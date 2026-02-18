@@ -1,10 +1,13 @@
 package com.school.miniinter.models;
 
+import java.util.List;
+
 public class Subject {
     // Atributos
     private int id;
     private String description;
     private String name;
+    List<Teacher> professores;
 
     // Métodos
     public Subject(int id, String description, String name) {
@@ -12,7 +15,6 @@ public class Subject {
         this.description = description;
         this.name = name;
     }
-
     public int getId() {
         return id;
     }
@@ -25,14 +27,12 @@ public class Subject {
     public void setDescription(String description) {
         this.description = description;
     }
-
     public String getName() {
         return name;
     }
     public void setName(String name) {
         this.name = name;
     }
-
     public String toString() {
         return "Subject{" +
                 "id=" + id +

@@ -1,21 +1,27 @@
 package com.school.miniinter.models;
 
-import java.time.LocalDate;
+import java.sql.Date;
+import java.util.List;
 
 public class Teacher {
     private int id;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String login;
     private String password;
-    private LocalDate birthDate;
+    private Date birthDate;
+    private Date createdAt;
+    private List<Subject> materias;
 
     // Métodos
-    public Teacher(int id, String name, String login, String password, LocalDate birthDate) {
+    public Teacher(int id, String firstName, String lastName, String login, String password, Date birthDate, Date createdAt) {
         this.id = id;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.login = login;
         this.password = password;
         this.birthDate = birthDate;
+        this.createdAt = createdAt;
     }
     public int getId() {
         return id;
@@ -23,11 +29,17 @@ public class Teacher {
     public void setId(int id) {
         this.id = id;
     }
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    public String getLastName() {
+        return lastName;
+    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
     public String getLogin() {
         return login;
@@ -41,10 +53,16 @@ public class Teacher {
     public void setPassword(String password) {
         this.password = password;
     }
-    public LocalDate getBirthDate() {
+    public Date getBirthDate() {
         return birthDate;
     }
-    public void setBirthDate(LocalDate birthDate) {
+    public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
+    }
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }
