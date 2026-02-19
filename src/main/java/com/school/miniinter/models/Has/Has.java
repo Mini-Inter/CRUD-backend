@@ -1,12 +1,15 @@
-package com.school.miniinter.models;
+package com.school.miniinter.models.Has;
+
+import com.school.miniinter.models.Class.Class;
+import com.school.miniinter.models.Teach.Teach;
 
 public class Has {
     private int id;
-    private Class classroom;
+    private com.school.miniinter.models.Class.Class classroom;
     private Teach professoria;
 
     // Métodos
-    public Has(int id, Class classroom, Teach professoria) {
+    public Has(int id, com.school.miniinter.models.Class.Class classroom, Teach professoria) {
         this.id = id;
         this.classroom = classroom;
         this.professoria = professoria;
@@ -17,7 +20,7 @@ public class Has {
     public void setId(int id) {
         this.id = id;
     }
-    public Class getClassroom() {
+    public com.school.miniinter.models.Class.Class getClassroom() {
         return classroom;
     }
     public void setClassroom(Class classroom) {

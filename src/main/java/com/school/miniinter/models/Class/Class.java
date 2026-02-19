@@ -1,4 +1,4 @@
-package com.school.miniinter.models;
+package com.school.miniinter.models.Class;
 
 public class Class {
     private int id;

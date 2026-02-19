@@ -1,6 +1,5 @@
-package com.school.miniinter.models;
+package com.school.miniinter.models.Students;
 import java.util.Date;
-import java.util.UUID;
 
 public class Students {
     private int id_student;
