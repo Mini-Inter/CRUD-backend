@@ -12,17 +12,6 @@ import java.util.List;
 
 public class SubjectsDAO {
 
-//  Métodos
-//
-// - Criar;
-// - Buscar;
-//   - Por ID
-//   - Por nome
-// - Atualizar;
-//   - Por ID
-// - Deletar;
-//   - Por ID
-
     public int insert(Subject subject){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;

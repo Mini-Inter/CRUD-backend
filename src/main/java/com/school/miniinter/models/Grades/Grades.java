@@ -5,10 +5,11 @@ public class Grades {
     private int fk_student;
     private int fk_subject;
     private int type;
-    private float value;
+    private double value;
     private String send_at;
 
-    public Grades(int fk_student, int fk_subject, int type, float value, String send_at) {
+    public Grades(int fk_student, int fk_subject, int type, double value,
+                  String send_at) {
         this.fk_student = fk_student;
         this.fk_subject = fk_subject;
         this.type = type;
@@ -48,11 +49,11 @@ public class Grades {
         this.type = type;
     }
 
-    public float getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(float value) {
+    public void setValue(double value) {
         this.value = value;
     }
 
