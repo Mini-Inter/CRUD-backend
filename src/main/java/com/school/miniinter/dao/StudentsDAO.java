@@ -101,7 +101,6 @@ public class StudentsDAO {
             connection.disconnect(conn);
         }
     }
-
     public ResultSet readId(int id){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -124,7 +123,6 @@ public class StudentsDAO {
             connection.disconnect(conn);
         }
     }
-
     public List<Students> readAll(){
         List list = new ArrayList<>();
         ConnectionFactory connection = new ConnectionFactory();
@@ -158,7 +156,6 @@ public class StudentsDAO {
             connection.disconnect(conn);
         }
     }
-
     public ResultSet readName(String name){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -177,6 +174,35 @@ public class StudentsDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
+        }finally {
+            connection.disconnect(conn);
+        }
+    }
+    public boolean isStudent(String login, String password) throws IllegalArgumentException {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        ResultSet rset = null;
+        try {
+            conn = connection.connect();
+
+            String sql = "SELECT * FROM students WHERE login=?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,login);
+
+            rset = pstmt.executeQuery();
+
+            if (rset.next()) {
+                if (rset.getString("password").equals(password)) {
+                    return true;
+                } throw new RuntimeException("Senha incorreta!");
+            } else {
+                return false;
+            }
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return false;
         }finally {
             connection.disconnect(conn);
         }

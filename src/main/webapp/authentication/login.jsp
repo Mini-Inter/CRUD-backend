@@ -8,6 +8,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     String error = String.valueOf(session.getAttribute("error"));
+    String login = "";
+    String password = "";
+    if (session.getAttribute("login")!=null) {
+        login = String.valueOf(session.getAttribute("login"));
+    }
+    if (session.getAttribute("password")!=null) {
+        password = String.valueOf(session.getAttribute("password"));
+    }
 %>
 <html>
 <head>
@@ -23,12 +31,15 @@
         }
     %>
     <form action="<%=request.getContextPath()%>/auth?type=login" method="post">
-        <label for="email"></label>
-        <input required name="email" id="email" type="email">
-        <label for="pw"></label>
-        <input required name="pw" id="pw" type="password">
+        <label for="login">Email:</label>
+        <input value="<%=login%>" required name="login" id="login" type="text">
+        <label for="pw">Senha:</label>
+        <input value="<%=password%>" required name="pw" id="pw" type="password">
         <input value="Login" type="submit">
     </form>
+    <%
+        session.invalidate();
+    %>
     <p>Ainda não tem conta? <a href="./cpf.jsp">Cadastre-se</a></p>
 </body>
 </html>
