@@ -12,7 +12,9 @@ public class Students {
     private String password;
     private String created_at;
 
-    public Students(int fk_class, String full_name, String first_name, String last_name, Date birth_date, String login, String password, String created_at) {
+    public Students(int id_student, int fk_class,
+    String full_name, String first_name, String last_name, Date birth_date, String login, String password, String created_at) {
+        this.id_student = id_student;
         this.fk_class = fk_class;
         this.full_name = full_name;
         this.first_name = first_name;
@@ -22,6 +24,8 @@ public class Students {
         this.password = password;
         this.created_at = created_at;
     }
+
+    public Students(){}
 
     public int getId_student() {
         return id_student;

@@ -29,7 +29,6 @@ public class AuthenticationSystem extends HttpServlet {
             case "login" -> {
                 String login = req.getParameter("login").toLowerCase().strip();
                 String password = req.getParameter("pw");
-
                 try {
                     if (!verificarEmail(login))
                         throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
@@ -37,7 +36,7 @@ public class AuthenticationSystem extends HttpServlet {
                     login = login.substring(0, login.indexOf("@"));
 
                     if (verificarLogin(login, password)) {
-                        req.getRequestDispatcher("/WEB-INF/homeAluno").forward(req, resp);
+                        resp.sendRedirect("homeStudent?email="+login);
                     } else {
                         throw new RuntimeException("login não pertence a nenhuma conta!");
                     }

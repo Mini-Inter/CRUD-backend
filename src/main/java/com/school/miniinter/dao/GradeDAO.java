@@ -5,7 +5,6 @@ import com.school.miniinter.models.Grades.GradeForSubject;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class GradeDAO {
@@ -35,9 +34,9 @@ public class GradeDAO {
                 if (n1  == null){
                     n1 = 0.0;
                 }
-                n2 = rs.getDouble("n2");
-                if (n1  == null){
-                    n1 = 0.0;
+                n2 = rs.getObject("n2");
+                if (n2  == null){
+                    n2 = 0.0;
                 }
                 GradeForSubject gradeForSubject = new GradeForSubject(name_subject,
                         Double.parseDouble(String.valueOf(n1)),
