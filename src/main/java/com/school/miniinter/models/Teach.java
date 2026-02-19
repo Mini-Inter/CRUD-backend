@@ -2,15 +2,22 @@ package com.school.miniinter.models;
 import java.util.List;
 
 public class Teach {
-    Teacher teacher;
-    Subject subject;
-    List<Class> classes;
+    private int id;
+    private Teacher teacher;
+    private Subject subject;
+    private List<Class> classes;
 
     // Métodos
     public Teach(Teacher teacher, Subject subject, List<Class> classes) {
         this.teacher = teacher;
         this.subject = subject;
         this.classes = classes;
+    }
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
     }
     public Teacher getTeacher() {
         return teacher;
