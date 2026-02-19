@@ -1,4 +1,4 @@
-package com.school.miniinter.models;
+package com.school.miniinter.models.Receive;
 
 public class Receive {
     private int id;

@@ -1,7 +1,7 @@
 package com.school.miniinter.dao;
 
 import com.school.miniinter.connection.ConnectionFactory;
-import com.school.miniinter.models.Students;
+import com.school.miniinter.models.Students.Students;
 
 import java.sql.*;
 import java.util.ArrayList;

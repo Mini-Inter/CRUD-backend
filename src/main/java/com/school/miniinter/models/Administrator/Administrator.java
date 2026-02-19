@@ -1,4 +1,4 @@
-package com.school.miniinter.models;
+package com.school.miniinter.models.Administrator;
 
 import java.sql.Date;
 

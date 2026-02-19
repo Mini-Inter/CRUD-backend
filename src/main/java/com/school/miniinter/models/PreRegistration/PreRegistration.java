@@ -1,4 +1,4 @@
-package com.school.miniinter.models;
+package com.school.miniinter.models.PreRegistration;
 
 public class PreRegistration {
     private int id;

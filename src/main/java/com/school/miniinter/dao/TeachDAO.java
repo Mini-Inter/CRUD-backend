@@ -1,7 +1,7 @@
 package com.school.miniinter.dao;
 
 import com.school.miniinter.connection.ConnectionFactory;
-import com.school.miniinter.models.Teach;
+import com.school.miniinter.models.Teach.Teach;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

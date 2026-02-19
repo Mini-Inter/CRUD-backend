@@ -1,4 +1,6 @@
-package com.school.miniinter.models;
+package com.school.miniinter.models.Teacher;
+
+import com.school.miniinter.models.Subject.Subject;
 
 import java.sql.Date;
 import java.util.List;
