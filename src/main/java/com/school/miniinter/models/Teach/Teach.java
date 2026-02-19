@@ -1,4 +1,7 @@
-package com.school.miniinter.models;
+package com.school.miniinter.models.Teach;
+import com.school.miniinter.models.Teacher.Teacher;
+import com.school.miniinter.models.Subject.Subject;
+import com.school.miniinter.models.Class.Class;
 import java.util.List;
 
 public class Teach {
