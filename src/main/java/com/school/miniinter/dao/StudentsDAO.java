@@ -98,20 +98,36 @@ public class StudentsDAO {
         }
     }
 
-    public ResultSet readId(int id){
+    public Students readById(int id_student){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
+        Students student = null;
         try {
             conn = connection.connect();
 
-            sql = "SELECT * FROM students WHERE id=?";
+            sql = "SELECT * FROM students WHERE id_student=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setInt(1,id);
+            pstmt.setInt(1,id_student);
 
-            ResultSet rset = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
 
-            return rset;
+            if(rs.next()) {
+                int fk_class = rs.getInt("fk_class");
+                String full_name = rs.getString("full_name");
+                String first_name = rs.getString("first_name");
+                String last_name = rs.getString("last_name");
+                Date birth_date = rs.getDate("birth_date");
+                String login = rs.getString("login");
+                String password = rs.getString("password");
+                String created_at = rs.getString("created_at");
+                student = new Students(id_student,fk_class,full_name,
+                        first_name,
+                        last_name,birth_date,login,password,created_at);
+            }
+
+            return student;
+
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
@@ -133,6 +149,7 @@ public class StudentsDAO {
 
             while(rs.next()){
 
+                int id_student = rs.getInt("id_student");
                 int fk_class = rs.getInt("fk_class");
                 String full_name = rs.getString("full_name");
                 String first_name = rs.getString("first_name");
@@ -142,7 +159,7 @@ public class StudentsDAO {
                 String password = rs.getString("password");
                 String created_at = rs.getString("created_at");
 
-                list.add(new Students(fk_class,full_name,first_name,
+                list.add(new Students(id_student,fk_class,full_name,first_name,
                         last_name,birth_date,login,password,created_at));
             }
             return list;
@@ -186,20 +203,20 @@ public class StudentsDAO {
             sql = "SELECT s.full_name, c.classroom, c.series, s" +
                     ".id_student, EXTRACT(YEAR FROM CURRENT_DATE) AS " +
                     "School_year FROM" +
-                    " class c JOIN " +
-                    "students s ON c.id = s.fk_class WHERE login LIKE ?";
+                    " class c JOIN students s ON c.id_class = s.fk_class WHERE login LIKE ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1,email);
 
             ResultSet rs = pstmt.executeQuery();
 
-            basicInfo.setId_student(rs.getInt("id_student"));
-            basicInfo.setClassroom(rs.getString("classroom"));
-            basicInfo.setSeries(rs.getString("series"));
-            basicInfo.setFull_name(rs.getString("full_name"));
-            basicInfo.setSchool_year(rs.getInt("School_year"));
-
+            if(rs.next()) {
+                basicInfo.setId_student(rs.getInt("id_student"));
+                basicInfo.setClassroom(rs.getString("classroom"));
+                basicInfo.setSeries(rs.getString("series"));
+                basicInfo.setFull_name(rs.getString("full_name"));
+                basicInfo.setSchool_year(rs.getInt("School_year"));
+            }
             return basicInfo;
 
         }catch (SQLException sqle){
@@ -227,9 +244,10 @@ public class StudentsDAO {
             pstmt.setInt(1,id_student);
 
             ResultSet rs = pstmt.executeQuery();
-
-            return rs.getInt("amount_of_subjects");
-
+            if(rs.next()) {
+                return rs.getInt("amount_of_subjects");
+            }
+            return null;
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
@@ -253,7 +271,10 @@ public class StudentsDAO {
 
             ResultSet rs = pstmt.executeQuery();
 
-            return rs.getDouble("avg_grade");
+            if(rs.next()) {
+                return rs.getDouble("avg_grade");
+            }
+            return null;
 
         }catch(SQLException sqle){
             sqle.printStackTrace();
@@ -277,7 +298,10 @@ public class StudentsDAO {
 
             ResultSet rs = pstmt.executeQuery();
 
-            return rs.getInt("amount_reports");
+            if(rs.next()) {
+                return rs.getInt("amount_reports");
+            }
+            return null;
 
         }catch(SQLException sqle){
             sqle.printStackTrace();

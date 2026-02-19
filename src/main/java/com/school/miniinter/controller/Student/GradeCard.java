@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name="GradeCard", value = {"/GradeCard"})
+@WebServlet(name="GradeCard", value = {"/gradeCard"})
 public class GradeCard extends HttpServlet {
 
     GradeDAO gradeDAO = new GradeDAO();
@@ -20,12 +20,15 @@ public class GradeCard extends HttpServlet {
             IOException{
         int id_student = Integer.parseInt(request.getParameter("idStudent"));
 
+        request.setAttribute("idStudent",id_student);
+
         List<GradeForSubject> gradeCard =
                 gradeDAO.readAllGradesForStudent(id_student);
 
         request.setAttribute("GradeCard",gradeCard);
 
 //        Essa caminho deve ser mudado quando chegar o frontend
-        request.getRequestDispatcher("gradeCard").forward(request,response);
+        request.getRequestDispatcher("WEB-INF/gradeCard.jsp").forward(request,
+                response);
     }
 }

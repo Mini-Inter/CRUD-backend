@@ -18,7 +18,7 @@ public class home extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException,
             IOException{
-        String email = String.valueOf(request.getAttribute("email"));
+        String email = String.valueOf(request.getParameter("email"));
 
         BasicInfo basicInfo = studentsDAO.readBasicInfoStudent(email);
 
@@ -41,6 +41,7 @@ public class home extends HttpServlet {
         request.setAttribute("amountReports",amountReports);
 
 //        Ainda tem que mudar esse caminho quando o fluxo estiver completo
-        request.getRequestDispatcher("/home").forward(request,response);
+        request.getRequestDispatcher("WEB-INF/homeAluno.jsp").forward(request,
+                response);
     }
 }

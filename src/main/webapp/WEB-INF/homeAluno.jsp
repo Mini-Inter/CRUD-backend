@@ -1,16 +1,19 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Vini
-  Date: 2/19/26
-  Time: 9:11 AM
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="com.school.miniinter.models.Students.BasicInfo" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    BasicInfo basicInfo = (BasicInfo) request.getAttribute("basicInfo");
+%>
 <html>
 <head>
-    <title>Title</title>
+    <title>Home Aluno</title>
 </head>
 <body>
-bien venido
+    <h1>Informações básicas</h1>
+    <p>Turma: <%=basicInfo.getSeries()%>°<%=basicInfo.getClassroom()%></p>
+    <p>Total de matérias: <%=request.getAttribute("amountSubjects")%></p>
+    <p>Média total: <%=request.getAttribute("avgGrade")%></p>
+    <p>Total de observações: <%=request.getAttribute("amountReports")%></p>
+
+    <a href="gradeCard?idStudent=<%=basicInfo.getId_student()%>">boletim</a>
 </body>
 </html>
