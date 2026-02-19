@@ -69,6 +69,8 @@ public class StudentsDAO {
         }
     }
 
+//   Precisa de mais informação de funcionamento, pois não sabemos o que
+//   precisa ser mudado!
     public int update(int id){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -281,6 +283,35 @@ public class StudentsDAO {
             sqle.printStackTrace();
             return null;
         }finally{
+            connection.disconnect(conn);
+        }
+    }
+    public boolean isStudent(String login, String password) throws IllegalArgumentException {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        ResultSet rset = null;
+        try {
+            conn = connection.connect();
+
+            String sql = "SELECT * FROM students WHERE login=?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,login);
+
+            rset = pstmt.executeQuery();
+
+            if (rset.next()) {
+                if (rset.getString("password").equals(password)) {
+                    return true;
+                } throw new RuntimeException("Senha incorreta!");
+            } else {
+                return false;
+            }
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return false;
+        }finally {
             connection.disconnect(conn);
         }
     }
