@@ -120,6 +120,35 @@ public class TeachersDAO {
             connection.disconnect(conn);
         }
     }
+    public boolean isTeacher(String login, String pw) throws IllegalArgumentException {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        ResultSet rset = null;
+
+        try {
+            conn = connection.connect();
+
+            String sql = "SELECT * FROM teachers WHERE login=?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, login);
+
+            rset = pstmt.executeQuery();
+
+            if (rset.next()) {
+                if (rset.getString("password").equals(pw)) {
+                    return true;
+                } throw new RuntimeException("Senha incorreta!");
+            } else {
+                return false;
+            }
+        } catch(SQLException sqle){
+            sqle.printStackTrace();
+            return false;
+        } finally {
+            connection.disconnect(conn);
+        }
+    }
     public int update(Teacher teacher) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
