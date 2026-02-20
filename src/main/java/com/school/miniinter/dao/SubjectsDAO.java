@@ -99,6 +99,42 @@ public class SubjectsDAO {
             connection.disconnect(conn);
         }
     }
+    public List<Subject> readByStudent(int idSubject) {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        ResultSet rset = null;
+        List<Subject> subjects = new LinkedList<>();
+
+        try {
+            conn = connection.connect();
+
+            String sql = "SELECT D.id_subject, D.name, D.description FROM Has H\n" +
+                "JOIN Class C on H.fk_class = C.id_class\n" +
+                "JOIN teach P on H.fk_teach = P.id\n" +
+                "JOIN subjects D on P.fk_subject = D.id_subject\n" +
+                "JOIN students S on C.id_class = S.fk_class\n" +
+                "WHERE id_student = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, idSubject);
+
+            rset = pstmt.executeQuery();
+            while (rset.next()) {
+                subjects.add(new Subject(
+                        rset.getInt("id_subject"),
+                        rset.getString("description"),
+                        rset.getString("name")
+                ));
+            }
+
+            return subjects;
+        } catch(SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        } finally {
+            connection.disconnect(conn);
+        }
+    }
     public int update(Subject subject) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;

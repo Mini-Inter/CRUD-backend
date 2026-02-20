@@ -2,12 +2,12 @@ package com.school.miniinter.controller.Student;
 
 import com.school.miniinter.dao.StudentsDAO;
 import com.school.miniinter.models.Students.BasicInfo;
-import com.school.miniinter.models.Students.Students;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -15,33 +15,39 @@ import java.io.IOException;
 public class home extends HttpServlet {
 
     StudentsDAO studentsDAO = new StudentsDAO();
-    public void doGet(HttpServletRequest request,
+    public void doPost(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException,
             IOException{
-        String email = String.valueOf(request.getParameter("email"));
+        HttpSession session =  request.getSession();
+        Object idStudentRaw = session.getAttribute("idStudent");
 
-        BasicInfo basicInfo = studentsDAO.readBasicInfoStudent(email);
+        if (idStudentRaw == null) {
+            response.sendRedirect( request.getContextPath()+"/authentication/login.jsp");
+        } else {
+            int idStudent = (Integer) idStudentRaw;
 
-        request.setAttribute("basicInfo",basicInfo);
+            String email = String.valueOf(session.getAttribute("email"));
 
-        Integer id_student = basicInfo.getId_student();
+            BasicInfo basicInfo = studentsDAO.readBasicInfoStudent(email);
 
-        Integer amountSubjects =
-                studentsDAO.readAmountOfSubjects(id_student);
+            request.setAttribute("basicInfo", basicInfo);
 
-        request.setAttribute("amountSubjects",amountSubjects);
+            Integer amountSubjects =
+                    studentsDAO.readAmountOfSubjects(idStudent);
 
-        Double avgGrade =
-                studentsDAO.readAverageGrade(id_student);
+            request.setAttribute("amountSubjects", amountSubjects);
 
-        request.setAttribute("avgGrade", avgGrade);
+            Double avgGrade =
+                    studentsDAO.readAverageGrade(idStudent);
 
-        Integer amountReports = studentsDAO.readAmountReports(id_student);
+            request.setAttribute("avgGrade", avgGrade);
 
-        request.setAttribute("amountReports",amountReports);
+            Integer amountReports = studentsDAO.readAmountReports(idStudent);
+
+            request.setAttribute("amountReports", amountReports);
 
 //        Ainda tem que mudar esse caminho quando o fluxo estiver completo
-        request.getRequestDispatcher("WEB-INF/homeAluno.jsp").forward(request,
-                response);
+            request.getRequestDispatcher("WEB-INF/homeAluno.jsp").forward(request, response);
+        }
     }
 }

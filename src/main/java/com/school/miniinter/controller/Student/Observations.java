@@ -7,6 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,18 +17,21 @@ public class Observations extends HttpServlet {
 
     ReportsDAO reportsDAO = new ReportsDAO();
 
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException,
-            IOException{
-        String path = request.getRequestURI();
-        int id_student = Integer.parseInt(request.getParameter(
-                "idStudent"));
-        String type = request.getParameter("filter");
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        HttpSession session = request.getSession();
+        Object idStudentRaw = session.getAttribute("idStudent");
 
-        if(type == null){
-            readAllReports(id_student,request, response);
-        } else{
-            readReportsByType(id_student,type,request,response);
+        if (idStudentRaw == null) {
+            response.sendRedirect(request.getContextPath()+"/authentication/login.jsp");
+        } else {
+            int idStudent = (Integer) idStudentRaw;
+            String type = request.getParameter("filter");
+
+            if (type == null) {
+                readAllReports(idStudent, request, response);
+            } else {
+                readReportsByType(idStudent, type, request, response);
+            }
         }
     }
 

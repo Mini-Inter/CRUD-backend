@@ -193,6 +193,44 @@ public class StudentsDAO {
         }
     }
 
+    public Students readByLogin(String login) {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        Students student = null;
+        try {
+            conn = connection.connect();
+
+            sql = "SELECT * FROM students WHERE login=?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, login);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if(rs.next()) {
+                int fk_class = rs.getInt("fk_class");
+                String full_name = rs.getString("full_name");
+                String first_name = rs.getString("first_name");
+                String last_name = rs.getString("last_name");
+                Date birth_date = rs.getDate("birth_date");
+                int id_student = rs.getInt("id_student");
+                String password = rs.getString("password");
+                String created_at = rs.getString("created_at");
+                student = new Students(id_student,fk_class,full_name,
+                        first_name,
+                        last_name,birth_date,login,password,created_at);
+            }
+
+            return student;
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        }finally {
+            connection.disconnect(conn);
+        }
+    }
+
     public BasicInfo readBasicInfoStudent(String email){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
