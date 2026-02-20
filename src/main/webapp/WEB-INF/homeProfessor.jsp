@@ -11,6 +11,6 @@
     <title>Vidya - Professor</title>
 </head>
 <body>
-
+    <form action="<%=request.getContextPath()%>/teacherStudents" method="post"><input value="Alunos" type="submit"></form>
 </body>
 </html>

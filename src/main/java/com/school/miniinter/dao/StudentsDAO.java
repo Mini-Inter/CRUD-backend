@@ -3,9 +3,11 @@ package com.school.miniinter.dao;
 import com.school.miniinter.connection.ConnectionFactory;
 import com.school.miniinter.models.Students.BasicInfo;
 import com.school.miniinter.models.Students.Students;
+import com.school.miniinter.models.Students.Summary;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class StudentsDAO {
@@ -193,6 +195,51 @@ public class StudentsDAO {
         }
     }
 
+    public List<Students> readByTeach(int idTeacher, int idSubject) {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        List<Students> students = new LinkedList<>();
+        try{
+            conn = connection.connect();
+
+            sql = "SELECT DISTINCT S.* FROM Has H\n" +
+                    "JOIN Class C on H.fk_class = C.id_class\n" +
+                    "JOIN teach P on H.fk_teach = P.id\n" +
+                    "JOIN students S on C.id_class = S.fk_class\n" +
+                    "JOIN teachers T on P.fk_teacher = T.id_employee\n" +
+                    "JOIN subjects D ON P.fk_subject = S.id_subject\n" +
+                    "WHERE T.id_employee = ? AND D.id_subject = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, idTeacher);
+            pstmt.setInt(2, idSubject);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+
+                int id_student = rs.getInt("id_student");
+                int fk_class = rs.getInt("fk_class");
+                String full_name = rs.getString("full_name");
+                String first_name = rs.getString("first_name");
+                String last_name = rs.getString("last_name");
+                Date birth_date = rs.getDate("birth_date");
+                String login = rs.getString("login");
+                String password = rs.getString("password");
+                String created_at = rs.getString("created_at");
+
+                students.add(new Students(id_student,fk_class,full_name,first_name,
+                        last_name,birth_date,login,password,created_at));
+            }
+            return students;
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return students;
+        }finally {
+            connection.disconnect(conn);
+        }
+    }
+
     public Students readByLogin(String login) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -264,6 +311,41 @@ public class StudentsDAO {
             connection.disconnect(conn);
         }
 
+    }
+
+    public Summary readSummary(int idStudent) {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        Summary sum = new Summary();
+        try {
+            conn = connection.connect();
+
+            sql = "SELECT S.id_student, S.full_name, C.series, C.classroom, avg(G.value) \"AVG\" FROM students S\n" +
+                    "JOIN class C ON S.fk_class = C.id_class\n" +
+                    "JOIN grades G on S.id_student = G.fk_student\n" +
+                    "WHERE S.id_student=?\n" +
+                    "GROUP BY 1, 2, 3, 4";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,idStudent);
+
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()) {
+                sum.setMatricula(rs.getInt("id_student"));
+                sum.setClassroom(rs.getString("classroom"));
+                sum.setSeries(rs.getString("series"));
+                sum.setName(rs.getString("full_name"));
+                sum.setAverage(rs.getInt("AVG"));
+                sum.setSituation(rs.getDouble("AVG")>7);
+            }
+
+            return sum;
+        }catch (SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        }finally{
+            connection.disconnect(conn);
+        }
     }
 
     public Integer readAmountOfSubjects(int id_student){
