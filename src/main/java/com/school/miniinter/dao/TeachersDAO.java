@@ -1,6 +1,9 @@
 package com.school.miniinter.dao;
 
 import com.school.miniinter.connection.ConnectionFactory;
+import com.school.miniinter.models.Class.Class;
+import com.school.miniinter.models.Grades.GradeForSubject;
+import com.school.miniinter.models.Students.GradeForStudent;
 import com.school.miniinter.models.Teacher.HomeTeacherInfo;
 import com.school.miniinter.models.Teacher.Teacher;
 
@@ -228,6 +231,40 @@ public class TeachersDAO {
                 connection.disconnect(conn);
             }
             return null;
+    }
+
+    public List<GradeForStudent> readGradeStudentBySubjectAndClass(int id_teacher, int id_subject, Class student_class){
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        List<GradeForStudent> list = new ArrayList<>();
+        try {
+            conn = connection.connect();
+
+            sql = "SELECT s.full_name, CASE WHEN g.grade_type = '1' THEN g.value END AS n1, CASE WHEN g.grade_type = '2' THEN g.value END AS n2 FROM subjects sub JOIN grades g on g.fk_subject = sub.id_subject JOIN students s on s.id_student = g.fk_student JOIN class c on c.id_class = s.fk_class JOIN has h on h.fk_class = c.id_class JOIN teach t on h.fk_teach = t.id JOIN teachers te on te.id_employee = t.id WHERE te.id_employee = ? AND EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) AND sub.id_subject = ? AND c.series = ? AND c.classroom = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,id_teacher);
+            pstmt.setInt(2,id_subject);
+            pstmt.setString(3,String.valueOf(student_class.getSeries()));
+            pstmt.setString(4,String.valueOf(student_class.getClassroom()));
+
+            ResultSet rs = pstmt.executeQuery();
+            GradeForStudent gradeForStudent;
+            while (rs.next()) {
+                String full_name = rs.getString("full_name");
+                Double n1 = rs.getDouble("n1");
+                Double n2 = rs.getDouble("n2");
+                gradeForStudent =
+                        new GradeForStudent(full_name,n1,n2);
+                list.add(gradeForStudent);
+            }
+            return list;
+        } catch(SQLException sqle){
+            sqle.printStackTrace();
+        } finally {
+            connection.disconnect(conn);
+        }
+        return null;
     }
 
     public boolean isTeacher(String login, String pw) throws IllegalArgumentException {

@@ -1,0 +1,50 @@
+package com.school.miniinter.dao;
+
+import com.school.miniinter.connection.ConnectionFactory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import com.school.miniinter.models.Class.Class;
+
+public class ClassDAO {
+
+    String sql;
+    public List<Class> readClassByTeacherAndSubject(int id_teacher,
+                                                    int id_subject){
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        List<Class> list = new ArrayList<>();
+
+        try{
+            conn = connection.connect();
+
+            sql = "SELECT c.* FROM class c JOIN has h ON c.id_class = h" +
+                    ".fk_class JOIN teach t ON t.id = h.fk_teach JOIN " +
+                    "teachers te ON te.id_employee = t.fk_teacher JOIN subjects s ON s.id_subject = t.fk_subject WHERE te.id_employee = ? AND s.id_subject = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,id_teacher);
+            pstmt.setInt(2,id_subject);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                int id_class = rs.getInt("id_class");
+                char series = rs.getString("series").charAt(0);
+                char classroom = rs.getString("classroom").charAt(0);
+                list.add(new Class(id_class
+                        ,series,classroom));
+            }
+            return list;
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        }finally{
+            connection.disconnect(conn);
+        }
+    }
+}

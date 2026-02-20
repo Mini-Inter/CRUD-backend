@@ -2,6 +2,7 @@ package com.school.miniinter.dao;
 
 import com.school.miniinter.connection.ConnectionFactory;
 import com.school.miniinter.models.Students.BasicInfo;
+import com.school.miniinter.models.Students.GradeForStudent;
 import com.school.miniinter.models.Students.Students;
 import com.school.miniinter.models.Students.Summary;
 
@@ -432,6 +433,7 @@ public class StudentsDAO {
             connection.disconnect(conn);
         }
     }
+
     public boolean isStudent(String login, String password) throws IllegalArgumentException {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;

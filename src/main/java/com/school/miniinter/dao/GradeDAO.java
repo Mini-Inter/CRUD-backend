@@ -19,7 +19,7 @@ public class GradeDAO {
             conn = connection.connect();
 
             sql = "SELECT sub.name as name_subject, CASE WHEN g.grade_type " +
-                    "LIKE '1' THEN g.value END AS n1, CASE WHEN g.grade_type LIKE '2' THEN g.value END AS n2 FROM students s JOIN grades g on s.id_student = g.fk_student AND EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) JOIN subjects sub on sub.id_subject = g.fk_subject WHERE s.id_student = ? GROUP BY 1,2,3";
+                    "LIKE '1' THEN g.value END AS n1, CASE WHEN g.grade_type LIKE '2' THEN g.value END AS n2 FROM students s JOIN grades g on s.id_student = g.fk_student AND EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) JOIN subjects sub on sub.id_subject = g.fk_subject WHERE s.id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1, id_student);
