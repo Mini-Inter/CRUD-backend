@@ -37,7 +37,7 @@ public class TeacherStudents extends HttpServlet {
             List<Students> students = stud.readByTeach(idTeacher, idSubject);
             if (idStudentRaw != null && !idStudentRaw.isBlank()) {
                 int idStudent = Integer.parseInt(idStudentRaw);
-                students = filterById(students, idSubject);
+                students = filterById(students, idStudent);
             }
             for (Students student : students)
                 summaries.add(stud.readSummary(student.getId_student(), idSubject));
