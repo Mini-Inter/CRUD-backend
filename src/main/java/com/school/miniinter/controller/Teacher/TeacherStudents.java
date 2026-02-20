@@ -1,10 +1,8 @@
 package com.school.miniinter.controller.Teacher;
 
 import com.school.miniinter.dao.StudentsDAO;
-import com.school.miniinter.dao.SubjectsDAO;
 import com.school.miniinter.models.Students.Students;
 import com.school.miniinter.models.Students.Summary;
-import com.school.miniinter.models.Subject.Subject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
