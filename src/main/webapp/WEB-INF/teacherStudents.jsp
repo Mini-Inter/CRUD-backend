@@ -11,6 +11,7 @@
 <%
     List<Summary> students = (List<Summary>) session.getAttribute("students");
     List<Subject> subjects = (List<Subject>) session.getAttribute("subjects");
+
 %>
 <html>
 <head>
@@ -18,19 +19,9 @@
 </head>
 <body>
     <h1>Meus Alunos</h1>
-    <form action="<%=request.getContextPath()%>/teacherStudents">
-        <input value="" placeholder="Buscar por matrícula" type="number">
-
-        <label for="subject"></label>
-        <select name="subject" id="subject">
-            <%
-                for (Subject subject : subjects) {
-            %>
-            <option value="<%=subject.getId()%>"><%=subject.getName()%></option>
-            <%
-                }
-            %>
-        </select>
+    <form action="<%=request.getContextPath()%>/teacherStudents" method="post">
+        <input value="" name="matricula" id="matricula" placeholder="Buscar por matrícula" type="number">
+        <input value="Buscar" type="submit">
     </form>
 
 
@@ -76,5 +67,18 @@
     <%
         }
     %>
+    <form action="<%=request.getContextPath()%>/changeSubject" method="post">
+        <label for="subject"></label>
+        <select name="subject" id="subject">
+            <%
+                for (Subject subject : subjects) {
+            %>
+            <option value="<%=subject.getId()%>"><%=subject.getName()%></option>
+            <%
+                }
+            %>
+        </select>
+        <input value="Trocar matéria" type="submit">
+    </form>
 </body>
 </html>

@@ -2,7 +2,9 @@ package com.school.miniinter.controller.authenticationSystem;
 
 import com.school.miniinter.dao.PreRegistrationDAO;
 import com.school.miniinter.dao.StudentsDAO;
+import com.school.miniinter.dao.SubjectsDAO;
 import com.school.miniinter.dao.TeachersDAO;
+import com.school.miniinter.models.Subject.Subject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,6 +16,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,6 +60,13 @@ public class AuthenticationSystem extends HttpServlet {
                     int idTeacher = teach.readByLogin(login).getId();
                     HttpSession session = req.getSession();
                     session.setAttribute("idTeacher", idTeacher);
+
+                    List<Subject> subjects;
+                    SubjectsDAO subDAO = new SubjectsDAO();
+                    subjects = subDAO.readByTeacher(idTeacher);
+                    session.setAttribute("subjects", subjects);
+                    session.setAttribute("subject", subjects.get(0).getId());
+
                     req.getRequestDispatcher("/WEB-INF/homeProfessor.jsp").forward(req, resp);
                 }
                 case (1) -> {

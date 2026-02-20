@@ -207,7 +207,7 @@ public class StudentsDAO {
                     "JOIN teach P on H.fk_teach = P.id\n" +
                     "JOIN students S on C.id_class = S.fk_class\n" +
                     "JOIN teachers T on P.fk_teacher = T.id_employee\n" +
-                    "JOIN subjects D ON P.fk_subject = S.id_subject\n" +
+                    "JOIN subjects D ON P.fk_subject = D.id_subject\n" +
                     "WHERE T.id_employee = ? AND D.id_subject = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -313,21 +313,23 @@ public class StudentsDAO {
 
     }
 
-    public Summary readSummary(int idStudent) {
+    public Summary readSummary(int idStudent, int idSubject) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
         Summary sum = new Summary();
         try {
             conn = connection.connect();
 
-            sql = "SELECT S.id_student, S.full_name, C.series, C.classroom, avg(G.value) \"AVG\" FROM students S\n" +
-                    "JOIN class C ON S.fk_class = C.id_class\n" +
-                    "JOIN grades G on S.id_student = G.fk_student\n" +
-                    "WHERE S.id_student=?\n" +
-                    "GROUP BY 1, 2, 3, 4";
+            sql = "SELECT S.id_student, S.full_name, C.series, C.classroom, avg(G.value) \"AVG\" FROM students S " +
+                    "JOIN class C ON S.fk_class = C.id_class " +
+                    "JOIN grades G on S.id_student = G.fk_student " +
+                    "JOIN subjects D on G.fk_subject = D.id_subject " +
+                    "WHERE S.id_student=? AND D.id_subject = ? " +
+                    "GROUP BY 1, 2, 3, 4, D.id_subject";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,idStudent);
+            pstmt.setInt(2, idSubject);
 
             ResultSet rs = pstmt.executeQuery();
             if(rs.next()) {
@@ -335,8 +337,8 @@ public class StudentsDAO {
                 sum.setClassroom(rs.getString("classroom"));
                 sum.setSeries(rs.getString("series"));
                 sum.setName(rs.getString("full_name"));
-                sum.setAverage(rs.getInt("AVG"));
-                sum.setSituation(rs.getDouble("AVG")>7);
+                sum.setAverage(rs.getDouble("AVG"));
+                sum.setSituation(rs.getDouble("AVG")>=7);
             }
 
             return sum;
