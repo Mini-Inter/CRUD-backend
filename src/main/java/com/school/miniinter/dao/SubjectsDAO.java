@@ -144,7 +144,7 @@ public class SubjectsDAO {
         try {
             conn = connection.connect();
 
-            String sql = "SELECT S.name FROM teachers T " +
+            String sql = "SELECT S.* FROM teachers T " +
             "JOIN teach P ON T.id_employee = P.fk_teacher " +
             "JOIN subjects S on P.fk_subject = S.id_subject " +
             "WHERE T.id_employee = ?";
