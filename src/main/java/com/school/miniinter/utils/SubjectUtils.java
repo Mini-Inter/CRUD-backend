@@ -15,6 +15,6 @@ public class SubjectUtils extends HttpServlet {
         HttpSession session = req.getSession();
         int idSubject = Integer.parseInt(req.getParameter("subject"));
         session.setAttribute("subject", idSubject);
-        req.getRequestDispatcher("/WEB-INF/homeProfessor.jsp").forward(req, resp);
+        req.getRequestDispatcher("/homeTeacher").forward(req, resp);
     }
 }

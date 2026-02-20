@@ -43,6 +43,9 @@
     <%
         for (Summary student : students) {
     %>
+            <form action="">
+
+            </form>
                 <tr>
                     <td><%=student.getName()%></td>
                     <td><%=student.getMatricula()%></td>

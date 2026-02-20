@@ -323,9 +323,11 @@ public class StudentsDAO {
 
             sql = "SELECT S.id_student, S.full_name, C.series, C.classroom, avg(G.value) \"AVG\" FROM students S " +
                     "JOIN class C ON S.fk_class = C.id_class " +
-                    "JOIN grades G on S.id_student = G.fk_student " +
-                    "JOIN subjects D on G.fk_subject = D.id_subject " +
-                    "WHERE S.id_student=? AND D.id_subject = ? " +
+                    "LEFT JOIN has H ON C.id_class = H.fk_class " +
+                    "LEFT JOIN teach P on H.fk_teach = P.id " +
+                    "LEFT JOIN subjects D ON P.fk_subject = D.id_subject " +
+                    "LEFT JOIN grades G on S.id_student = G.fk_student AND D.id_subject = G.fk_subject " +
+                    "WHERE S.id_student = ? AND D.id_subject = ? " +
                     "GROUP BY 1, 2, 3, 4, D.id_subject";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -340,9 +342,10 @@ public class StudentsDAO {
                 sum.setName(rs.getString("full_name"));
                 sum.setAverage(rs.getDouble("AVG"));
                 sum.setSituation(rs.getDouble("AVG")>=7);
+                return sum;
             }
 
-            return sum;
+            return null;
         }catch (SQLException sqle){
             sqle.printStackTrace();
             return null;

@@ -1,10 +1,8 @@
 package com.school.miniinter.controller.Teacher;
 
 import com.school.miniinter.dao.StudentsDAO;
-import com.school.miniinter.dao.SubjectsDAO;
 import com.school.miniinter.models.Students.Students;
 import com.school.miniinter.models.Students.Summary;
-import com.school.miniinter.models.Subject.Subject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -37,7 +35,7 @@ public class TeacherStudents extends HttpServlet {
             List<Students> students = stud.readByTeach(idTeacher, idSubject);
             if (idStudentRaw != null && !idStudentRaw.isBlank()) {
                 int idStudent = Integer.parseInt(idStudentRaw);
-                students = filterById(students, idSubject);
+                students = filterById(students, idStudent);
             }
             for (Students student : students)
                 summaries.add(stud.readSummary(student.getId_student(), idSubject));
