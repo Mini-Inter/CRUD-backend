@@ -19,6 +19,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,16 +32,22 @@ public class GenerateGradeCard extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException,
             IOException{
+        HttpSession session = request.getSession();
+        Object idStudentRaw = session.getAttribute("idStudent");
 
-        int id_student = Integer.parseInt(request.getParameter("idStudent"));
+        if (idStudentRaw == null) {
+            response.sendRedirect(request.getContextPath()+"/authentication/login.jsp");
+        } else {
+            int idStudent = (Integer) idStudentRaw;
 
-        Students student = studentsDAO.readById(id_student);
-        BasicInfo basicInfo =
-                studentsDAO.readBasicInfoStudent(student.getLogin());
-        List<GradeForSubject> gradeForSubjects =
-                gradeDAO.readAllGradesForStudent(id_student);
+            Students student = studentsDAO.readById(idStudent);
+            BasicInfo basicInfo =
+                    studentsDAO.readBasicInfoStudent(student.getLogin());
+            List<GradeForSubject> gradeForSubjects =
+                    gradeDAO.readAllGradesForStudent(idStudent);
 
-        generatePDF(response,basicInfo,gradeForSubjects);
+            generatePDF(response, basicInfo, gradeForSubjects);
+        }
     }
 
     public void generatePDF(HttpServletResponse response, BasicInfo student,

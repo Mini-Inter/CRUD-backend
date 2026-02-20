@@ -56,7 +56,12 @@ public class AuthenticationSystem extends HttpServlet {
                     req.getRequestDispatcher("/WEB-INF/homeProfessor.jsp").forward(req, resp);
                 }
                 case (1) -> {
-                    req.getRequestDispatcher("/WEB-INF/homeAluno.jsp").forward(req, resp);
+                    StudentsDAO stud = new StudentsDAO();
+                    int idStudent = stud.readByLogin(login).getId_student();
+                    HttpSession session = req.getSession();
+                    session.setAttribute("idStudent", idStudent);
+                    session.setAttribute("email", login);
+                    req.getRequestDispatcher("/homeStudent").forward(req, resp);
                 }
                 case (0) -> {
                     throw new RuntimeException("login não pertence a nenhuma conta!");
