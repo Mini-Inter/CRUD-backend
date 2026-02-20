@@ -67,7 +67,7 @@ public class AuthenticationSystem extends HttpServlet {
                     session.setAttribute("subjects", subjects);
                     session.setAttribute("subject", subjects.get(0).getId());
 
-                    req.getRequestDispatcher("/WEB-INF/homeProfessor.jsp").forward(req, resp);
+                    req.getRequestDispatcher("/homeTeacher").forward(req, resp);
                 }
                 case (1) -> {
                     StudentsDAO stud = new StudentsDAO();
