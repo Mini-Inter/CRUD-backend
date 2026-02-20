@@ -24,8 +24,17 @@
         %>
         <tr>
             <td><%=g.getSubject()%></td>
-            <td><%=g.getN1()%></td>
-            <td><%=g.getN2()%></td>
+            <td><%if(g.getN1() == -1.0){%>
+                <p>-</p>
+            <%}else{%>
+                <%=g.getN1()%>
+                <%}%></td>
+
+            <td><%if(g.getN2() == -1.0){%>
+                <p>-</p>
+                <%}else{%>
+                <%=g.getN2()%>
+                <%}%></td>
             <td><%=g.getAverage()%></td>
             <td><%=g.getSituation()%></td>
         </tr>

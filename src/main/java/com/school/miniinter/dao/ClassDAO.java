@@ -47,4 +47,33 @@ public class ClassDAO {
             connection.disconnect(conn);
         }
     }
+
+    public Class readClassById(int id_class){
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+
+        try{
+            conn = connection.connect();
+
+            sql = "SELECT * FROM class WHERE id_class = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,id_class);
+
+            ResultSet rs = pstmt.executeQuery();
+            Class classChoose = null;
+            if(rs.next()){
+                Character series = rs.getString("series").charAt(0);
+                Character classroom = rs.getString("classroom").charAt(0);
+
+                classChoose = new Class(id_class,series,classroom);
+            }
+            return classChoose;
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        }finally{
+            connection.disconnect(conn);
+        }
+    }
 }

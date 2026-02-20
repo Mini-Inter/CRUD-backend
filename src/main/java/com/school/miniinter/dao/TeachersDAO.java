@@ -233,29 +233,50 @@ public class TeachersDAO {
             return null;
     }
 
-    public List<GradeForStudent> readGradeStudentBySubjectAndClass(int id_teacher, int id_subject, Class student_class){
+    public List<GradeForStudent> readGradeStudentBySubjectAndClass(int id_teacher, int id_subject, int id_class){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
         List<GradeForStudent> list = new ArrayList<>();
         try {
             conn = connection.connect();
 
-            sql = "SELECT s.full_name, CASE WHEN g.grade_type = '1' THEN g.value END AS n1, CASE WHEN g.grade_type = '2' THEN g.value END AS n2 FROM subjects sub JOIN grades g on g.fk_subject = sub.id_subject JOIN students s on s.id_student = g.fk_student JOIN class c on c.id_class = s.fk_class JOIN has h on h.fk_class = c.id_class JOIN teach t on h.fk_teach = t.id JOIN teachers te on te.id_employee = t.id WHERE te.id_employee = ? AND EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) AND sub.id_subject = ? AND c.series = ? AND c.classroom = ?";
+            sql = "SELECT s.full_name,s.id_student, CASE WHEN g" +
+                    ".grade_type= '1' THEN g.value END AS n1,CASE WHEN g.grade_type = '1' " +
+                    "THEN g.id_grade END AS idn1, CASE WHEN g.grade_type = " +
+                    "'2' THEN g.value END AS n2, CASE WHEN g.grade_type = '2'" +
+                    " THEN g.id_grade END AS idn2 FROM subjects sub JOIN " +
+                    "grades g on g.fk_subject = sub.id_subject JOIN students " +
+                    "s on s.id_student = g.fk_student JOIN class c on c" +
+                    ".id_class = s.fk_class JOIN has h on h.fk_class = c" +
+                    ".id_class JOIN teach t on h.fk_teach = t.id JOIN " +
+                    "teachers te on te.id_employee = t.id WHERE te" +
+                    ".id_employee = ? AND EXTRACT(YEAR FROM g.send_at) = " +
+                    "EXTRACT(YEAR FROM CURRENT_DATE) AND sub.id_subject = ? " +
+                    "AND c.id_class = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_teacher);
             pstmt.setInt(2,id_subject);
-            pstmt.setString(3,String.valueOf(student_class.getSeries()));
-            pstmt.setString(4,String.valueOf(student_class.getClassroom()));
+            pstmt.setInt(3,id_class);
 
             ResultSet rs = pstmt.executeQuery();
             GradeForStudent gradeForStudent;
             while (rs.next()) {
                 String full_name = rs.getString("full_name");
+                Integer id_student = rs.getInt("id_student");
                 Double n1 = rs.getDouble("n1");
+                if(rs.wasNull()){
+                    n1 = -1.0;
+                }
+                Integer idn1 = rs.getInt("idn1");
                 Double n2 = rs.getDouble("n2");
+                if(rs.wasNull()){
+                    n2 = -1.0;
+                }
+                Integer idn2 = rs.getInt("idn2");
                 gradeForStudent =
-                        new GradeForStudent(full_name,n1,n2);
+                        new GradeForStudent(full_name,id_student,n1,idn1,n2,
+                                idn2);
                 list.add(gradeForStudent);
             }
             return list;

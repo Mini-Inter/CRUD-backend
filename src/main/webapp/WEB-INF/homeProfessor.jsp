@@ -7,7 +7,7 @@
     HomeTeacherInfo homeTeacherInfo =
             (HomeTeacherInfo) request.getAttribute("homeTeacherInfo");
     List<Subject> subjects = (List<Subject>) session.getAttribute("subjects");
-    int idSubject = (Integer) session.getAttribute("subject");
+    Integer idSubject = (Integer) session.getAttribute("subject");
 %>
 <html>
 <head>
@@ -34,6 +34,9 @@
             %>
         </select>
         <input value="Trocar matéria" type="submit">
+    </form>
+    <form action="updateGrade" method="post">
+        <input type="submit" value="Ver notas alunos">
     </form>
 </body>
 </html>
