@@ -53,6 +53,10 @@ public class AuthenticationSystem extends HttpServlet {
 
             switch (verifyLogin(login, password)) {
                 case (2) -> {
+                    TeachersDAO teach = new TeachersDAO();
+                    int idTeacher = teach.readByLogin(login).getId();
+                    HttpSession session = req.getSession();
+                    session.setAttribute("idTeacher", idTeacher);
                     req.getRequestDispatcher("/WEB-INF/homeProfessor.jsp").forward(req, resp);
                 }
                 case (1) -> {

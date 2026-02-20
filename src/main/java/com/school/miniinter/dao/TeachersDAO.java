@@ -120,6 +120,38 @@ public class TeachersDAO {
             connection.disconnect(conn);
         }
     }
+    public Teacher readByLogin(String login) {
+            ConnectionFactory connection = new ConnectionFactory();
+            Connection conn = null;
+            ResultSet rset = null;
+
+            try {
+                conn = connection.connect();
+
+                String sql = "SELECT * FROM teachers WHERE login=?";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+
+                pstmt.setString(1,login);
+
+                rset = pstmt.executeQuery();
+                if (rset.next()) {
+                    return new Teacher(
+                            rset.getInt("id_employee"),
+                            rset.getString("first_name"),
+                            rset.getString("last_name"),
+                            login,
+                            rset.getString("password"),
+                            rset.getDate("birth_date"),
+                            rset.getDate("created_at")
+                    );
+                }
+            } catch(SQLException sqle){
+                sqle.printStackTrace();
+            } finally {
+                connection.disconnect(conn);
+            }
+            return null;
+    }
     public boolean isTeacher(String login, String pw) throws IllegalArgumentException {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;

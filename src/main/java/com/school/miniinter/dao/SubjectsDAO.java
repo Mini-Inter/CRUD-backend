@@ -99,7 +99,7 @@ public class SubjectsDAO {
             connection.disconnect(conn);
         }
     }
-    public List<Subject> readByStudent(int idSubject) {
+    public List<Subject> readByStudent(int idStudent) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
         ResultSet rset = null;
@@ -116,7 +116,41 @@ public class SubjectsDAO {
                 "WHERE id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setInt(1, idSubject);
+            pstmt.setInt(1, idStudent);
+
+            rset = pstmt.executeQuery();
+            while (rset.next()) {
+                subjects.add(new Subject(
+                        rset.getInt("id_subject"),
+                        rset.getString("description"),
+                        rset.getString("name")
+                ));
+            }
+
+            return subjects;
+        } catch(SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        } finally {
+            connection.disconnect(conn);
+        }
+    }
+    public List<Subject> readByTeacher(int idTeacher) {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        ResultSet rset = null;
+        List<Subject> subjects = new LinkedList<>();
+
+        try {
+            conn = connection.connect();
+
+            String sql = "SELECT S.name FROM teachers T " +
+            "JOIN teach P ON T.id_employee = P.fk_teacher " +
+            "JOIN subjects S on P.fk_subject = S.id_subject " +
+            "WHERE T.id_employee = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, idTeacher);
 
             rset = pstmt.executeQuery();
             while (rset.next()) {
