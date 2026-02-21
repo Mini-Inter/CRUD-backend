@@ -42,13 +42,18 @@ public class Observations extends HttpServlet {
 
         request.setAttribute("List",list);
 
-        request.getRequestDispatcher("/AllObservations").forward(request,
+        request.getRequestDispatcher("WEB-INF/student/observations.jsp").forward(request,
                 response);
     }
 
     public void readReportsByType(int id_student,
                                   String type, HttpServletRequest request,
-                           HttpServletResponse response){
-        reportsDAO.readCompleteInfoReportByType(id_student,type);
+                           HttpServletResponse response) throws ServletException, IOException{
+        List<CompleteInformationReport> list =
+                reportsDAO.readCompleteInfoReportByType(id_student,type);
+        request.setAttribute("List",list);
+
+        request.getRequestDispatcher("WEB-INF/student/observations.jsp").forward(request,
+                response);
     }
 }

@@ -2,6 +2,7 @@ package com.school.miniinter.dao;
 
 import com.school.miniinter.connection.ConnectionFactory;
 import com.school.miniinter.models.Grades.GradeForSubject;
+import com.school.miniinter.models.Grades.SimpleGrade;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,36 +14,54 @@ public class GradeDAO {
     public List<GradeForSubject> readAllGradesForStudent(int id_student) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
-        List<GradeForSubject> gradeForSubjects = new ArrayList<>();
+        List<GradeForSubject> grades = new ArrayList<>();
 
         try{
             conn = connection.connect();
 
-            sql = "SELECT sub.name as name_subject, CASE WHEN g.grade_type " +
-                    "LIKE '1' THEN g.value END AS n1, CASE WHEN g.grade_type LIKE '2' THEN g.value END AS n2 FROM students s JOIN grades g on s.id_student = g.fk_student AND EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) JOIN subjects sub on sub.id_subject = g.fk_subject WHERE s.id_student = ?";
+            sql = "SELECT sub.name as name_subject, g.value AS value, g.grade_type AS grade_type FROM students s JOIN grades g on s.id_student = g.fk_student AND EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) JOIN subjects sub on sub.id_subject = g.fk_subject WHERE s.id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1, id_student);
 
             ResultSet rs = pstmt.executeQuery();
-            String name_subject;
-            Double n1;
-            Double n2;
+
             while (rs.next()) {
-                name_subject = rs.getString("name_subject");
-                n1 = rs.getDouble("n1");
-                if(rs.wasNull()){
-                    n1 = -1.0;
+                GradeForSubject grade = new GradeForSubject();
+                boolean existe = false;
+
+                if (!grades.isEmpty()) {
+                    for (GradeForSubject grade1 : grades) {
+                        if (rs.getString("name_subject").equals(grade1.getSubject())) {
+                            existe = true;
+
+                            if (grade1.getN1() == -1.0) {
+                                grade1.setN1(rs.getDouble("value"));
+                            } else {
+                                grade1.setN2(rs.getDouble("value"));
+                            }
+                            grade1.setAverage();
+                            grade1.setSituation();
+                        }
+                    }
                 }
-                n2 = rs.getDouble("n2");
-                if(rs.wasNull()){
-                    n2 = -1.0;
+
+                if (!existe) {
+                    int type = rs.getInt("grade_type");
+                    grade.setSubject(rs.getString("name"));
+                    if (type == 1) {
+                        grade.setN1(rs.getDouble("value"));
+                        grade.setN2();
+                    } else if (type == 2) {
+                        grade.setN1();
+                        grade.setN2(rs.getDouble("value"));
+                    }
+                    grade.setAverage();
+                    grade.setSituation();
+                    grades.add(grade);
                 }
-                GradeForSubject gradeForSubject =
-                        new GradeForSubject(name_subject,n1,n2);
-                gradeForSubjects.add(gradeForSubject);
             }
-            return gradeForSubjects;
+            return grades;
         } catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
@@ -73,8 +92,7 @@ public class GradeDAO {
         }
     }
 
-    public boolean insertGradeByStudent(Double value, Integer id_student,
-                                    Integer id_subject, String grade_type){
+    public boolean insertGradeByStudent(SimpleGrade simpleGrade){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
         try{
@@ -84,10 +102,10 @@ public class GradeDAO {
                     " VALUES(?,?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setInt(1,id_student);
-            pstmt.setInt(2,id_subject);
-            pstmt.setString(3,grade_type);
-            pstmt.setDouble(4,value);
+            pstmt.setInt(1,simpleGrade.getId_student());
+            pstmt.setInt(2,simpleGrade.getId_subject());
+            pstmt.setString(3,simpleGrade.getGrade_type());
+            pstmt.setDouble(4,simpleGrade.getValue());
 
             return pstmt.execute();
         }catch(SQLException sqle){

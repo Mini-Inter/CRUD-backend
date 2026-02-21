@@ -5,7 +5,7 @@ import java.util.List;
 public class HomeTeacherInfo {
 
     private String full_name;
-    private List<String> subjects;
+    private String subject;
     private Integer amountStudents;
     private Integer amountClass;
     private Integer amountObservations;
@@ -18,12 +18,12 @@ public class HomeTeacherInfo {
         this.full_name = full_name;
     }
 
-    public List<String> getSubjects() {
-        return subjects;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setSubjects(List<String> subjects) {
-        this.subjects = subjects;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public Integer getAmountStudents() {
@@ -54,7 +54,7 @@ public class HomeTeacherInfo {
     public String toString() {
         return "HomeTeacherInfo{" +
                 "full_name='" + full_name + '\'' +
-                ", subjects=" + subjects +
+                ", subjects=" + subject +
                 ", amountStudents=" + amountStudents +
                 ", amountClass=" + amountClass +
                 ", amountObservations=" + amountObservations +

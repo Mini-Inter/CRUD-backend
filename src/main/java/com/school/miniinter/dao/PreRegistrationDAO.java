@@ -12,17 +12,7 @@ import java.util.List;
 
 public class PreRegistrationDAO {
 
-//  Métodos
-//
-// - Criar;
-// - Buscar;
-//   - Por ID
-//   - Por nome
-// - Atualizar;
-//   - Por ID
-// - Deletar;
-//   - Por ID
-
+    String sql;
     public int insert(PreRegistration preReg){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -30,7 +20,7 @@ public class PreRegistrationDAO {
         try {
             conn = connection.connect();
 
-            String sql = "INSERT INTO preRegistration" +
+            sql = "INSERT INTO pre_registration" +
                     "(cpf)" +
                     "VALUES(?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -49,16 +39,38 @@ public class PreRegistrationDAO {
             connection.disconnect(conn);
         }
     }
-    public PreRegistration read(int id) {
+
+    public int insertIdStudentOnCpf(Integer idStudent, int idCpf){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
-        ResultSet rset = null;
-        PreRegistration preReg;
 
+        try{
+            conn = connection.connect();
+
+            sql = "UPDATE students SET fk_student = ? WHERE id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,idStudent);
+            pstmt.setInt(2,idCpf);
+
+            return pstmt.executeUpdate();
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return -1;
+        }finally {
+            connection.disconnect(conn);
+        }
+    }
+
+    public PreRegistration readById(int id) {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        ResultSet rset;
+        PreRegistration preReg;
         try {
             conn = connection.connect();
 
-            String sql = "SELECT * FROM preRegistration WHERE id=?";
+            sql = "SELECT * FROM pre_registration WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id);
@@ -80,13 +92,12 @@ public class PreRegistrationDAO {
     public PreRegistration read(String cpf) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
-        ResultSet rset = null;
-        List<PreRegistration> preRegs = new LinkedList<>();
+        ResultSet rset;
 
         try {
             conn = connection.connect();
 
-            String sql = "SELECT * FROM preRegistration WHERE cpf=?";
+            sql = "SELECT * FROM pre_registration WHERE cpf=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, cpf);
@@ -107,13 +118,14 @@ public class PreRegistrationDAO {
             connection.disconnect(conn);
         }
     }
+
     public int update(PreRegistration preReg) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
         try {
             conn = connection.connect();
-            String sql = "UPDATE preRegistration SET cpf=? WHERE id=?";
+            sql = "UPDATE pre_registration SET cpf=? WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, preReg.getCpf());
@@ -138,7 +150,7 @@ public class PreRegistrationDAO {
         try {
             conn = connection.connect();
 
-            String sql = "DELETE FROM preRegistration WHERE id=?";
+            sql = "DELETE FROM pre_registration WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id);
@@ -162,7 +174,7 @@ public class PreRegistrationDAO {
         try {
             conn = connection.connect();
 
-            String sql = "DELETE FROM preRegistration WHERE cpf=?";
+            sql = "DELETE FROM pre_registration WHERE cpf=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, cpf);
