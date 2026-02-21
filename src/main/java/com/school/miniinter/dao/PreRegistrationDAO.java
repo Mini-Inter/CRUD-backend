@@ -30,7 +30,7 @@ public class PreRegistrationDAO {
         try {
             conn = connection.connect();
 
-            String sql = "INSERT INTO pre_registration" +
+            String sql = "INSERT INTO preRegistration" +
                     "(cpf)" +
                     "VALUES(?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -58,7 +58,7 @@ public class PreRegistrationDAO {
         try {
             conn = connection.connect();
 
-            String sql = "SELECT * FROM pre_registration WHERE id=?";
+            String sql = "SELECT * FROM preRegistration WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id);
@@ -86,7 +86,7 @@ public class PreRegistrationDAO {
         try {
             conn = connection.connect();
 
-            String sql = "SELECT * FROM pre_registration WHERE cpf=?";
+            String sql = "SELECT * FROM preRegistration WHERE cpf=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, cpf);
@@ -113,7 +113,7 @@ public class PreRegistrationDAO {
 
         try {
             conn = connection.connect();
-            String sql = "UPDATE pre_registration SET cpf=? WHERE id=?";
+            String sql = "UPDATE preRegistration SET cpf=? WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, preReg.getCpf());
@@ -138,7 +138,7 @@ public class PreRegistrationDAO {
         try {
             conn = connection.connect();
 
-            String sql = "DELETE FROM pre_registration WHERE id=?";
+            String sql = "DELETE FROM preRegistration WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id);
@@ -162,7 +162,7 @@ public class PreRegistrationDAO {
         try {
             conn = connection.connect();
 
-            String sql = "DELETE FROM pre_registration WHERE cpf=?";
+            String sql = "DELETE FROM preRegistration WHERE cpf=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, cpf);
