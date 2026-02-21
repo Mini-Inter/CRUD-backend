@@ -26,7 +26,7 @@ public class TeacherProfile extends HttpServlet {
         Integer id_teacher = (Integer) session.getAttribute("idTeacher");
         Integer subject = (Integer)  session.getAttribute("subject");
 
-        String name_subject = subjectsDAO.readById(subject).getName();
+        String name_subject = subjectsDAO.read(subject).getName();
 
         CompleteInfo completeInfo =
                 teachersDAO.readCompleteInfoTeacher(id_teacher);

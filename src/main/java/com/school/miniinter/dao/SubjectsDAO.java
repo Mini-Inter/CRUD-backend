@@ -3,10 +3,7 @@ package com.school.miniinter.dao;
 import com.school.miniinter.connection.ConnectionFactory;
 import com.school.miniinter.models.Subject.Subject;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,7 +36,36 @@ public class SubjectsDAO {
             connection.disconnect(conn);
         }
     }
-    public Subject readById(int id) {
+    public List<Subject> read() {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        ResultSet rset = null;
+        List<Subject> subjects = new LinkedList<>();
+
+        try {
+            conn = connection.connect();
+
+            String sql = "SELECT * FROM Subjects";
+            Statement pstmt = conn.createStatement();
+
+            rset = pstmt.executeQuery(sql);
+            while (rset.next()) {
+                subjects.add(new Subject(
+                        rset.getInt("id"),
+                        rset.getString("description"),
+                        rset.getString("name")
+                ));
+            }
+
+            return subjects;
+        } catch(SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        } finally {
+            connection.disconnect(conn);
+        }
+    }
+    public Subject read(int id) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
         ResultSet rset = null;
