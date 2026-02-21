@@ -32,20 +32,6 @@
         </select>
         <input value="Trocar matéria" type="submit">
     </form>
-    <form action="<%=request.getContextPath()%>/updateGrade?changeClass=1"
-          method="post">
-        <label for="class"></label>
-        <select name="class" id="class">
-            <%
-                for(Class c:listClass){
-            %>
-            <option value="<%=c.getId()%>"><%=c%></option>
-            <%
-                }
-            %>
-        </select>
-        <input value="Trocas Classe" type="submit">
-    </form>
     <table>
         <tr>
             <th>Nome completo</th>
@@ -78,5 +64,19 @@
             }
         %>
     </table>
+    <form action="<%=request.getContextPath()%>/updateGrade?changeClass=1"
+          method="post">
+        <label for="class"></label>
+        <select name="class" id="class">
+            <%
+                for(Class c:listClass){
+            %>
+            <option value="<%=c.getId()%>"><%=c%></option>
+            <%
+                }
+            %>
+        </select>
+        <input value="Trocas Classe" type="submit">
+    </form>
 </body>
 </html>

@@ -14,7 +14,6 @@
     <title>Vidya - Professor</title>
 </head>
 <body>
-    <form action="<%=request.getContextPath()%>/teacherStudents" method="post"><input value="Alunos" type="submit"></form>
     <p><%=homeTeacherInfo%></p>
     <form action="<%=request.getContextPath()%>/changeSubject" method="post">
         <label for="subject"></label>
@@ -37,6 +36,12 @@
     </form>
     <form action="updateGrade" method="post">
         <input type="submit" value="Ver notas alunos">
+    </form>
+    <form action="<%=request.getContextPath()%>/teacherStudents" method="post">
+        <input value="Alunos" type="submit">
+    </form>
+    <form action="<%=request.getContextPath()%>/teacherReports" method="post">
+        <input value="Observações" type="submit">
     </form>
 </body>
 </html>

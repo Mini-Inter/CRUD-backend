@@ -19,20 +19,21 @@ public class StudentGrades extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        Object idTeacherRaw = session.getAttribute("idTeacher");
         String idStudentRaw = req.getParameter("student");
 
-        if (idTeacherRaw == null || idStudentRaw == null || idStudentRaw.isBlank() || idStudentRaw.equals("null")) {
+        if (idStudentRaw == null || idStudentRaw.isBlank() || idStudentRaw.equals("null")) {
             resp.sendRedirect(req.getContextPath()+"/authentication/login.jsp");
         } else {
             int idStudent = Integer.parseInt(idStudentRaw);
             StudentsDAO stud = new StudentsDAO();
-            TeachersDAO teach = new TeachersDAO();
             Summary student = stud.readSummary(idStudent);
-            List<GradeForSubject> grades = teach.readGradesByStudent(idStudent);
             session.setAttribute("student", student);
+
+            TeachersDAO teach = new TeachersDAO();
+            List<GradeForSubject> grades = teach.readGradesByStudent(idStudent);
             session.setAttribute("grades", grades);
-            req.getRequestDispatcher("/WEB-INF/studentGrades.jsp").forward(req, resp);
+
+            req.getRequestDispatcher("/WEB-INF/teacher/studentGrades.jsp").forward(req, resp);
         }
     }
 }

@@ -33,7 +33,7 @@ public class HomeTeacher extends HttpServlet {
 
             request.setAttribute("homeTeacherInfo",homeTeacherInfo);
 
-            request.getRequestDispatcher("WEB-INF/homeProfessor.jsp").forward(request,response);
+            request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request,response);
         }
     }
 }

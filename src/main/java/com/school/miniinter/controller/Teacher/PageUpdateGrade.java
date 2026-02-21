@@ -42,7 +42,7 @@ public class PageUpdateGrade extends HttpServlet {
                         idSubject);
 
                 if (list.isEmpty()) {
-                    request.getRequestDispatcher("WEB-INF/homeProfessor.jsp").forward(request
+                    request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request
                             , response);
                 }
                 request.setAttribute("listClass", list);
@@ -55,14 +55,14 @@ public class PageUpdateGrade extends HttpServlet {
 
                 request.setAttribute("listGradeByStudent", list1);
 
-                request.getRequestDispatcher("WEB-INF/updateGradeTeacher.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/teacher/updateGradeTeacher.jsp").forward(request, response);
             }else if(url.equals("/updateGrade") && changeClass.equals("1")) {
 
                 List<Class> list = classDAO.readClassByTeacherAndSubject(idTeacher,
                         idSubject);
 
                 if(list.isEmpty()){
-                    request.getRequestDispatcher("WEB-INF/homeProfessor.jsp").forward(request
+                    request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request
                             , response);
                 }
 
@@ -78,7 +78,7 @@ public class PageUpdateGrade extends HttpServlet {
 
                 request.setAttribute("listGradeByStudent", list1);
 
-                request.getRequestDispatcher("WEB-INF/updateGradeTeacher.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/teacher/updateGradeTeacher.jsp").forward(request, response);
 
             }else if(url.equals("/updateData")){
 

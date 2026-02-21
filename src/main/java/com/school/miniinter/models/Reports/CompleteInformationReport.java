@@ -4,26 +4,16 @@ import java.util.Date;
 
 public class CompleteInformationReport {
 
-    private String subject;
     private String teacher_name;
     private String description;
     private String type;
     private Date send_at;
 
-    public CompleteInformationReport(String subject, String teacher_name, String description, String type, Date send_at) {
-        this.subject = subject;
+    public CompleteInformationReport(String teacher_name, String description, String type, Date send_at) {
         this.teacher_name = teacher_name;
         this.description = description;
         this.type = type;
         this.send_at = send_at;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
     }
 
     public String getTeacher_name() {

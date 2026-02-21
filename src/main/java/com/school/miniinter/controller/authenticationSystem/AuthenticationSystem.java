@@ -106,7 +106,7 @@ public class AuthenticationSystem extends HttpServlet {
             if (preDAO.read(cpf) != null) {
                 HttpSession session = req.getSession();
                 session.setAttribute("preRegistered", true);
-                req.getRequestDispatcher("/WEB-INF/signUp.jsp").forward(req, resp);
+                req.getRequestDispatcher("/WEB-INF/student/signUp.jsp").forward(req, resp);
             } else
                 throw new RuntimeException("CPF não cadastrado para registro!");
         } catch (RuntimeException exc) {
@@ -164,7 +164,7 @@ public class AuthenticationSystem extends HttpServlet {
                 session.setAttribute("email", login);
                 session.setAttribute("pw", password);
                 session.setAttribute("pc", passConf);
-                req.getRequestDispatcher("/WEB-INF/signUp.jsp").forward(req, resp);
+                req.getRequestDispatcher("/WEB-INF/student/signUp.jsp").forward(req, resp);
             }
         } else {
             HttpSession session = req.getSession();
