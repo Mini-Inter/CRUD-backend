@@ -96,4 +96,19 @@ public class CompleteInfo {
     public void setFormated_address(String formated_address) {
         this.formated_address = formated_address;
     }
+
+    @Override
+    public String toString() {
+        return "CompleteInfo{" +
+                "full_name='" + full_name + '\'' +
+                ", subject='" + subject + '\'' +
+                ", created_at=" + created_at +
+                ", school_year=" + school_year +
+                ", status='" + status + '\'' +
+                ", birth_date=" + birth_date +
+                ", login='" + login + '\'' +
+                ", phone='" + phone + '\'' +
+                ", formated_address='" + formated_address + '\'' +
+                '}';
+    }
 }

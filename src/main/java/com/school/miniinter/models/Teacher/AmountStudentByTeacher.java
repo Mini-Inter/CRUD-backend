@@ -26,4 +26,12 @@ public class AmountStudentByTeacher {
     public void setAmountStudent(Integer amountStudent) {
         this.amountStudent = amountStudent;
     }
+
+    @Override
+    public String toString() {
+        return "AmountStudentByTeacher{" +
+                "teacherClass=" + teacherClass +
+                ", amountStudent=" + amountStudent +
+                '}';
+    }
 }
