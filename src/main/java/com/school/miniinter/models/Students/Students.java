@@ -1,5 +1,5 @@
 package com.school.miniinter.models.Students;
-import java.util.Date;
+import java.sql.Date;
 
 public class Students {
     private int id_student;
@@ -13,12 +13,12 @@ public class Students {
     private String created_at;
 
     public Students(int id_student, int fk_class,
-    String full_name, String first_name, String last_name, Date birth_date, String login, String password, String created_at) {
+    String full_name, Date birth_date, String login, String password, String created_at) {
         this.id_student = id_student;
         this.fk_class = fk_class;
         this.full_name = full_name;
-        this.first_name = first_name;
-        this.last_name = last_name;
+        this.first_name = full_name.substring(0, full_name.indexOf(" "));
+        this.last_name = full_name.substring(full_name.lastIndexOf(" "));
         this.birth_date = birth_date;
         this.login = login;
         this.password = password;
@@ -49,22 +49,24 @@ public class Students {
 
     public void setFull_name(String full_name) {
         this.full_name = full_name;
+        setLast_name();
+        setFirst_name();
     }
 
     public String getFirst_name() {
         return first_name;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirst_name() {
+        this.first_name = full_name.substring(0, full_name.indexOf(" "));
     }
 
     public String getLast_name() {
         return last_name;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setLast_name() {
+        this.last_name = full_name.substring(full_name.lastIndexOf(" "));
     }
 
     public Date getBirth_date() {

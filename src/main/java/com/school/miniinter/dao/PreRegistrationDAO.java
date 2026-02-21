@@ -70,7 +70,7 @@ public class PreRegistrationDAO {
         try {
             conn = connection.connect();
 
-            String sql = "SELECT * FROM pre_registration WHERE id=?";
+            sql = "SELECT * FROM pre_registration WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id);
@@ -89,8 +89,7 @@ public class PreRegistrationDAO {
         }
         return null;
     }
-
-    public PreRegistration readByCpf(String cpf) {
+    public PreRegistration read(String cpf) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
         ResultSet rset;
@@ -98,7 +97,7 @@ public class PreRegistrationDAO {
         try {
             conn = connection.connect();
 
-            String sql = "SELECT * FROM pre_registration WHERE cpf=?";
+            sql = "SELECT * FROM pre_registration WHERE cpf=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, cpf);
@@ -126,7 +125,7 @@ public class PreRegistrationDAO {
 
         try {
             conn = connection.connect();
-            String sql = "UPDATE pre_registration SET cpf=? WHERE id=?";
+            sql = "UPDATE pre_registration SET cpf=? WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, preReg.getCpf());
@@ -144,15 +143,14 @@ public class PreRegistrationDAO {
             connection.disconnect(conn);
         }
     }
-
-    public int deleteById(int id) {
+    public int delete(int id) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
         try {
             conn = connection.connect();
 
-            String sql = "DELETE FROM pre_registration WHERE id=?";
+            sql = "DELETE FROM pre_registration WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id);
@@ -169,15 +167,14 @@ public class PreRegistrationDAO {
             connection.disconnect(conn);
         }
     }
-
-    public int deleteByCpf(String cpf) {
+    public int delete(String cpf) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
         try {
             conn = connection.connect();
 
-            String sql = "DELETE FROM pre_registration WHERE cpf=?";
+            sql = "DELETE FROM pre_registration WHERE cpf=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, cpf);

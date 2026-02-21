@@ -8,6 +8,7 @@ import com.school.miniinter.models.Students.CompleteInfo;
 import com.school.miniinter.models.Students.Students;
 import com.school.miniinter.connection.*;
 import com.school.miniinter.models.Students.Summary;
+import com.school.miniinter.models.Teacher.Teacher;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -76,32 +77,38 @@ public class StudentsDAO {
 
 //   Precisa de mais informação de funcionamento, pois não sabemos o que
 //   precisa ser mudado!
-    public int update(int id){
-        ConnectionFactory connection = new ConnectionFactory();
-        Connection conn = null;
-        try {
-            conn = connection.connect();
-            sql = "UPDATE students " +
-                    "SET   WHERE id=?";
-//            Precisa de mais algumas informações do que será mudado
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+    public int update(Students student) {
+    ConnectionFactory connection = new ConnectionFactory();
+    Connection conn = null;
 
-//            Não esquecer de mudar o pstmt, pois o id não será mais o indice 1
-            pstmt.setInt(1,id);
+    try {
+        conn = connection.connect();
 
-            if(pstmt.executeUpdate() == 0){
-                return 0;
-            }else{
-                return 1;
-            }
-        }catch(SQLException sqle){
-            sqle.printStackTrace();
-            return -1;
+        sql = "UPDATE students SET fk_class = ?, full_name = ?, first_name = ?, last_name = ?, birth_date = ?, login =?, password = ?" +
+                " WHERE id=?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+        pstmt.setInt(1, student.getFk_class());
+        pstmt.setString(2, student.getFull_name());
+        pstmt.setString(3, student.getFirst_name());
+        pstmt.setString(4, student.getLast_name());
+        pstmt.setDate(5, student.getBirth_date());
+        pstmt.setString(6, student.getLogin());
+        pstmt.setString(7, student.getPassword());
+        pstmt.setInt(8, student.getId_student());
+
+        if (pstmt.executeUpdate() == 0) {
+            return 0;
+        } else {
+            return 1;
         }
-        finally{
-            connection.disconnect(conn);
-        }
+    } catch (SQLException sqle) {
+        sqle.printStackTrace();
+        return -1;
+    } finally {
+        connection.disconnect(conn);
     }
+}
 
     public Students readById(int id_student){
         ConnectionFactory connection = new ConnectionFactory();
@@ -127,8 +134,7 @@ public class StudentsDAO {
                 String password = rs.getString("password");
                 String created_at = rs.getString("created_at");
                 student = new Students(id_student,fk_class,full_name,
-                        first_name,
-                        last_name,birth_date,login,password,created_at);
+                        birth_date,login,password,created_at);
             }
 
             return student;
@@ -164,8 +170,7 @@ public class StudentsDAO {
                 String password = rs.getString("password");
                 String created_at = rs.getString("created_at");
 
-                list.add(new Students(id_student,fk_class,full_name,first_name,
-                        last_name,birth_date,login,password,created_at));
+                list.add(new Students(id_student,fk_class,full_name,birth_date,login,password,created_at));
             }
             return list;
         }catch(SQLException sqle){
@@ -231,9 +236,7 @@ public class StudentsDAO {
                 String password = rs.getString("password");
                 String created_at = rs.getString("created_at");
 
-                Students students1 = new Students(id_student,fk_class,full_name,
-                        first_name,
-                        last_name,birth_date,login,password,created_at);
+                Students students1 = new Students(id_student,fk_class,full_name,birth_date,login,password,created_at);
                 students.add(students1);
             }
             return students;
@@ -268,9 +271,7 @@ public class StudentsDAO {
                 int id_student = rs.getInt("id_student");
                 String password = rs.getString("password");
                 String created_at = rs.getString("created_at");
-                student = new Students(id_student,fk_class,full_name,
-                        first_name,
-                        last_name,birth_date,login,password,created_at);
+                student = new Students(id_student,fk_class,full_name,birth_date,login,password,created_at);
             }
 
             return student;

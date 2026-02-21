@@ -9,17 +9,18 @@ public class Teacher {
     private int id;
     private String firstName;
     private String lastName;
+    private String name;
     private String login;
     private String password;
     private Date birthDate;
     private Date createdAt;
-    private List<Subject> materias;
 
     // Métodos
-    public Teacher(int id, String firstName, String lastName, String login, String password, Date birthDate, Date createdAt) {
+    public Teacher(int id, String name, String login, String password, Date birthDate, Date createdAt) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
+        this.firstName = name.substring(0, name.indexOf(" "));
+        this.lastName = name.substring(name.lastIndexOf(" "));
         this.login = login;
         this.password = password;
         this.birthDate = birthDate;
@@ -31,17 +32,25 @@ public class Teacher {
     public void setId(int id) {
         this.id = id;
     }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+        setFirstName();
+        setLastName();
+    }
     public String getFirstName() {
         return firstName;
     }
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirstName() {
+        this.firstName = this.name.substring(0, name.indexOf(" "));
     }
     public String getLastName() {
         return lastName;
     }
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastName() {
+        this.lastName = name.substring(name.lastIndexOf(" "));
     }
     public String getLogin() {
         return login;
@@ -63,8 +72,5 @@ public class Teacher {
     }
     public Date getCreatedAt() {
         return createdAt;
-    }
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 }
