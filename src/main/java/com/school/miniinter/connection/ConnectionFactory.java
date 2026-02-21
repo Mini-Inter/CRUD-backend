@@ -20,7 +20,7 @@ public class ConnectionFactory {
         String host = envVars.get("HOST");
         String port = envVars.get("PORT");
         String database = envVars.get("DATABASE");
-        String user = envVars.get("USERNAME");
+        String user = envVars.get("USER");
         String password = envVars.get("PASSWORD");
         try {
             conn = DriverManager.getConnection("jdbc:postgresql://" + host + ":" + port + "/" + database, user, password);
