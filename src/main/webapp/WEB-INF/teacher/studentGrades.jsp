@@ -24,9 +24,12 @@
 <body>
 
     <h1>Aluno: <%=student.getName()%></h1>
-    <p>Turma: <%=student.getSeries()%>°<%=student.getClassroom()%>></p>
+    <p>Turma: <%=student.getSeries()%>°<%=student.getClassroom()%></p>
     <p>Matrícula: <%=student.getMatricula()%></p>
     <p>Ano Letivo: <%=LocalDate.now().getYear()%></p>
+
+    <form action="<%=request.getContextPath()%>/studentReports?student=<%=student.getMatricula()%>" method="post"><input value="Observações" type="submit"></form>
+    <form action="<%=request.getContextPath()%>/studentGrades?student=<%=student.getMatricula()%>" method="post"><input value="Notas" type="submit"></form>
 
     <table>
         <tr>

@@ -33,7 +33,7 @@ public class GradeCard extends HttpServlet {
             request.setAttribute("GradeCard", gradeCard);
 
 //        Essa caminho deve ser mudado quando chegar o frontend
-            request.getRequestDispatcher("WEB-INF/gradeCard.jsp").forward(request,
+            request.getRequestDispatcher("WEB-INF/student/gradeCard.jsp").forward(request,
                     response);
         }
     }

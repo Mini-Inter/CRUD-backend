@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpSession;
 
 
 import java.io.IOException;
-import java.rmi.ServerException;
 
 @WebServlet(name="HomeTeacher", value={"/homeTeacher"})
 public class HomeTeacher extends HttpServlet {
@@ -33,7 +32,7 @@ public class HomeTeacher extends HttpServlet {
 
             request.setAttribute("homeTeacherInfo",homeTeacherInfo);
 
-            request.getRequestDispatcher("WEB-INF/homeProfessor.jsp").forward(request,response);
+            request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request,response);
         }
     }
 }

@@ -41,7 +41,7 @@ public class TeacherStudents extends HttpServlet {
                 summaries.add(stud.readSummary(student.getId_student(), idSubject));
             session.setAttribute("students", summaries);
 
-            req.getRequestDispatcher("/WEB-INF/teacherStudents.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/teacher/teacherStudents.jsp").forward(req, resp);
         }
     }
 
