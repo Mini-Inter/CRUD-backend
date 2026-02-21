@@ -305,6 +305,72 @@ public class TeachersDAO {
         return null;
     }
 
+    public List<GradeForSubject> readGradesByStudent(int id_student) {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        List<GradeForSubject> grades = new LinkedList<>();
+        try {
+            conn = connection.connect();
+
+            sql = "SELECT S.full_name ,D.name, G.grade_type, G.value FROM students S " +
+                    "JOIN class C ON S.fk_class = C.id_class " +
+                    "JOIN has H ON C.id_class = H.fk_class " +
+                    "JOIN teach P ON H.fk_teach = P.id " +
+                    "JOIN teachers T ON P.fk_teacher = T.id_employee " +
+                    "JOIN grades G ON S.id_student = G.fk_student " +
+                    "RIGHT JOIN subjects D ON P.fk_subject = D.id_subject AND G.fk_subject = D.id_subject " +
+                    "WHERE EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) AND S.id_student = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,id_student);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                GradeForSubject grade = new GradeForSubject();
+                boolean existe = false;
+
+                if (!grades.isEmpty()) {
+                    for (GradeForSubject grade1 : grades) {
+                        if (rs.getString("name").equals(grade1.getSubject())) {
+                            existe = true;
+
+                            if (grade1.getN1() == -1.0) {
+                                grade1.setN1(rs.getDouble("value"));
+                            } else {
+                                grade1.setN2(rs.getDouble("value"));
+                            }
+                            grade1.setAverage();
+                            grade1.setSituation();
+                        }
+                    }
+                }
+
+                if (!existe) {
+                    int type = rs.getInt("grade_type");
+                    grade.setSubject(rs.getString("name"));
+                    if (type == 1) {
+                        grade.setN1(rs.getDouble("value"));
+                        grade.setN2();
+                    } else if (type == 2) {
+                        grade.setN1();
+                        grade.setN2(rs.getDouble("value"));
+                    }
+                    grade.setAverage();
+                    grade.setSituation();
+                    grades.add(grade);
+                }
+            }
+
+            return grades;
+        } catch(SQLException sqle){
+            sqle.printStackTrace();
+        } finally {
+            connection.disconnect(conn);
+        }
+        return null;
+    }
+
     public boolean isTeacher(String login, String pw) throws IllegalArgumentException {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;

@@ -11,7 +11,6 @@
 <%
     List<Summary> students = (List<Summary>) session.getAttribute("students");
     List<Subject> subjects = (List<Subject>) session.getAttribute("subjects");
-
 %>
 <html>
 <head>
@@ -19,7 +18,7 @@
 </head>
 <body>
     <h1>Meus Alunos</h1>
-    <form action="<%=request.getContextPath()%>/teacherStudents" method="post">
+    <form action="<%=request.getContextPath()%>/teacherStudents>" method="post">
         <input value="" name="matricula" id="matricula" placeholder="Buscar por matrícula" type="number">
         <input value="Buscar" type="submit">
     </form>
@@ -32,37 +31,38 @@
     <%
         } else {
     %>
-        <table>
+        <table style="border: 1px">
             <tr>
                 <th>Nome</th>
                 <th>Matrícula</th>
                 <th>Turma</th>
                 <th>Média</th>
                 <th>Situação</th>
+                <th>Visão Detalhada</th>
             </tr>
     <%
         for (Summary student : students) {
     %>
-            <form action="">
-
+            <form action="<%=request.getContextPath()%>/studentGrades?student=<%=student.getMatricula()%>" method="post">
+                    <tr>
+                        <td><%=student.getName()%></td>
+                        <td><%=student.getMatricula()%></td>
+                        <td><%=student.getSeries()%>°<%=student.getClassroom()%></td>
+                        <td><%=student.getAverage()%></td>
+                        <%
+                            if (student.getSituation()) {
+                        %>
+                            <td style="color: green">Aprovado</td>
+                        <%
+                            } else {
+                        %>
+                            <td style="color: red;">Reprovado</td>
+                        <%
+                            }
+                        %>
+                        <td><input value="Lupinha" type="submit"></td>
+                    </tr>
             </form>
-                <tr>
-                    <td><%=student.getName()%></td>
-                    <td><%=student.getMatricula()%></td>
-                    <td><%=student.getSeries()%>°<%=student.getClassroom()%></td>
-                    <td><%=student.getAverage()%></td>
-                    <%
-                        if (student.getSituation()) {
-                    %>
-                        <td style="color: green">Aprovado</td>
-                    <%
-                        } else {
-                    %>
-                        <td style="color: red;">Reprovado</td>
-                    <%
-                        }
-                    %>
-                </tr>
             <%
                 }
             %>

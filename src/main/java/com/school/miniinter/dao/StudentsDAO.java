@@ -1,12 +1,16 @@
 package com.school.miniinter.dao;
 
-import com.school.miniinter.connection.ConnectionFactory;
+
+import com.school.miniinter.models.Class.*;
 import com.school.miniinter.models.Class.Class;
-import com.school.miniinter.models.Students.*;
+import com.school.miniinter.models.Students.BasicInfo;
+import com.school.miniinter.models.Students.CompleteInfo;
+import com.school.miniinter.models.Students.Students;
+import com.school.miniinter.connection.*;
+import com.school.miniinter.models.Students.Summary;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class StudentsDAO {
@@ -197,7 +201,7 @@ public class StudentsDAO {
     public List<Students> readByTeach(int idTeacher, int idSubject) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
-        List<Students> students = new LinkedList<>();
+        ArrayList<Students> students = new ArrayList<>();
         try{
             conn = connection.connect();
 
@@ -227,8 +231,10 @@ public class StudentsDAO {
                 String password = rs.getString("password");
                 String created_at = rs.getString("created_at");
 
-                students.add(new Students(id_student,fk_class,full_name,first_name,
-                        last_name,birth_date,login,password,created_at));
+                Students students1 = new Students(id_student,fk_class,full_name,
+                        first_name,
+                        last_name,birth_date,login,password,created_at);
+                students.add(students1);
             }
             return students;
         }catch(SQLException sqle){
@@ -375,7 +381,8 @@ public class StudentsDAO {
             if(rs.next()){
                 String full_name = rs.getString("nameStudent");
                 String nameGuardian = rs.getString("nameGuardian");
-                Class studentClass = new Class(rs.getInt("id_class"),
+                Class studentClass =
+                        new Class(rs.getInt("id_class"),
                         rs.getString("series").charAt(0),rs.getString(
                                 "classroom").charAt(0));
                 Date created_at = rs.getDate("date_registration");
@@ -390,6 +397,38 @@ public class StudentsDAO {
                         birth_dateStudent,login,phone,full_address);
             }
             return completeInfo;
+        }catch (SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        }finally{
+            connection.disconnect(conn);
+        }
+    }
+
+    public Summary readSummary(int idStudent) {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        Summary sum = new Summary();
+        try {
+            conn = connection.connect();
+
+            sql = "SELECT S.id_student, S.full_name, C.series, C.classroom FROM students S " +
+                    "JOIN class C ON S.fk_class = C.id_class " +
+                    "WHERE S.id_student = ? ";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,idStudent);
+
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()) {
+                sum.setMatricula(rs.getInt("id_student"));
+                sum.setClassroom(rs.getString("classroom"));
+                sum.setSeries(rs.getString("series"));
+                sum.setName(rs.getString("full_name"));
+                return sum;
+            }
+
+            return null;
         }catch (SQLException sqle){
             sqle.printStackTrace();
             return null;
