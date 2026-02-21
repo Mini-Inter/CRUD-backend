@@ -1,14 +1,11 @@
-package com.school.miniinter.models.Students;
-
-import com.school.miniinter.models.Class.Class;
+package com.school.miniinter.models.Teacher;
 
 import java.util.Date;
 
 public class CompleteInfo {
+
     private String full_name;
-    private Integer id_student;
-    private String firstName_guardian;
-    private Class studentClass;
+    private String subject;
     private Date created_at;
     private Integer school_year;
     private String status;
@@ -17,22 +14,15 @@ public class CompleteInfo {
     private String phone;
     private String formated_address;
 
-    public CompleteInfo(String full_name, Integer id_student,
-                        String firstName_guardian, Class studentClass,
-                        Date created_at,Integer school_year, Date birth_date,
-                        String login,
-                        String phone, String full_address) {
-        this.full_name = full_name;
-        this.id_student = id_student;
-        this.firstName_guardian = firstName_guardian;
-        this.studentClass = studentClass;
+    public CompleteInfo(Date created_at, String full_name, Integer school_year, String status, Date birth_date, String login, String phone, String formated_address) {
         this.created_at = created_at;
+        this.full_name = full_name;
+        this.school_year = school_year;
+        this.status = status;
         this.birth_date = birth_date;
         this.login = login+"@vidya.org.br";
         this.phone = phone;
-        this.formated_address = full_address;
-        this.school_year = school_year;
-        this.status = "Ativo";
+        this.formated_address = formated_address;
     }
 
     public String getFull_name() {
@@ -43,28 +33,12 @@ public class CompleteInfo {
         this.full_name = full_name;
     }
 
-    public Integer getId_student() {
-        return id_student;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setId_student(Integer id_student) {
-        this.id_student = id_student;
-    }
-
-    public String getFirstName_guardian() {
-        return firstName_guardian;
-    }
-
-    public void setFirstName_guardian(String firstName_guardian) {
-        this.firstName_guardian = firstName_guardian;
-    }
-
-    public Class getStudentClass() {
-        return studentClass;
-    }
-
-    public void setStudentClass(Class studentClass) {
-        this.studentClass = studentClass;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public Date getCreated_at() {
@@ -119,24 +93,22 @@ public class CompleteInfo {
         return formated_address;
     }
 
-    public void setFormated_address(String full_address) {
-        this.formated_address = full_address;
+    public void setFormated_address(String formated_address) {
+        this.formated_address = formated_address;
     }
 
     @Override
     public String toString() {
         return "CompleteInfo{" +
                 "full_name='" + full_name + '\'' +
-                ", id_student=" + id_student +
-                ", firstName_guardian='" + firstName_guardian + '\'' +
-                ", studentClass=" + studentClass +
+                ", subject='" + subject + '\'' +
                 ", created_at=" + created_at +
                 ", school_year=" + school_year +
                 ", status='" + status + '\'' +
                 ", birth_date=" + birth_date +
                 ", login='" + login + '\'' +
                 ", phone='" + phone + '\'' +
-                ", full_address='" + formated_address + '\'' +
+                ", formated_address='" + formated_address + '\'' +
                 '}';
     }
 }

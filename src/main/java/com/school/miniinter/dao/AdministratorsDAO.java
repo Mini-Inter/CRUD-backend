@@ -9,17 +9,6 @@ import java.util.List;
 
 public class AdministratorsDAO {
 
-//  Métodos
-//
-// - Criar;
-// - Buscar;
-//   - Por ID
-//   - Por nome
-// - Atualizar;
-//   - Por ID
-// - Deletar;
-//   - Por ID
-
     public int insert(Administrator admin){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -51,6 +40,7 @@ public class AdministratorsDAO {
             connection.disconnect(conn);
         }
     }
+
     public Administrator read(int id) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;

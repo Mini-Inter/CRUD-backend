@@ -370,8 +370,12 @@ public class StudentsDAO {
                     ".created_at AS DATE) AS date_registration,CAST(s" +
                     ".birth_date AS DATE) AS birth_dateStudent,s.login AS " +
                     "login," +
-                    "s.phone AS phone,a.full_address AS full_address FROM " +
-                    "students s JOIN guardian g ON g.fk_student = s.id_student JOIN class c ON c.id_class = s.fk_class JOIN adress a ON a.fk_student = s.id_student WHERE s.id_student = ?";
+                    "s.phone AS phone,a.formated_address AS full_address FROM" +
+                    " " +
+                    "students s JOIN guardian g ON g.fk_student = s" +
+                    ".id_student JOIN class c ON c.id_class = s.fk_class JOIN" +
+                    " adress_student a ON a.fk_student = s.id_student WHERE s" +
+                    ".id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_student);
