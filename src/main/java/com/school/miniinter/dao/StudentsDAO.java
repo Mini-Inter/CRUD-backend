@@ -354,6 +354,38 @@ public class StudentsDAO {
         }
     }
 
+    public Summary readSummary(int idStudent) {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        Summary sum = new Summary();
+        try {
+            conn = connection.connect();
+
+            sql = "SELECT S.id_student, S.full_name, C.series, C.classroom FROM students S " +
+                    "JOIN class C ON S.fk_class = C.id_class " +
+                    "WHERE S.id_student = ? ";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,idStudent);
+
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()) {
+                sum.setMatricula(rs.getInt("id_student"));
+                sum.setClassroom(rs.getString("classroom"));
+                sum.setSeries(rs.getString("series"));
+                sum.setName(rs.getString("full_name"));
+                return sum;
+            }
+
+            return null;
+        }catch (SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        }finally{
+            connection.disconnect(conn);
+        }
+    }
+
     public Integer readAmountOfSubjects(int id_student){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;

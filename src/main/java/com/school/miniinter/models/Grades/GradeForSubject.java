@@ -32,54 +32,58 @@ public class GradeForSubject {
             this.situation = "Reprovado";
         }
     }
+    public GradeForSubject(){
+        this.subject = null;
+        this.n1 = null;
+        this.n2 = null;
+        this.average = null;
+        this.situation = null;
+    }
 
     public String getSubject() {
         return subject;
     }
-
     public void setSubject(String subject) {
         this.subject = subject;
     }
-
-    public Double getN1() {
+    public double getN1() {
         return n1;
     }
-
-    public void setN1(Double n1) {
+    public void setN1(double n1) {
         this.n1 = n1;
     }
-
-    public Double getN2() {
+    public void setN1() {
+        this.n1 = -1.0;
+    }
+    public double getN2() {
         return n2;
     }
-
-    public void setN2(Double n2) {
+    public void setN2(double n2) {
         this.n2 = n2;
     }
-
-    public Double getAverage() {
+    public void setN2() {
+        this.n2 = -1.0;
+    }
+    public double getAverage() {
         return average;
     }
-
     public void setAverage() {
-        if(n1 == -1.0){
-            this.average = n2/2;
-        }else if(n2 == -1.0){
-            this.average = n1/2;
-        }else{
-            this.average = (n1+n2)/2;
-        }
+        if (this.n1 != -1 && this.n2!=-1)
+            this.average = (this.n1 + this.n2)/2;
+        else
+            this.average = -1.0;
     }
-
     public String getSituation() {
         return situation;
     }
-
     public void setSituation() {
-        if (this.average >= 7){
-            this.situation = "Aprovado";
-        }else{
-            this.situation = "Reprovado";
+        if (average != -1) {
+            if (average >= 7)
+                this.situation = "APROVADO";
+            else
+                this.situation = "REPROVADO";
+        } else {
+            this.situation = "INDEFINIDO";
         }
     }
 }
