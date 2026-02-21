@@ -1,9 +1,6 @@
-package com.school.miniinter.controller.authenticationSystem;
+package com.school.miniinter.controller.AuthenticationSystem;
 
-import com.school.miniinter.dao.PreRegistrationDAO;
-import com.school.miniinter.dao.StudentsDAO;
-import com.school.miniinter.dao.SubjectsDAO;
-import com.school.miniinter.dao.TeachersDAO;
+import com.school.miniinter.dao.*;
 import com.school.miniinter.models.Subject.Subject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -42,6 +38,9 @@ public class AuthenticationSystem extends HttpServlet {
                 else {
                     signUp(req, resp);
                 }
+            }
+            case "loginAA" -> {
+                loginRest(req, resp);
             }
         }
     }
@@ -96,6 +95,37 @@ public class AuthenticationSystem extends HttpServlet {
             session.setAttribute("login", login);
             session.setAttribute("password", password);
             resp.sendRedirect(req.getContextPath() + "/authentication/login.jsp");
+        }
+    }
+    private void loginRest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String login = req.getParameter("login").toLowerCase().strip();
+        String password = req.getParameter("pw");
+
+        try {
+            if (!verifyEmail(login))
+                throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
+            login = login.substring(0, login.indexOf("@"));
+
+            if (isAdmin(login, password)) {
+                req.getRequestDispatcher("/homeAdmin").forward(req, resp);
+            } else {
+                throw new RuntimeException("login não pertence a nenhuma conta!");
+            }
+        } catch (NullPointerException exc) {
+            String error = "Alguns dados não foram preenchidos!";
+            HttpSession session = req.getSession();
+            session.setAttribute("error", error);
+            session.setAttribute("login", login);
+            session.setAttribute("password", password);
+            resp.sendRedirect(req.getContextPath() + "/authentication/loginaa.jsp");
+        }
+        catch (RuntimeException exc) {
+            String error = exc.getMessage();
+            HttpSession session = req.getSession();
+            session.setAttribute("error", error);
+            session.setAttribute("login", login);
+            session.setAttribute("password", password);
+            resp.sendRedirect(req.getContextPath() + "/authentication/loginaa.jsp");
         }
     }
     private void preRegister(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
@@ -187,6 +217,13 @@ public class AuthenticationSystem extends HttpServlet {
             return 2;
         else
             return 0;
+    }
+    private boolean isAdmin(String login, String pw) throws NullPointerException {
+        if (login == null || pw == null) {
+            throw new NullPointerException();
+        }
+        AdministratorsDAO adm = new AdministratorsDAO();
+        return  (adm.isAdmin(login, pw));
     }
     private boolean verifyEmail(String email) {
         Pattern vidyaEmail = Pattern.compile("^[a-z0-9._%+-]+\\.[a-z0-9._%+-]+@vidya\\.org\\.br$");

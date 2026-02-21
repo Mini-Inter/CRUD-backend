@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpSession;
 
 
 import java.io.IOException;
-import java.rmi.ServerException;
 
 @WebServlet(name="HomeTeacher", value={"/homeTeacher"})
 public class HomeTeacher extends HttpServlet {
