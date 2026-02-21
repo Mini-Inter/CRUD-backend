@@ -1,12 +1,11 @@
 package com.school.miniinter.dao;
 
+import com.itextpdf.layout.element.Link;
 import com.school.miniinter.connection.ConnectionFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import com.school.miniinter.models.Class.Class;
 
@@ -69,6 +68,36 @@ public class ClassDAO {
                 classChoose = new Class(id_class,series,classroom);
             }
             return classChoose;
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        }finally{
+            connection.disconnect(conn);
+        }
+    }
+
+    public List<Class> read(){
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        List<Class> classes = new LinkedList<>();
+
+        try{
+            conn = connection.connect();
+
+            sql = "SELECT * FROM class";
+            Statement pstmt = conn.createStatement();
+
+            ResultSet rs = pstmt.executeQuery(sql);
+
+            while (rs.next()) {
+                int id_class = rs.getString("id_class").charAt(0);
+                char series = rs.getString("series").charAt(0);
+                char classroom = rs.getString("classroom").charAt(0);
+
+                classes.add(new Class(id_class,series,classroom));
+            }
+
+            return classes;
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;

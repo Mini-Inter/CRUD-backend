@@ -2,6 +2,7 @@ package com.school.miniinter.controller.AuthenticationSystem;
 
 import com.school.miniinter.dao.*;
 import com.school.miniinter.models.Subject.Subject;
+import com.school.miniinter.utils.EmailUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -49,7 +50,7 @@ public class AuthenticationSystem extends HttpServlet {
         String password = req.getParameter("pw");
 
         try {
-            if (!verifyEmail(login))
+            if (!EmailUtils.verifyEmail(login))
                 throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
             login = login.substring(0, login.indexOf("@"));
 
@@ -102,7 +103,7 @@ public class AuthenticationSystem extends HttpServlet {
         String password = req.getParameter("pw");
 
         try {
-            if (!verifyEmail(login))
+            if (!EmailUtils.verifyEmail(login))
                 throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
             login = login.substring(0, login.indexOf("@"));
 
@@ -174,7 +175,7 @@ public class AuthenticationSystem extends HttpServlet {
                     throw new RuntimeException("Nome digitado incorretamente");
                 if (5>idade || idade>20)
                     throw new RuntimeException("Data de nascimento preenchida incorretamente");
-                if (!verifyEmail(login))
+                if (!EmailUtils.verifyEmail(login))
                     throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
                 if (!password.equals(passConf))
                     throw new RuntimeException("Senhas não são iguais");
@@ -226,10 +227,5 @@ public class AuthenticationSystem extends HttpServlet {
         }
         AdministratorsDAO adm = new AdministratorsDAO();
         return  (adm.isAdmin(login, pw));
-    }
-    private boolean verifyEmail(String email) {
-        Pattern vidyaEmail = Pattern.compile("^[a-z0-9._%+-]+\\.[a-z0-9._%+-]+@vidya\\.org\\.br$");
-        Matcher match = vidyaEmail.matcher(email);
-        return match.find();
     }
 }

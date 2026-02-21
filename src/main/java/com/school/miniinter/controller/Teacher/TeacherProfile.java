@@ -40,7 +40,6 @@ public class TeacherProfile extends HttpServlet {
 
         request.setAttribute("amountStudentByTeacher",amountStudentByTeacher);
 
-        request.getRequestDispatcher("WEB-INF/teacher/")
-
+        request.getRequestDispatcher("WEB-INF/teacher/profileTeacher.jsp").forward(request, response);
     }
 }

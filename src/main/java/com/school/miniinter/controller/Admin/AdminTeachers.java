@@ -2,6 +2,7 @@ package com.school.miniinter.controller.Admin;
 
 import com.school.miniinter.dao.TeachersDAO;
 import com.school.miniinter.models.Teacher.Teacher;
+import com.school.miniinter.utils.EmailUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,6 +14,8 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name="adminTeachers", urlPatterns = "/adminTeachers")
 public class AdminTeachers extends HttpServlet {
@@ -84,6 +87,11 @@ public class AdminTeachers extends HttpServlet {
             String email = req.getParameter("email");
             Date birth =  Date.valueOf(req.getParameter("birth"));
             String password = req.getParameter("pass");
+
+            if (!EmailUtils.verifyEmail(email)) {
+                throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
+            }
+            email = email.substring(0, email.indexOf("@"));
 
             if (!nome.equals(teacher.getName())) {
                 teacher.setName(nome);

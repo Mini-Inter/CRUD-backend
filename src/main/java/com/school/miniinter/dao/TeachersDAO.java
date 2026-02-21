@@ -9,11 +9,10 @@ import com.school.miniinter.models.Students.GradeForStudent;
 import com.school.miniinter.models.Teacher.HomeTeacherInfo;
 import com.school.miniinter.models.Teacher.Teacher;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.swing.plaf.nimbus.State;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public class TeachersDAO {
 
@@ -50,6 +49,40 @@ public class TeachersDAO {
         }
     }
 
+    public List<Teacher> read() {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        ResultSet rset = null;
+        List<Teacher> teachers = new LinkedList<>();
+
+        try {
+            conn = connection.connect();
+
+            sql = "SELECT * FROM teachers";
+            Statement pstmt = conn.createStatement();
+
+            rset = pstmt.executeQuery(sql);
+
+            while (rset.next()) {
+                teachers.add(new Teacher(
+                        rset.getInt("id"),
+                        rset.getString("full_name"),
+                        rset.getString("login"),
+                        rset.getString("password"),
+                        rset.getDate("birth_date"),
+                        rset.getDate("created_at")
+                ));
+            }
+
+            return teachers;
+        } catch(SQLException sqle){
+            sqle.printStackTrace();
+        } finally {
+            connection.disconnect(conn);
+        }
+        return null;
+    }
+
     public Teacher read(int id) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -67,8 +100,7 @@ public class TeachersDAO {
             if (rset.next()) {
                 return new Teacher(
                         rset.getInt("id"),
-                        rset.getString("first_name"),
-                        rset.getString("last_name"),
+                        rset.getString("full_name"),
                         rset.getString("login"),
                         rset.getString("password"),
                         rset.getDate("birth_date"),
@@ -101,8 +133,7 @@ public class TeachersDAO {
             while (rset.next()) {
                 teachers.add(new Teacher(
                         rset.getInt("id"),
-                        rset.getString("first_name"),
-                        rset.getString("last_name"),
+                        rset.getString("full_name"),
                         rset.getString("login"),
                         rset.getString("password"),
                         rset.getDate("birth_date"),
@@ -217,8 +248,7 @@ public class TeachersDAO {
                 if (rset.next()) {
                     return new Teacher(
                             rset.getInt("id_employee"),
-                            rset.getString("first_name"),
-                            rset.getString("last_name"),
+                            rset.getString("full_name"),
                             login,
                             rset.getString("password"),
                             rset.getDate("birth_date"),
