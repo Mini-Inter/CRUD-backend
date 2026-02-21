@@ -12,17 +12,7 @@ import java.util.List;
 
 public class PreRegistrationDAO {
 
-//  Métodos
-//
-// - Criar;
-// - Buscar;
-//   - Por ID
-//   - Por nome
-// - Atualizar;
-//   - Por ID
-// - Deletar;
-//   - Por ID
-
+    String sql;
     public int insert(PreRegistration preReg){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -30,7 +20,7 @@ public class PreRegistrationDAO {
         try {
             conn = connection.connect();
 
-            String sql = "INSERT INTO pre_registration" +
+            sql = "INSERT INTO pre_registration" +
                     "(cpf)" +
                     "VALUES(?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -49,12 +39,34 @@ public class PreRegistrationDAO {
             connection.disconnect(conn);
         }
     }
-    public PreRegistration read(int id) {
+
+    public int insertIdStudentOnCpf(Integer idStudent, int idCpf){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
-        ResultSet rset = null;
-        PreRegistration preReg;
 
+        try{
+            conn = connection.connect();
+
+            sql = "UPDATE students SET fk_student = ? WHERE id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,idStudent);
+            pstmt.setInt(2,idCpf);
+
+            return pstmt.executeUpdate();
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return -1;
+        }finally {
+            connection.disconnect(conn);
+        }
+    }
+
+    public PreRegistration readById(int id) {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        ResultSet rset;
+        PreRegistration preReg;
         try {
             conn = connection.connect();
 
@@ -77,11 +89,11 @@ public class PreRegistrationDAO {
         }
         return null;
     }
-    public PreRegistration read(String cpf) {
+
+    public PreRegistration readByCpf(String cpf) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
-        ResultSet rset = null;
-        List<PreRegistration> preRegs = new LinkedList<>();
+        ResultSet rset;
 
         try {
             conn = connection.connect();
@@ -107,6 +119,7 @@ public class PreRegistrationDAO {
             connection.disconnect(conn);
         }
     }
+
     public int update(PreRegistration preReg) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -131,7 +144,8 @@ public class PreRegistrationDAO {
             connection.disconnect(conn);
         }
     }
-    public int delete(int id) {
+
+    public int deleteById(int id) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
@@ -155,7 +169,8 @@ public class PreRegistrationDAO {
             connection.disconnect(conn);
         }
     }
-    public int delete(String cpf) {
+
+    public int deleteByCpf(String cpf) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 

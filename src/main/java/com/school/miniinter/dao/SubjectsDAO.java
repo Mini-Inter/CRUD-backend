@@ -39,16 +39,16 @@ public class SubjectsDAO {
             connection.disconnect(conn);
         }
     }
+
     public Subject readById(int id) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
-        ResultSet rset = null;
-        Subject subject;
+        ResultSet rset;
 
         try {
             conn = connection.connect();
 
-            String sql = "SELECT * FROM subjects WHERE id=?";
+            String sql = "SELECT * FROM subjects WHERE id_subject=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id);
@@ -68,10 +68,11 @@ public class SubjectsDAO {
         }
         return null;
     }
-    public List<Subject> read(String name) {
+
+    public List<Subject> readByName(String name) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
-        ResultSet rset = null;
+        ResultSet rset;
         List<Subject> subjects = new LinkedList<>();
 
         try {
@@ -99,21 +100,17 @@ public class SubjectsDAO {
             connection.disconnect(conn);
         }
     }
+
     public List<Subject> readByStudent(int idStudent) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
-        ResultSet rset = null;
+        ResultSet rset;
         List<Subject> subjects = new LinkedList<>();
 
         try {
             conn = connection.connect();
 
-            String sql = "SELECT D.id_subject, D.name, D.description FROM Has H\n" +
-                "JOIN Class C on H.fk_class = C.id_class\n" +
-                "JOIN teach P on H.fk_teach = P.id\n" +
-                "JOIN subjects D on P.fk_subject = D.id_subject\n" +
-                "JOIN students S on C.id_class = S.fk_class\n" +
-                "WHERE id_student = ?";
+            String sql = "SELECT D.id_subject, D.name, D.description FROM Class C JOIN teachingAssignment P on C.id_class = P.fk_class JOIN subjects D on P.fk_subject = D.id_subject JOIN students S on C.id_class = S.fk_class WHERE id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1, idStudent);
@@ -126,7 +123,6 @@ public class SubjectsDAO {
                         rset.getString("name")
                 ));
             }
-
             return subjects;
         } catch(SQLException sqle){
             sqle.printStackTrace();
@@ -135,19 +131,17 @@ public class SubjectsDAO {
             connection.disconnect(conn);
         }
     }
+
     public List<Subject> readByTeacher(int idTeacher) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
-        ResultSet rset = null;
+        ResultSet rset;
         List<Subject> subjects = new LinkedList<>();
 
         try {
             conn = connection.connect();
 
-            String sql = "SELECT S.* FROM teachers T " +
-            "JOIN teach P ON T.id_employee = P.fk_teacher " +
-            "JOIN subjects S on P.fk_subject = S.id_subject " +
-            "WHERE T.id_employee = ?";
+            String sql = "SELECT S.* FROM teachers T JOIN teachingAssignment P ON T.id_employee = P.fk_teacher JOIN subjects S on P.fk_subject = S.id_subject WHERE T.id_employee = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1, idTeacher);
@@ -160,7 +154,6 @@ public class SubjectsDAO {
                         rset.getString("name")
                 ));
             }
-
             return subjects;
         } catch(SQLException sqle){
             sqle.printStackTrace();
@@ -169,13 +162,15 @@ public class SubjectsDAO {
             connection.disconnect(conn);
         }
     }
+
     public int update(Subject subject) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
         try {
             conn = connection.connect();
-            String sql = "UPDATE Subjects SET name=?, description=? WHERE id=?";
+            String sql = "UPDATE Subjects SET name=?, description=? WHERE " +
+                    "id_subject=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, subject.getName());
@@ -201,7 +196,7 @@ public class SubjectsDAO {
         try {
             conn = connection.connect();
 
-            String sql = "DELETE FROM Subjects WHERE id=?";
+            String sql = "DELETE FROM Subjects WHERE id_subject=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id);

@@ -1,5 +1,6 @@
 package com.school.miniinter.controller.Teacher;
 
+import com.school.miniinter.dao.SubjectsDAO;
 import com.school.miniinter.dao.TeachersDAO;
 import com.school.miniinter.models.Teacher.HomeTeacherInfo;
 import jakarta.servlet.ServletException;
@@ -15,6 +16,7 @@ import java.io.IOException;
 @WebServlet(name="HomeTeacher", value={"/homeTeacher"})
 public class HomeTeacher extends HttpServlet {
 
+    SubjectsDAO subjectsDAO = new SubjectsDAO();
     TeachersDAO teachersDAO = new TeachersDAO();
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException,
@@ -22,14 +24,16 @@ public class HomeTeacher extends HttpServlet {
 
         HttpSession session =  request.getSession();
         Object idTeacherRaw = session.getAttribute("idTeacher");
+        Integer idSubject = (Integer) session.getAttribute("subject");
 
-        if(idTeacherRaw == null){
+        if(idTeacherRaw == null || idSubject == null){
             response.sendRedirect( request.getContextPath()+"/authentication/login.jsp");
         }else{
             int id_teacher = Integer.parseInt(String.valueOf(idTeacherRaw));
             HomeTeacherInfo homeTeacherInfo =
-                    teachersDAO.readHomeInfoTeacher(id_teacher);
+                    teachersDAO.readHomeInfoTeacher(id_teacher,idSubject);
 
+            homeTeacherInfo.setSubject(subjectsDAO.readById(idSubject).getName());
             request.setAttribute("homeTeacherInfo",homeTeacherInfo);
 
             request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request,response);

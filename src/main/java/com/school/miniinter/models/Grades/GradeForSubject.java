@@ -13,24 +13,6 @@ public class GradeForSubject {
         this.subject = subject;
         this.n1 = n1;
         this.n2 = n2;
-        if(n1 == -1.0 && n2 == -1.0){
-            this.average = -1.0;
-        }
-        else if(n1 == -1.0){
-            this.average = n2/2;
-        }else if(n2 == -1.0){
-            this.average = n1/2;
-        }else{
-            this.average = (n1+n2)/2;
-        }
-        if(this.average == -1.0){
-            this.situation = "-";
-        }
-        else if (this.average >= 7){
-            this.situation = "Aprovado";
-        }else{
-            this.situation = "Reprovado";
-        }
     }
     public GradeForSubject(){
         this.subject = null;

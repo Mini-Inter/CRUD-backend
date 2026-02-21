@@ -23,11 +23,7 @@ public class ReportsDAO {
         try{
             conn = connection.connect();
 
-            sql = "SELECT teachers.full_name AS teacher_name, repo.description, 'nothing' AS type, CAST(repo.send_at AS DATE) FROM students s " +
-                    "JOIN receive r on r.fk_student = s.id_student " +
-                    "JOIN reports repo on repo.id = r.fk_report " +
-                    "JOIN teachers ON teachers.id_employee = repo.fk_teacher " +
-                    "WHERE id_student = ?";
+            sql = "SELECT te.full_name AS teacher_name, repo.description, repo.type AS type, CAST(repo.send_at AS DATE) FROM students s JOIN receive r on r.fk_student = s.id_student JOIN reports repo on repo.id = r.fk_report JOIN teachers te ON te.id_employee = repo.fk_teacher WHERE id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_student);
@@ -64,11 +60,7 @@ public class ReportsDAO {
         try{
             conn = connection.connect();
 
-            sql = "SELECT teachers.full_name AS teacher_name, repo.description, 'nothing' AS type, CAST(repo.send_at AS DATE) FROM students s " +
-                    "JOIN receive r on r.fk_student = s.id_student " +
-                    "JOIN reports repo on repo.id = r.fk_report " +
-                    "JOIN teachers ON teachers.id_employee = repo.fk_teacher " +
-                    "WHERE id_employee = ?";
+            sql = "SELECT teachers.full_name AS teacher_name, repo.description, repo.type AS type, CAST(repo.send_at AS DATE) FROM students s JOIN receive r on r.fk_student = s.id_student JOIN reports repo on repo.id = r.fk_report JOIN teachers ON teachers.id_employee = repo.fk_teacher WHERE id_employee = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1, id_teacher);
@@ -104,14 +96,10 @@ public class ReportsDAO {
         try{
             conn = connection.connect();
 
-            sql = "SELECT sub.name AS subject, teachers.full_name AS " +
-                    "teacher_name, repo.description, repo.type, CAST(repo" +
-                    ".send_at AS DATE) FROM students s JOIN receive r on r" +
-                    ".fk_student = s.id_student JOIN reports repo on repo.id " +
-                    "= r.fk_report JOIN teachers ON teachers.id_employee = " +
-                    "repo.fk_teacher JOIN teach t ON teachers.id_employee = t" +
-                    ".fk_teacher JOIN subjects sub ON sub.id_subject = t" +
-                    ".fk_subject WHERE id_student = ? AND repo.type LIKE ?";
+            sql = "SELECT teachers.full_name AS teacher_name, repo" +
+                    ".description, repo.type, CAST(repo.send_at AS DATE) AS " +
+                    "date_report" +
+                    " FROM students s JOIN receive r on r.fk_student = s.id_student JOIN reports repo on repo.id = r.fk_report JOIN teachers ON teachers.id_employee = repo.fk_teacher WHERE id_student = ? AND repo.type LIKE ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_student);
@@ -119,7 +107,6 @@ public class ReportsDAO {
 
             ResultSet rs = pstmt.executeQuery();
 
-            String subject;
             String teacher_name;
             String description;
             String type;
@@ -129,7 +116,7 @@ public class ReportsDAO {
                 teacher_name = rs.getString("teacher_name");
                 description = rs.getString("description");
                 type = rs.getString("type");
-                send_at = rs.getDate("send_at");
+                send_at = rs.getDate("date_report");
 
                 list.add(new CompleteInformationReport(teacher_name,
                         description,type,send_at));

@@ -4,6 +4,7 @@ import com.school.miniinter.dao.ClassDAO;
 import com.school.miniinter.dao.GradeDAO;
 import com.school.miniinter.dao.TeachersDAO;
 import com.school.miniinter.models.Class.Class;
+import com.school.miniinter.models.Grades.SimpleGrade;
 import com.school.miniinter.models.Students.GradeForStudent;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -110,7 +111,9 @@ public class PageUpdateGrade extends HttpServlet {
                         "subject");
                 String grade_type = request.getParameter("n");
 
-                if(gradeDAO.insertGradeByStudent(value,id_student, id_subject, grade_type)){
+                SimpleGrade simpleGrade = new SimpleGrade(id_student,
+                        id_subject,value,grade_type);
+                if(gradeDAO.insertGradeByStudent(simpleGrade)){
 //                    Colocar uma mensagem de nota lançada com sucesso
                 }else{
 //                    Colocar que houve algum erro ao cadastrar essa nota no

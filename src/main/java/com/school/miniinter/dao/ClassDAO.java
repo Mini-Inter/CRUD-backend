@@ -22,9 +22,7 @@ public class ClassDAO {
         try{
             conn = connection.connect();
 
-            sql = "SELECT c.* FROM class c JOIN has h ON c.id_class = h" +
-                    ".fk_class JOIN teach t ON t.id = h.fk_teach JOIN " +
-                    "teachers te ON te.id_employee = t.fk_teacher JOIN subjects s ON s.id_subject = t.fk_subject WHERE te.id_employee = ? AND s.id_subject = ?";
+            sql = "SELECT c.* FROM class c JOIN teachingAssignment t ON t.fk_class = c.id_class JOIN teachers te ON te.id_employee = t.fk_teacher JOIN subjects s ON s.id_subject = t.fk_subject WHERE te.id_employee = ? AND s.id_subject = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_teacher);

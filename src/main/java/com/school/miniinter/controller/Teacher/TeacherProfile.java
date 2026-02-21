@@ -36,11 +36,11 @@ public class TeacherProfile extends HttpServlet {
         request.setAttribute("completeInfoTeacher",completeInfo);
 
         List<AmountStudentByTeacher> amountStudentByTeacher =
-                teachersDAO.amountStudentByTeacherAndClass(id_teacher);
+                teachersDAO.amountStudentByTeacherAndClass(id_teacher,subject);
 
         request.setAttribute("amountStudentByTeacher",amountStudentByTeacher);
 
-        request.getRequestDispatcher("WEB-INF/teacher/")
+        request.getRequestDispatcher("WEB-INF/teacher/profileTeacher.jsp").forward(request,response);
 
     }
 }
