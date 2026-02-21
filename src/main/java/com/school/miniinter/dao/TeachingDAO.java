@@ -1,0 +1,97 @@
+package com.school.miniinter.dao;
+
+import com.school.miniinter.connection.ConnectionFactory;
+import com.school.miniinter.models.TeachingAssignment.Teaching;
+import com.school.miniinter.models.TeachingAssignment.TeachingAssignment;
+
+import java.sql.*;
+
+public class TeachingDAO {
+    public Teaching[] read() {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        Teaching[] aulas = new Teaching[6];
+        for (int n = 0; n < 6; n++) {
+            aulas[n] = new Teaching();
+        }
+        Teaching aula;
+
+        try {
+            aula = new Teaching();
+            conn = connection.connect();
+            String sql = "SELECT A.id, S.name, T.full_name, A.class_num FROM teachingAssignment A " +
+                    "JOIN subjects S ON A.fk_subject = S.id_subject " +
+                    "JOIN teachers T ON A.fk_teacher = T.id_employee";
+
+            Statement stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery(sql);
+
+            while (rset.next()) {
+                aula.setSubject(rset.getString("name"));
+                aula.setIdTeaching(rset.getInt("id"));
+                aula.setTeacher(rset.getString("full_name"));
+                aula.setClassNum(rset.getInt("class_num"));
+
+                aulas[aula.getClassNum()-1] = aula;
+            }
+
+            return aulas;
+        } catch (SQLException exc) {
+            exc.printStackTrace();
+            return null;
+        } finally {
+            connection.disconnect(conn);
+        }
+    }
+
+    public boolean insert(TeachingAssignment aula) {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+
+        try {
+            conn = connection.connect();
+            String sql = "INSERT INTO teachingassignment (fk_class, fk_subject, fk_teacher, class_num) VALUES " +
+                    "(?, ?, ?, ?)";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, aula.getIdClass());
+            pstmt.setInt(2, aula.getIdSubject());
+            pstmt.setInt(3, aula.getIdTeacher());
+            pstmt.setInt(4, aula.getClassNumber());
+
+            return pstmt.executeUpdate() > 0;
+
+        } catch (SQLException exc) {
+            exc.printStackTrace();
+            return false;
+        } finally {
+            connection.disconnect(conn);
+        }
+    }
+
+    public boolean update(TeachingAssignment aula) {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+
+        try {
+            conn = connection.connect();
+            String sql = "UPDATE teachingassignment " +
+                    "SET fk_subject = ? AND fk_teacher = ?" +
+                    "WHERE id = ?";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, aula.getIdSubject());
+            pstmt.setInt(2, aula.getIdTeacher());
+            pstmt.setInt(3, aula.getId());
+
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException exc) {
+            exc.printStackTrace();
+            return false;
+        } finally {
+            connection.disconnect(conn);
+        }
+    }
+}

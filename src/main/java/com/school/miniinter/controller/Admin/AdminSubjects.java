@@ -2,7 +2,6 @@ package com.school.miniinter.controller.Admin;
 
 import com.school.miniinter.dao.SubjectsDAO;
 import com.school.miniinter.models.Subject.Subject;
-import com.school.miniinter.utils.EmailUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,10 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @WebServlet(name="adminSubjects", urlPatterns = "/adminSubjects")
 public class AdminSubjects extends HttpServlet {
@@ -75,7 +71,7 @@ public class AdminSubjects extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("subject", subject);
 
-        req.getRequestDispatcher("WEB-INF/admin/subjectEDit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/subjectEdit.jsp").forward(req, resp);
     }
 
     private void updateSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

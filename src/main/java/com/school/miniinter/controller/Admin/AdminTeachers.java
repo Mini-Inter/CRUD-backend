@@ -14,8 +14,6 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @WebServlet(name="adminTeachers", urlPatterns = "/adminTeachers")
 public class AdminTeachers extends HttpServlet {
@@ -75,7 +73,7 @@ public class AdminTeachers extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("teacher", teacher);
 
-        req.getRequestDispatcher("WEB-INF/admin/teacherEDit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/teacherEdit.jsp").forward(req, resp);
     }
 
     private void updateTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

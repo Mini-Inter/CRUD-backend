@@ -1,4 +1,4 @@
-<%@ page import="com.school.miniinter.models.Subject.Subject" %>
+<%@ page import="com.school.miniinter.models.Class.Class" %>
 <%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: Vini
@@ -8,7 +8,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<Subject> subjects = (List<Subject>) session.getAttribute("subjects");
+    List<Class> classes = (List<Class>) session.getAttribute("classes");
     String success = (String) session.getAttribute("success");
     String error = (String) session.getAttribute("error");
 %>
@@ -34,35 +34,35 @@
     }
 %>
 <%
-    if (subjects.isEmpty()) {
+    if (classes.isEmpty()) {
 %>
-<h2>Nenhum professor encontrado!</h2>
+<h2>Nenhuma turma encontrada!</h2>
 <%
 } else {
 %>
 <table>
     <tr>
-        <th>Nome</th>
-        <th>Descrição</th>
+        <th>Série</th>
+        <th>Turma</th>
         <th colspan="3">Ações</th>
     </tr>
     <%
-        for (Subject subject : subjects) {
+        for (Class classroom : classes) {
     %>
     <tr>
-        <td><%=subject.getName()%></td>
-        <td><%=subject.getDescription()%></td>
+        <td><%=classroom.getSeries()%></td>
+        <td><%=classroom.getClassroom()%></td>
         <td>
-            <form action="<%=request.getContextPath()%>/adminSubjects?type=showSubject" method="post">
-                <input name="subject" id="subject" value="<%=subject.getId()%>" type="hidden">
+            <form action="<%=request.getContextPath()%>/adminClasses?type=showClass" method="post">
+                <input name="classroom" id="classroom" value="<%=classroom.getId()%>" type="hidden">
                 <input value="Ver" type="submit">
             </form>
-            <form action="<%=request.getContextPath()%>/adminSubjects?type=editSubject" method="post">
-                <input name="subject" id="subject" value="<%=subject.getId()%>" type="hidden">
+            <form action="<%=request.getContextPath()%>/adminClasses?type=editClass" method="post">
+                <input name="classroom" id="classroom" value="<%=classroom.getId()%>" type="hidden">
                 <input value="Editar" type="submit">
             </form>
-            <form action="<%=request.getContextPath()%>/adminSubjects?type=deleteSubject" method="post">
-                <input name="subject" id="subject" value="<%=subject.getId()%>" type="hidden">
+            <form action="<%=request.getContextPath()%>/adminClasses?type=deleteClass" method="post">
+                <input name="classroom" id="classroom" value="<%=classroom.getId()%>" type="hidden">
                 <input value="Deletar" type="submit">
             </form>
         </td>

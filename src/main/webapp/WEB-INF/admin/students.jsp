@@ -37,7 +37,7 @@
 <%
     if (students.isEmpty()) {
 %>
-<h2>Nenhum professor encontrado!</h2>
+<h2>Nenhum estudante encontrado!</h2>
 <%
 } else {
 %>
