@@ -241,7 +241,7 @@ public class TeachersDAO {
         try {
             conn = connection.connect();
 
-            sql = "SELECT DISTINCT S.full_name, D.name, g.grade_type, G.value, G.id_grade FROM students S " +
+            sql = "SELECT DISTINCT S.full_name, S.id_student, D.name, g.grade_type, G.value, G.id_grade FROM students S " +
                     "JOIN class C ON S.fk_class = C.id_class " +
                     "JOIN has H ON C.id_class = H.fk_class " +
                     "JOIN teach P ON H.fk_teach = P.id " +
@@ -266,11 +266,13 @@ public class TeachersDAO {
                         if (rs.getInt("id_student") == (student.getId_student())) {
                             existe = true;
                             if (student.getN1() == -1.0) {
-                                gradeForStudent.setN1(rs.getDouble("value"));
-                                gradeForStudent.setIdN1(rs.getInt("id_grade"));
+                                student.setN1(rs.getDouble("value"));
+                                student.setIdN1(rs.getInt("id_grade"));
+                                student.setAverage();
                             } else {
-                                gradeForStudent.setN2(rs.getDouble("value"));
-                                gradeForStudent.setIdN2(rs.getInt("id_grade"));
+                                student.setN2(rs.getDouble("value"));
+                                student.setIdN2(rs.getInt("id_grade"));
+                                student.setAverage();
                             }
                         }
                     }
@@ -291,8 +293,8 @@ public class TeachersDAO {
                         gradeForStudent.setN2(rs.getDouble("value"));
                         gradeForStudent.setIdN2(rs.getInt("id_grade"));
                     }
+                    list.add(gradeForStudent);
                 }
-                list.add(gradeForStudent);
             }
             return list;
         } catch(SQLException sqle){

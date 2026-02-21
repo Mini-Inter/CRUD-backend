@@ -66,8 +66,8 @@ public class GradeForStudent {
         return average;
     }
 
-    public void setAverage(Double average) {
-        this.average = average;
+    public void setAverage() {
+        this.average = (n1+n2)/2;
     }
 
     public Integer getId_student() {
