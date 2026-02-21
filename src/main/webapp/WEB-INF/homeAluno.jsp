@@ -18,5 +18,7 @@
     <form action="<%=request.getContextPath()%>/gradeCard" method="post"><input value="Boletim" type="submit"></form>
     <form action="<%=request.getContextPath()%>/studentSubjects" method="post"><input value="Matérias" type="submit"></form>
     <form action="<%=request.getContextPath()%>/observations" method="post"><input value="Observações" type="submit"></form>
+    <form action="<%=request.getContextPath()%>/profileStudent"
+          method="post"><input value="Profile" type="submit"></form>
 </body>
 </html>

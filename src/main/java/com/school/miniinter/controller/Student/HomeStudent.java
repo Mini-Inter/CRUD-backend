@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet(name="home", value = {"/homeStudent"})
-public class home extends HttpServlet {
+public class HomeStudent extends HttpServlet {
 
     StudentsDAO studentsDAO = new StudentsDAO();
     public void doPost(HttpServletRequest request,

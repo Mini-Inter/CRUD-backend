@@ -1,10 +1,8 @@
 package com.school.miniinter.dao;
 
 import com.school.miniinter.connection.ConnectionFactory;
-import com.school.miniinter.models.Students.BasicInfo;
-import com.school.miniinter.models.Students.GradeForStudent;
-import com.school.miniinter.models.Students.Students;
-import com.school.miniinter.models.Students.Summary;
+import com.school.miniinter.models.Class.Class;
+import com.school.miniinter.models.Students.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -346,6 +344,52 @@ public class StudentsDAO {
             }
 
             return null;
+        }catch (SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        }finally{
+            connection.disconnect(conn);
+        }
+    }
+
+    public CompleteInfo readCompleteInfoStudent(int id_student){
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        try{
+            conn = connection.connect();
+
+            sql = "SELECT s.full_name AS nameStudent,g" +
+                    ".first_name AS nameGuardian,c.*,EXTRACT(YEAR FROM " +
+                    "CURRENT_DATE) as school_year, CAST(s" +
+                    ".created_at AS DATE) AS date_registration,CAST(s" +
+                    ".birth_date AS DATE) AS birth_dateStudent,s.login AS " +
+                    "login," +
+                    "s.phone AS phone,a.full_address AS full_address FROM " +
+                    "students s JOIN guardian g ON g.fk_student = s.id_student JOIN class c ON c.id_class = s.fk_class JOIN adress a ON a.fk_student = s.id_student WHERE s.id_student = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,id_student);
+
+            ResultSet rs = pstmt.executeQuery();
+            CompleteInfo completeInfo = null;
+            if(rs.next()){
+                String full_name = rs.getString("nameStudent");
+                String nameGuardian = rs.getString("nameGuardian");
+                Class studentClass = new Class(rs.getInt("id_class"),
+                        rs.getString("series").charAt(0),rs.getString(
+                                "classroom").charAt(0));
+                Date created_at = rs.getDate("date_registration");
+                Integer school_year = rs.getInt("school_year");
+                Date birth_dateStudent = rs.getDate("birth_dateStudent");
+                String login = rs.getString("login");
+                String phone = rs.getString("phone");
+                String full_address = rs.getString("full_address");
+
+                completeInfo = new CompleteInfo(full_name,id_student,
+                        nameGuardian,studentClass,created_at,school_year,
+                        birth_dateStudent,login,phone,full_address);
+            }
+            return completeInfo;
         }catch (SQLException sqle){
             sqle.printStackTrace();
             return null;
