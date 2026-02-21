@@ -3,7 +3,8 @@ package com.school.miniinter.dao;
 import com.school.miniinter.connection.ConnectionFactory;
 import com.school.miniinter.models.Class.Class;
 import com.school.miniinter.models.Grades.GradeForSubject;
-import com.school.miniinter.models.Grades.Grades;
+import com.school.miniinter.models.Teacher.AmountStudentByTeacher;
+import com.school.miniinter.models.Teacher.CompleteInfo;
 import com.school.miniinter.models.Students.GradeForStudent;
 import com.school.miniinter.models.Teacher.HomeTeacherInfo;
 import com.school.miniinter.models.Teacher.Teacher;
@@ -12,9 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class TeachersDAO {
 
@@ -369,6 +368,80 @@ public class TeachersDAO {
             connection.disconnect(conn);
         }
         return null;
+    }
+
+    public CompleteInfo readCompleteInfoTeacher(int id_teacher){
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+
+        try{
+            conn = connection.connect();
+
+            sql = "SELECT te.full_name,te.created_at AS date_admission," +
+                    "EXTRACT(YEAR FROM CURRENT_DATE) as school_year,te" +
+                    ".birth_date,te.login,te.phone,a.formated_address FROM " +
+                    "teachers te JOIN address a ON a.fk_teacher = te.id_employee WHERE te.id_employee = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,id_teacher);
+
+            ResultSet rs = pstmt.executeQuery();
+            CompleteInfo completeInfo = null;
+            if(rs.next()){
+                String full_name = rs.getString("full_name");
+                Date date_admission = rs.getDate("date_admission");
+                Integer school_year = rs.getInt("school_year");
+                Date birth_date = rs.getDate("birth_date");
+                String login = rs.getString("login");
+                String phone = rs.getString("phone");
+                String formated_address = rs.getString("formated_address");
+
+                completeInfo = new CompleteInfo(date_admission,full_name,
+                        school_year,"Ativo",birth_date,login,phone,
+                        formated_address);
+            }
+            return completeInfo;
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        }finally{
+            connection.disconnect(conn);
+        }
+    }
+
+    public List<AmountStudentByTeacher> amountStudentByTeacherAndClass(int id_teacher){
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        ResultSet rs;
+        List<AmountStudentByTeacher> list = new ArrayList<>();
+        try{
+            conn = connection.connect();
+
+            sql = "SELECT c.*, count(s.id_student) AS qtd_students " +
+                    "FROM " +
+                    "students s JOIN class c on s.fk_class = c.id_class JOIN teachingAssignment t on t.fk_class = c.id_class JOIN teachers te on t.fk_teacher = te.id_employee GROUP BY 1 WHERE te.id_employee = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,id_teacher);
+
+            rs = pstmt.executeQuery();
+            AmountStudentByTeacher amountStuentByTeacher = null;
+            if(rs.next()){
+                Class teacherClass = new Class(rs.getInt("id_class"),
+                        rs.getString("series").charAt(0), rs.getString(
+                                "classroom").charAt(0));
+                Integer qtd_students = rs.getInt("qtd_students");
+                amountStuentByTeacher =
+                        new AmountStudentByTeacher(teacherClass,qtd_students);
+                list.add(amountStuentByTeacher);
+            }
+            return list;
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        }finally{
+            connection.disconnect(conn);
+        }
     }
 
     public boolean isTeacher(String login, String pw) throws IllegalArgumentException {

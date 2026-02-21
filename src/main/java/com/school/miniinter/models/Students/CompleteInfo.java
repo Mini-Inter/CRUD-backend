@@ -15,7 +15,7 @@ public class CompleteInfo {
     private Date birth_date;
     private String login;
     private String phone;
-    private String full_address;
+    private String formated_address;
 
     public CompleteInfo(String full_name, Integer id_student,
                         String firstName_guardian, Class studentClass,
@@ -30,7 +30,7 @@ public class CompleteInfo {
         this.birth_date = birth_date;
         this.login = login+"@vidya.org.br";
         this.phone = phone;
-        this.full_address = full_address;
+        this.formated_address = full_address;
         this.school_year = school_year;
         this.status = "Ativo";
     }
@@ -115,12 +115,12 @@ public class CompleteInfo {
         this.phone = phone;
     }
 
-    public String getFull_address() {
-        return full_address;
+    public String getFormated_address() {
+        return formated_address;
     }
 
-    public void setFull_address(String full_address) {
-        this.full_address = full_address;
+    public void setFormated_address(String full_address) {
+        this.formated_address = full_address;
     }
 
     @Override
@@ -136,7 +136,7 @@ public class CompleteInfo {
                 ", birth_date=" + birth_date +
                 ", login='" + login + '\'' +
                 ", phone='" + phone + '\'' +
-                ", full_address='" + full_address + '\'' +
+                ", full_address='" + formated_address + '\'' +
                 '}';
     }
 }

@@ -39,7 +39,7 @@ public class SubjectsDAO {
             connection.disconnect(conn);
         }
     }
-    public Subject read(int id) {
+    public Subject readById(int id) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
         ResultSet rset = null;
