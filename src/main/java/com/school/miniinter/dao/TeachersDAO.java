@@ -3,6 +3,7 @@ package com.school.miniinter.dao;
 import com.school.miniinter.connection.ConnectionFactory;
 import com.school.miniinter.models.Class.Class;
 import com.school.miniinter.models.Grades.GradeForSubject;
+import com.school.miniinter.models.Grades.Grades;
 import com.school.miniinter.models.Students.GradeForStudent;
 import com.school.miniinter.models.Teacher.HomeTeacherInfo;
 import com.school.miniinter.models.Teacher.Teacher;
@@ -240,19 +241,14 @@ public class TeachersDAO {
         try {
             conn = connection.connect();
 
-            sql = "SELECT s.full_name,s.id_student, CASE WHEN g" +
-                    ".grade_type= '1' THEN g.value END AS n1,CASE WHEN g.grade_type = '1' " +
-                    "THEN g.id_grade END AS idn1, CASE WHEN g.grade_type = " +
-                    "'2' THEN g.value END AS n2, CASE WHEN g.grade_type = '2'" +
-                    " THEN g.id_grade END AS idn2 FROM subjects sub JOIN " +
-                    "grades g on g.fk_subject = sub.id_subject JOIN students " +
-                    "s on s.id_student = g.fk_student JOIN class c on c" +
-                    ".id_class = s.fk_class JOIN has h on h.fk_class = c" +
-                    ".id_class JOIN teach t on h.fk_teach = t.id JOIN " +
-                    "teachers te on te.id_employee = t.id WHERE te" +
-                    ".id_employee = ? AND EXTRACT(YEAR FROM g.send_at) = " +
-                    "EXTRACT(YEAR FROM CURRENT_DATE) AND sub.id_subject = ? " +
-                    "AND c.id_class = ?";
+            sql = "SELECT DISTINCT S.full_name, D.name, g.grade_type, G.value, G.id_grade FROM students S " +
+                    "JOIN class C ON S.fk_class = C.id_class " +
+                    "JOIN has H ON C.id_class = H.fk_class " +
+                    "JOIN teach P ON H.fk_teach = P.id " +
+                    "JOIN teachers T ON P.fk_teacher = T.id_employee " +
+                    "JOIN grades G ON S.id_student = G.fk_student " +
+                    "JOIN subjects D ON P.fk_subject = D.id_subject AND G.fk_subject = D.id_subject " +
+                    "WHERE EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) AND T.id_employee=? AND D.id_subject = ? AND C.id_class = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_teacher);
@@ -261,22 +257,41 @@ public class TeachersDAO {
 
             ResultSet rs = pstmt.executeQuery();
             GradeForStudent gradeForStudent;
+
             while (rs.next()) {
-                String full_name = rs.getString("full_name");
-                Integer id_student = rs.getInt("id_student");
-                Double n1 = rs.getDouble("n1");
-                if(rs.wasNull()){
-                    n1 = -1.0;
+                gradeForStudent = new GradeForStudent();
+                boolean existe = false;
+                if (!list.isEmpty()) {
+                    for (GradeForStudent student : list) {
+                        if (rs.getInt("id_student") == (student.getId_student())) {
+                            existe = true;
+                            if (student.getN1() == -1.0) {
+                                gradeForStudent.setN1(rs.getDouble("value"));
+                                gradeForStudent.setIdN1(rs.getInt("id_grade"));
+                            } else {
+                                gradeForStudent.setN2(rs.getDouble("value"));
+                                gradeForStudent.setIdN2(rs.getInt("id_grade"));
+                            }
+                        }
+                    }
                 }
-                Integer idn1 = rs.getInt("idn1");
-                Double n2 = rs.getDouble("n2");
-                if(rs.wasNull()){
-                    n2 = -1.0;
+
+                if (!existe) {
+                    int type = rs.getInt("grade_type");
+                    gradeForStudent.setFull_name(rs.getString("full_name"));
+                    gradeForStudent.setId_student(rs.getInt("id_student"));
+                    if (type == 1) {
+                        gradeForStudent.setN1(rs.getDouble("value"));
+                        gradeForStudent.setIdN1(rs.getInt("id_grade"));
+                        gradeForStudent.setN2(-1.0);
+                        gradeForStudent.setIdN2(-1);
+                    } else if (type == 2) {
+                        gradeForStudent.setN1(-1.0);
+                        gradeForStudent.setIdN1(-1);
+                        gradeForStudent.setN2(rs.getDouble("value"));
+                        gradeForStudent.setIdN2(rs.getInt("id_grade"));
+                    }
                 }
-                Integer idn2 = rs.getInt("idn2");
-                gradeForStudent =
-                        new GradeForStudent(full_name,id_student,n1,idn1,n2,
-                                idn2);
                 list.add(gradeForStudent);
             }
             return list;

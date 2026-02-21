@@ -28,6 +28,15 @@ public class GradeForStudent {
             this.average = (n1+n2)/2;
         }
     }
+    public GradeForStudent() {
+        this.full_name = null;
+        this.n1 = null;
+        this.n2 = null;
+        this.id_student = null;
+        this.idN1 = null;
+        this.idN2 = null;
+        this.average = null;
+    }
 
     public String getFull_name() {
         return full_name;
