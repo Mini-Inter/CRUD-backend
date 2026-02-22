@@ -8,22 +8,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Guardian guardian = (Guardian) session.getAttribute("guardian");
-    String error = (String) session.getAttribute("error");
 %>
 <html>
 <head>
     <title>Vidya - Admin</title>
 </head>
 <body>
-<%
-    if (!error.equals("null")) {
-%>
-<p style="color: red"><%=error%></p>
-<%
-        session.setAttribute("error", null);
-    }
-%>
-<form action="<%=request.getContextPath()%>/adminGuardians?type=editGuardian">
+<%@include file="../common/error.jsp"%>
+<form action="<%=request.getContextPath()%>/adminGuardians?type=updateGuardian" method="post">
     <input name="guardian" id="guardian" value="<%=guardian.getId()%>" type="hidden">
     <table>
         <tr>
@@ -35,6 +27,7 @@
             <td><input value="<%=guardian.getBirthDate()%>" name="birth" id="birth" type="date"></td>
         </tr>
     </table>
+    <input value="Enviar" type="submit">
 </form>
 </body>
 </html>

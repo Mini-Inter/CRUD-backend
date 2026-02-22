@@ -18,13 +18,13 @@ public class AdminSubjects extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        Object idAdmin = session.getAttribute("idAdmin");
+        Object admin = session.getAttribute("admin");
         String type = "noot noot";
         if (req.getParameter("type") != null) {
             type = req.getParameter("type");
         }
 
-        if (idAdmin == null) {
+        if (admin == null) {
             resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
         } else {
             switch (type) {
@@ -49,11 +49,11 @@ public class AdminSubjects extends HttpServlet {
 
     private void showSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         SubjectsDAO sub = new SubjectsDAO();
-        Subject subject = sub.read((Integer) req.getAttribute("subject"));
+        Subject subject = sub.read(Integer.parseInt(req.getParameter("subject")));
         HttpSession session = req.getSession();
         session.setAttribute("subject", subject);
 
-        req.getRequestDispatcher("WEB-INF/admin/subjectShow.jsp");
+        req.getRequestDispatcher("WEB-INF/admin/subjectShow.jsp").forward(req, resp);
     }
 
     private void showSubjects(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -62,7 +62,7 @@ public class AdminSubjects extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("subjects", subjects);
 
-        req.getRequestDispatcher("WEB-INF/admin/subjects.jsp");
+        req.getRequestDispatcher("WEB-INF/admin/subjects.jsp").forward(req, resp);
     }
 
     private void editSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -79,7 +79,7 @@ public class AdminSubjects extends HttpServlet {
             SubjectsDAO sub = new SubjectsDAO();
             Subject subject = sub.read(Integer.parseInt(req.getParameter("subject")));
 
-            String nome = req.getParameter("nome");
+            String nome = req.getParameter("name");
             String descricao = req.getParameter("description");
 
             if (!nome.equals(subject.getName())) {
@@ -89,12 +89,15 @@ public class AdminSubjects extends HttpServlet {
                 subject.setDescription(descricao);
             }
 
-            sub.update(subject);
+            if (sub.update(subject)) {
+                HttpSession session = req.getSession();
+                session.setAttribute("success", "Dados da  matéria " + subject.getName() + " alterados com sucesso!");
+            } else {
+                HttpSession session = req.getSession();
+                session.setAttribute("error", "Dados do matéria " + subject.getName() + " não foram alterados!");
+            }
 
-            req.getRequestDispatcher("/adminSubjects").forward(req, resp);
-
-            HttpSession session = req.getSession();
-            session.setAttribute("success", "Dados do professor" + subject.getName() + "alterados com sucesso!");
+            req.getRequestDispatcher("/adminSubjects?type=noot").forward(req, resp);
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
@@ -108,7 +111,7 @@ public class AdminSubjects extends HttpServlet {
             Subject subject = sub.read(Integer.parseInt(req.getParameter("subject")));
 
             if (sub.delete(subject.getId()) == 1) {
-                req.getRequestDispatcher("/adminSubjects").forward(req, resp);
+                req.getRequestDispatcher("/adminSubjects?type=noot").forward(req, resp);
 
                 HttpSession session = req.getSession();
                 session.setAttribute("success", "Matéria " + subject.getName() + " deletado com sucesso!");

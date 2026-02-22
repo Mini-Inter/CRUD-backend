@@ -66,7 +66,7 @@ public class TeachersDAO {
 
             while (rset.next()) {
                 teachers.add(new Teacher(
-                        rset.getInt("id"),
+                        rset.getInt("id_employee"),
                         rset.getString("full_name"),
                         rset.getString("login"),
                         rset.getString("password"),
@@ -475,7 +475,7 @@ public class TeachersDAO {
         }
     }
 
-    public int update(Teacher teacher) {
+    public boolean update(Teacher teacher) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
@@ -494,14 +494,10 @@ public class TeachersDAO {
             pstmt.setDate(7, teacher.getCreatedAt());
             pstmt.setInt(8, teacher.getId());
 
-            if (pstmt.executeUpdate() == 0) {
-                return 0;
-            } else {
-                return 1;
-            }
+            return  pstmt.executeUpdate() > 0;
         } catch (SQLException sqle) {
             sqle.printStackTrace();
-            return -1;
+            return false;
         } finally {
             connection.disconnect(conn);
         }

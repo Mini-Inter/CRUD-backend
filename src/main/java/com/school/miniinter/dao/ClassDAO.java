@@ -109,7 +109,7 @@ public class ClassDAO {
             ResultSet rs = pstmt.executeQuery(sql);
 
             while (rs.next()) {
-                int id_class = rs.getString("id_class").charAt(0);
+                int id_class = Integer.parseInt(rs.getString("id_class"));
                 char series = rs.getString("series").charAt(0);
                 char classroom = rs.getString("classroom").charAt(0);
 

@@ -19,13 +19,13 @@ public class AdminGuardians extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        Object idAdmin = session.getAttribute("idAdmin");
+        Object admin = session.getAttribute("admin");
         String type = "noot noot";
         if (req.getParameter("type") != null) {
             type = req.getParameter("type");
         }
 
-        if (idAdmin == null) {
+        if (admin == null) {
             resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
         } else {
             switch (type) {
@@ -49,11 +49,11 @@ public class AdminGuardians extends HttpServlet {
     }
     private void showGuardian(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         GuardiansDAO gar = new GuardiansDAO();
-        Guardian guardian = gar.read((Integer) req.getAttribute("guardian"));
+        Guardian guardian = gar.read(Integer.parseInt(req.getParameter("guardian")));
         HttpSession session = req.getSession();
         session.setAttribute("guardian", guardian);
 
-        req.getRequestDispatcher("WEB-INF/admin/guardianShow.jsp");
+        req.getRequestDispatcher("WEB-INF/admin/guardianShow.jsp").forward(req, resp);
     }
     private void showGuardians(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         GuardiansDAO gar = new GuardiansDAO();
@@ -61,7 +61,7 @@ public class AdminGuardians extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("guardians", guardians);
 
-        req.getRequestDispatcher("WEB-INF/admin/guardians.jsp");
+        req.getRequestDispatcher("WEB-INF/admin/guardians.jsp").forward(req, resp);
     }
     private void editGuardian(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         GuardiansDAO gar = new GuardiansDAO();
@@ -76,7 +76,7 @@ public class AdminGuardians extends HttpServlet {
             GuardiansDAO gar = new GuardiansDAO();
             Guardian guardian = gar.read(Integer.parseInt(req.getParameter("guardian")));
 
-            String nome = req.getParameter("nome");
+            String nome = req.getParameter("name");
             Date birth =  Date.valueOf(req.getParameter("birth"));
 
             if (!nome.equals(guardian.getName())) {
@@ -86,12 +86,15 @@ public class AdminGuardians extends HttpServlet {
                 guardian.setBirthDate(birth);
             }
 
-            gar.update(guardian);
+            if (gar.update(guardian)) {
+                HttpSession session = req.getSession();
+                session.setAttribute("success", "Dados do professor" + guardian.getName() + "alterados com sucesso!");
+            } else {
+                HttpSession session = req.getSession();
+                session.setAttribute("error", "Dados do professor " + guardian.getName() + " não foram alterados!");
+            }
 
-            req.getRequestDispatcher("/adminGuardians").forward(req, resp);
-
-            HttpSession session = req.getSession();
-            session.setAttribute("success", "Dados do professor" + guardian.getName() + "alterados com sucesso!");
+            req.getRequestDispatcher("/adminGuardians?type=noot").forward(req, resp);
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
@@ -104,7 +107,7 @@ public class AdminGuardians extends HttpServlet {
             Guardian guardian = gar.read(Integer.parseInt(req.getParameter("guardian")));
 
             if (gar.delete(guardian.getId())) {
-                req.getRequestDispatcher("/adminGuardians").forward(req, resp);
+                req.getRequestDispatcher("/adminGuardians?type=noot").forward(req, resp);
 
                 HttpSession session = req.getSession();
                 session.setAttribute("success", "Professor " + guardian.getName() + " deletado com sucesso!");

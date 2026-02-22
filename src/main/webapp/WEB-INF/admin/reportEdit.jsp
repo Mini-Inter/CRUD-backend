@@ -10,7 +10,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Reports reports = (Reports) session.getAttribute("reports");
-    String error = (String) session.getAttribute("error");
 
     List<Students> students = (List<Students>) session.getAttribute("students");
 %>
@@ -19,23 +18,16 @@
     <title>Vidya - Admin</title>
 </head>
 <body>
-<%
-    if (!error.equals("null")) {
-%>
-<p style="color: red"><%=error%></p>
-<%
-        session.setAttribute("error", null);
-    }
-%>
-<form action="<%=request.getContextPath()%>/adminReports?type=editReports">
+<%@include file="../common/error.jsp"%>
+<form action="<%=request.getContextPath()%>/adminReports?type=updateReport" method="post">
     <input name="reports" id="reports" value="<%=reports.getId()%>" type="hidden">
     <table>
         <tr>
-            <th><label for="name">Tipo:</label></th>
-            <td><input value="<%=reports.getType()%>" name="description" id="description" type="text"></td>
+            <th><label for="type">Tipo:</label></th>
+            <td><input value="<%=reports.getType()%>" name="type" id="type" type="text"></td>
         </tr>
         <tr>
-            <th><label for="birth">Descrição:</label></th>
+            <th><label for="description">Descrição:</label></th>
             <td><input value="<%=reports.getDescription()%>" name="description" id="description" type="date"></td>
         </tr>
         <tr>
@@ -52,6 +44,7 @@
             </th>
         </tr>
     </table>
+    <input value="Enviar" type="submit">
 </form>
 </body>
 </html>

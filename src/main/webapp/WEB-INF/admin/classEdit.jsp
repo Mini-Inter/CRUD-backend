@@ -13,7 +13,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Class classroom = (Class) session.getAttribute("classroom");
-    String error = (String) session.getAttribute("error");
 
     Teaching[] aulas = (Teaching[]) session.getAttribute("aulas");
     List<Teacher> teachers = (List<Teacher>) session.getAttribute("teachers");
@@ -24,15 +23,8 @@
     <title>Vidya - Admin</title>
 </head>
 <body>
-<%
-    if (!error.equals("null")) {
-%>
-<p style="color: red"><%=error%></p>
-<%
-        session.setAttribute("error", null);
-    }
-%>
-<form action="<%=request.getContextPath()%>/adminClasses?type=editClass">
+<%@include file="../common/error.jsp"%>
+<form action="<%=request.getContextPath()%>/adminClasses?type=updateClass" method="post">
     <input name="classroom" id="classroom" value="<%=classroom.getId()%>" type="hidden">
     <table>
         <tr>
@@ -84,6 +76,7 @@
             }
         %>
     </table>
+    <input value="Enviar" type="submit">
 </form>
 </body>
 </html>

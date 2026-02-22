@@ -9,34 +9,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     List<Subject> subjects = (List<Subject>) session.getAttribute("subjects");
-    String success = (String) session.getAttribute("success");
-    String error = (String) session.getAttribute("error");
 %>
 <html>
 <head>
     <title>Vidya - Admin</title>
 </head>
 <body>
+<%@include file="../common/menuCRUD.jsp"%>
+<%@include file="../common/error.jsp"%>
 <%
-    if (!success.equals("null")) {
+    if (subjects == null || subjects.isEmpty()) {
 %>
-<p style="color: green"><%=success%></p>
-<%
-        session.setAttribute("error", null);
-    }
-%>
-<%
-    if (!error.equals("null")) {
-%>
-<p style="color: red"><%=error%></p>
-<%
-        session.setAttribute("error", null);
-    }
-%>
-<%
-    if (subjects.isEmpty()) {
-%>
-<h2>Nenhum professor encontrado!</h2>
+<h2>Nenhuma matéria encontrada!</h2>
 <%
 } else {
 %>
@@ -57,10 +41,14 @@
                 <input name="subject" id="subject" value="<%=subject.getId()%>" type="hidden">
                 <input value="Ver" type="submit">
             </form>
+        </td>
+        <td>
             <form action="<%=request.getContextPath()%>/adminSubjects?type=editSubject" method="post">
                 <input name="subject" id="subject" value="<%=subject.getId()%>" type="hidden">
                 <input value="Editar" type="submit">
             </form>
+        </td>
+        <td>
             <form action="<%=request.getContextPath()%>/adminSubjects?type=deleteSubject" method="post">
                 <input name="subject" id="subject" value="<%=subject.getId()%>" type="hidden">
                 <input value="Deletar" type="submit">
@@ -76,3 +64,9 @@
 %>
 </body>
 </html>
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>

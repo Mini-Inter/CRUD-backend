@@ -9,30 +9,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     List<Guardian> guardians = (List<Guardian>) session.getAttribute("guardians");
-    String success = (String) session.getAttribute("success");
-    String error = (String) session.getAttribute("error");
 %>
 <html>
 <head>
     <title>Vidya - Admin</title>
 </head>
 <body>
-<%
-    if (!success.equals("null")) {
-%>
-<p style="color: green"><%=success%></p>
-<%
-        session.setAttribute("error", null);
-    }
-%>
-<%
-    if (!error.equals("null")) {
-%>
-<p style="color: red"><%=error%></p>
-<%
-        session.setAttribute("error", null);
-    }
-%>
+<%@include file="../common/menuCRUD.jsp"%>
+<%@include file="../common/error.jsp"%>
 <%
     if (guardians.isEmpty()) {
 %>
@@ -57,10 +41,14 @@
                 <input name="guardian" id="guardian" value="<%=guardian.getId()%>" type="hidden">
                 <input value="Ver" type="submit">
             </form>
-            <form action="<%=request.getContextPath()%>/adminGuardians?type=editGuardian" method="post">
-                <input name="guardian" id="guardian" value="<%=guardian.getId()%>" type="hidden">
-                <input value="Editar" type="submit">
-            </form>
+        </td>
+        <td>
+        <form action="<%=request.getContextPath()%>/adminGuardians?type=editGuardian" method="post">
+            <input name="guardian" id="guardian" value="<%=guardian.getId()%>" type="hidden">
+            <input value="Editar" type="submit">
+        </form>
+        </td>
+        <td>
             <form action="<%=request.getContextPath()%>/adminGuardians?type=deleteGuardian" method="post">
                 <input name="guardian" id="guardian" value="<%=guardian.getId()%>" type="hidden">
                 <input value="Deletar" type="submit">
@@ -76,3 +64,9 @@
 %>
 </body>
 </html>
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>

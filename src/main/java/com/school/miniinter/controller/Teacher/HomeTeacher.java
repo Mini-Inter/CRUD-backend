@@ -33,7 +33,7 @@ public class HomeTeacher extends HttpServlet {
             HomeTeacherInfo homeTeacherInfo =
                     teachersDAO.readHomeInfoTeacher(id_teacher,idSubject);
 
-            homeTeacherInfo.setSubject(subjectsDAO.readById(idSubject).getName());
+            homeTeacherInfo.setSubject(subjectsDAO.read(idSubject).getName());
             request.setAttribute("homeTeacherInfo",homeTeacherInfo);
 
             request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request,response);

@@ -14,12 +14,6 @@
     <title>Vidya - Admin</title>
 </head>
 <body>
-<form action="<%=request.getContextPath()%>/adminClasses"></form>
-<form action="<%=request.getContextPath()%>/adminGuardians"></form>
-<form action="<%=request.getContextPath()%>/adminReports"></form>
-<form action="<%=request.getContextPath()%>/adminStudents"></form>
-<form action="<%=request.getContextPath()%>/adminSubjects"></form>
-<form action="<%=request.getContextPath()%>/adminTeachers"></form>
     <table>
         <tr>
             <th>Nome:</th>

@@ -20,13 +20,13 @@ public class AdminReports extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        Object idAdmin = session.getAttribute("idAdmin");
+        Object admin = session.getAttribute("admin");
         String type = "noot noot";
         if (req.getParameter("type") != null) {
             type = req.getParameter("type");
         }
 
-        if (idAdmin == null) {
+        if (admin == null) {
             resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
         } else {
             switch (type) {
@@ -50,11 +50,11 @@ public class AdminReports extends HttpServlet {
     }
     private void showReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ReportsDAO rep = new ReportsDAO();
-        CompleteReport report = rep.readCompleteReport((Integer) req.getAttribute("report"));
+        CompleteReport report = rep.readCompleteReport(Integer.parseInt(req.getParameter("report")));
         HttpSession session = req.getSession();
         session.setAttribute("report", report);
 
-        req.getRequestDispatcher("WEB-INF/admin/reportShow.jsp");
+        req.getRequestDispatcher("WEB-INF/admin/reportShow.jsp").forward(req, resp);
     }
     private void showReports(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ReportsDAO rep = new ReportsDAO();
@@ -62,7 +62,7 @@ public class AdminReports extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("reports", reports);
 
-        req.getRequestDispatcher("WEB-INF/admin/reports.jsp");
+        req.getRequestDispatcher("WEB-INF/admin/reports.jsp").forward(req, resp);
     }
     private void editReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ReportsDAO rep = new ReportsDAO();
@@ -87,12 +87,15 @@ public class AdminReports extends HttpServlet {
                 report.setType(type);
             }
 
-            rep.update(report);
+            if (rep.update(report)) {
+                HttpSession session = req.getSession();
+                session.setAttribute("success", "Observação alterada com sucesso!");
+            } else {
+                HttpSession session = req.getSession();
+                session.setAttribute("error", "Observação não foi alterada!");
+            }
 
-            req.getRequestDispatcher("/adminReports").forward(req, resp);
-
-            HttpSession session = req.getSession();
-            session.setAttribute("success", "Observação alterada com sucesso!");
+            req.getRequestDispatcher("/adminReports?type=noot").forward(req, resp);
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
@@ -105,7 +108,7 @@ public class AdminReports extends HttpServlet {
             Reports report = rep.read(Integer.parseInt(req.getParameter("report")));
 
             if (rep.delete(report.getId())) {
-                req.getRequestDispatcher("/adminReports").forward(req, resp);
+                req.getRequestDispatcher("/adminReports?type=noot").forward(req, resp);
 
                 HttpSession session = req.getSession();
                 session.setAttribute("success", "Observação deletada com sucesso!");

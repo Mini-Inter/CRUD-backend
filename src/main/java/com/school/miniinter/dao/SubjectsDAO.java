@@ -51,7 +51,7 @@ public class SubjectsDAO {
             rset = pstmt.executeQuery(sql);
             while (rset.next()) {
                 subjects.add(new Subject(
-                        rset.getInt("id"),
+                        rset.getInt("id_subject"),
                         rset.getString("description"),
                         rset.getString("name")
                 ));
@@ -184,7 +184,7 @@ public class SubjectsDAO {
             connection.disconnect(conn);
         }
     }
-    public int update(Subject subject) {
+    public boolean update(Subject subject) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
@@ -198,14 +198,10 @@ public class SubjectsDAO {
             pstmt.setString(2, subject.getDescription());
             pstmt.setInt(3, subject.getId());
 
-            if (pstmt.executeUpdate() == 0) {
-                return 0;
-            } else {
-                return 1;
-            }
+            return  pstmt.executeUpdate() > 0;
         } catch (SQLException sqle) {
             sqle.printStackTrace();
-            return -1;
+            return false;
         } finally {
             connection.disconnect(conn);
         }

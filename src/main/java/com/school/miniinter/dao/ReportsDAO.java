@@ -158,11 +158,11 @@ public class ReportsDAO {
 
         try {
             conn = connection.connect();
-            String sql = "SELECT R.send_at, R.type, R.description, T.full_name \"teacher\", STRING_AGG(S.full_name, '|') \"students\" FROM reports R " +
+            String sql = "SELECT R.id, R.send_at, R.type, R.description, T.full_name \"teacher\", STRING_AGG(S.full_name, '|') \"students\" FROM reports R " +
                     "JOIN receive H ON R.id = H.fk_report " +
                     "JOIN students S ON H.fk_student = S.id_student " +
                     "JOIN teachers T ON R.fk_teacher = T.id_employee " +
-                    "GROUP BY 1, 2, 3, 4";
+                    "GROUP BY 1, 2, 3, 4, 5";
             Statement stmt = conn.createStatement();
 
             ResultSet rset = stmt.executeQuery(sql);
