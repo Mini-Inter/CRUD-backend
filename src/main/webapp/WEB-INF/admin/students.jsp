@@ -25,12 +25,15 @@
 <%
 } else {
 %>
+<form action="<%=request.getContextPath()%>/adminStudents?type=createStudent" method="post">
+    <input value="Criar" type="submit">
+</form>
 <table>
     <tr>
         <th>Nome Completo</th>
         <th>Email</th>
         <th>Data de nascimento</th>
-        <th colspan="3">Ações</th>
+        <th colspan="4">Ações</th>
     </tr>
     <%
         for (Students student : students) {
@@ -56,6 +59,7 @@
                 <input name="student" id="student" value="<%=student.getId_student()%>" type="hidden">
                 <input value="Deletar" type="submit">
             </form>
+        </td>
         </td>
     </tr>
     <%
