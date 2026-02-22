@@ -9,7 +9,7 @@ import java.util.List;
 
 public class SubjectsDAO {
 
-    public int insert(Subject subject){
+    public boolean insert(Subject subject){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
@@ -21,21 +21,19 @@ public class SubjectsDAO {
                     "VALUES(?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setString(1,subject.getName());
-            pstmt.setString(2,subject.getDescription());
+            pstmt.setString(1,subject.getDescription());
+            pstmt.setString(2,subject.getName());
 
-            if (pstmt.executeUpdate()>0) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return pstmt.execute();
         } catch(SQLException sqle){
             sqle.printStackTrace();
-            return -1;
+            return false;
         } finally {
             connection.disconnect(conn);
         }
     }
+
+
     public List<Subject> read() {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;

@@ -6,13 +6,35 @@ public class TeachingAssignment {
     private Integer idSubject;
     private Integer idTeacher;
     private Integer classNumber;
+    private String class_hour;
 
-    public TeachingAssignment(Integer id, Integer idClass, Integer idSubject, Integer idTeacher, Integer classNumber) {
+    public TeachingAssignment(Integer id, Integer idClass, Integer idSubject,
+                              Integer idTeacher, Integer classNumber) {
         this.id = id;
         this.idClass = idClass;
         this.idSubject = idSubject;
         this.idTeacher = idTeacher;
         this.classNumber = classNumber;
+        switch (this.classNumber) {
+            case (1) -> {
+                this.class_hour = "07:00 - 07:55";
+            }
+            case (2) -> {
+                this.class_hour = "08:00 - 08:55";
+            }
+            case (3) -> {
+                this.class_hour = "09:00 - 09:55";
+            }
+            case (4) -> {
+                this.class_hour = "10:30 - 11:25";
+            }
+            case (5) -> {
+                this.class_hour = "11:30 - 12:25";
+            }
+            case (6) -> {
+                this.class_hour = "12:30 - 13:25";
+            }
+        }
     }
 
     public Integer getId() {

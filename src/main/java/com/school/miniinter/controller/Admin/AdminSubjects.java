@@ -15,6 +15,7 @@ import java.util.List;
 
 @WebServlet(name="adminSubjects", urlPatterns = "/adminSubjects")
 public class AdminSubjects extends HttpServlet {
+    SubjectsDAO sub = new SubjectsDAO();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -34,6 +35,12 @@ public class AdminSubjects extends HttpServlet {
                 case ("editSubject") -> {
                     editSubject(req, resp);
                 }
+                case ("createSubject") -> {
+                    createSubject(req,resp);
+                }
+                case ("insertSubject") -> {
+                    insertSubject(req,resp);
+                }
                 case ("updateSubject") -> {
                     updateSubject(req, resp);
                 }
@@ -48,7 +55,6 @@ public class AdminSubjects extends HttpServlet {
     }
 
     private void showSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SubjectsDAO sub = new SubjectsDAO();
         Subject subject = sub.read(Integer.parseInt(req.getParameter("subject")));
         HttpSession session = req.getSession();
         session.setAttribute("subject", subject);
@@ -57,7 +63,6 @@ public class AdminSubjects extends HttpServlet {
     }
 
     private void showSubjects(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SubjectsDAO sub = new SubjectsDAO();
         List<Subject> subjects = sub.read();
         HttpSession session = req.getSession();
         session.setAttribute("subjects", subjects);
@@ -65,8 +70,38 @@ public class AdminSubjects extends HttpServlet {
         req.getRequestDispatcher("WEB-INF/admin/subjects.jsp").forward(req, resp);
     }
 
+    private void createSubject(HttpServletRequest req,
+                               HttpServletResponse resp) throws ServletException, IOException{
+        req.getRequestDispatcher("WEB-INF/admin/subjectInsert.jsp").forward(req,resp);
+    }
+
+    private void insertSubject(HttpServletRequest req,
+                               HttpServletResponse resp) throws ServletException, IOException{
+        try{
+            String description = req.getParameter("description");
+            String name = req.getParameter("name");
+
+            Subject subject = new Subject(description,name);
+
+            if(sub.insert(subject)){
+                HttpSession session = req.getSession();
+                session.setAttribute("success", "Dados da matéira criados " +
+                        "com sucesso!");
+            } else {
+                HttpSession session = req.getSession();
+                session.setAttribute("error", "Ocorreu um erro ao criar os " +
+                        "dados de matéria, tente novamente!");
+            }
+            req.getRequestDispatcher("/adminSubjects?type=noot").forward(req,
+                    resp);
+
+        } catch (NullPointerException exc) {
+            HttpSession session = req.getSession();
+            session.setAttribute("error", "Alguns dados não foram preenchidos!");
+            req.getRequestDispatcher("adminSubjects?type=createSubject").forward(req, resp);
+        }
+    }
     private void editSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SubjectsDAO sub = new SubjectsDAO();
         Subject subject = sub.read(Integer.parseInt(req.getParameter("subject")));
         HttpSession session = req.getSession();
         session.setAttribute("subject", subject);
@@ -76,7 +111,6 @@ public class AdminSubjects extends HttpServlet {
 
     private void updateSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            SubjectsDAO sub = new SubjectsDAO();
             Subject subject = sub.read(Integer.parseInt(req.getParameter("subject")));
 
             String nome = req.getParameter("name");
@@ -107,7 +141,6 @@ public class AdminSubjects extends HttpServlet {
 
     private void deleteSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            SubjectsDAO sub = new SubjectsDAO();
             Subject subject = sub.read(Integer.parseInt(req.getParameter("subject")));
 
             if (sub.delete(subject.getId()) == 1) {

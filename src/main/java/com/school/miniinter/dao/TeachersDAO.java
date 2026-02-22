@@ -17,33 +17,30 @@ import java.util.Date;
 public class TeachersDAO {
 
     String sql;
-    public int insert(Teacher teacher){
+    public boolean insert(Teacher teacher){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
         try {
             conn = connection.connect();
             sql = "INSERT INTO teachers" +
-                    "(last_name, first_name, full_name, birth_date, login, password, created_at)" +
+                    "(last_name, first_name, full_name, birth_date, login," +
+                    "phone, password)" +
                     "VALUES(?,?,?,?,?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1,teacher.getLastName());
             pstmt.setString(2,teacher.getFirstName());
-            pstmt.setString(3,teacher.getFirstName() + " " + teacher.getLastName());
+            pstmt.setString(3,teacher.getName());
             pstmt.setDate(4,teacher.getBirthDate());
             pstmt.setString(5,teacher.getLogin());
-            pstmt.setString(6,teacher.getPassword());
-            pstmt.setDate(7,teacher.getCreatedAt());
+            pstmt.setString(6,teacher.getPhone());
+            pstmt.setString(7,teacher.getPassword());
 
-            if (pstmt.executeUpdate()>0) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return pstmt.execute();
         }catch(SQLException sqle){
             sqle.printStackTrace();
-            return -1;
+            return false;
         }finally {
             connection.disconnect(conn);
         }
@@ -69,6 +66,7 @@ public class TeachersDAO {
                         rset.getInt("id_employee"),
                         rset.getString("full_name"),
                         rset.getString("login"),
+                        rset.getString("phone"),
                         rset.getString("password"),
                         rset.getDate("birth_date"),
                         rset.getDate("created_at")
@@ -87,12 +85,12 @@ public class TeachersDAO {
     public Teacher read(int id) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
-        ResultSet rset = null;
+        ResultSet rset;
 
         try {
             conn = connection.connect();
 
-            sql = "SELECT * FROM teachers WHERE id=?";
+            sql = "SELECT * FROM teachers WHERE id_employee=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id);
@@ -100,9 +98,10 @@ public class TeachersDAO {
             rset = pstmt.executeQuery();
             if (rset.next()) {
                 return new Teacher(
-                        rset.getInt("id"),
+                        rset.getInt("id_employee"),
                         rset.getString("full_name"),
                         rset.getString("login"),
+                        rset.getString("phone"),
                         rset.getString("password"),
                         rset.getDate("birth_date"),
                         rset.getDate("created_at")
@@ -136,6 +135,7 @@ public class TeachersDAO {
                         rset.getInt("id"),
                         rset.getString("full_name"),
                         rset.getString("login"),
+                        rset.getString("phone"),
                         rset.getString("password"),
                         rset.getDate("birth_date"),
                         rset.getDate("created_at")
@@ -239,6 +239,7 @@ public class TeachersDAO {
                             rset.getInt("id_employee"),
                             rset.getString("full_name"),
                             login,
+                            rset.getString("phone"),
                             rset.getString("password"),
                             rset.getDate("birth_date"),
                             rset.getDate("created_at")

@@ -3,10 +3,8 @@ package com.school.miniinter.dao;
 import com.school.miniinter.connection.ConnectionFactory;
 import com.school.miniinter.models.PreRegistration.PreRegistration;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.swing.plaf.nimbus.State;
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,7 +45,7 @@ public class PreRegistrationDAO {
         try{
             conn = connection.connect();
 
-            sql = "UPDATE students SET fk_student = ? WHERE id = ?";
+            sql = "UPDATE preRegistration SET fk_student = ? WHERE id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,idStudent);
@@ -62,32 +60,30 @@ public class PreRegistrationDAO {
         }
     }
 
-    public PreRegistration readById(int id) {
+    public List<PreRegistration> readAllAvailableCpf(){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
-        ResultSet rset;
-        PreRegistration preReg;
-        try {
+        List<PreRegistration> list = new LinkedList<>();
+        PreRegistration pre = null;
+        try{
             conn = connection.connect();
 
-            sql = "SELECT * FROM pre_registration WHERE id=?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            sql = "SELECT * FROM preRegistration WHERE fk_student is null";
+            Statement stmt = conn.createStatement();
 
-            pstmt.setInt(1,id);
+            ResultSet rs = stmt.executeQuery(sql);
 
-            rset = pstmt.executeQuery();
-            if (rset.next()) {
-                return new PreRegistration(
-                        rset.getInt("id"),
-                        rset.getString("cpf")
-                );
+            while(rs.next()){
+                pre = new PreRegistration(rs.getInt("id"),rs.getString("cpf"));
+                list.add(pre);
             }
-        } catch(SQLException sqle){
+            return list;
+        }catch(SQLException sqle){
             sqle.printStackTrace();
-        } finally {
+            return list;
+        }finally {
             connection.disconnect(conn);
         }
-        return null;
     }
     public PreRegistration read(String cpf) {
         ConnectionFactory connection = new ConnectionFactory();
@@ -97,7 +93,8 @@ public class PreRegistrationDAO {
         try {
             conn = connection.connect();
 
-            sql = "SELECT * FROM pre_registration WHERE cpf=?";
+            sql = "SELECT * FROM preRegistration WHERE cpf Like ? AND " +
+                    "fk_student is null ";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, cpf);
@@ -114,6 +111,27 @@ public class PreRegistrationDAO {
         } catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
+        } finally {
+            connection.disconnect(conn);
+        }
+    }
+
+    public boolean updateFkStudentById(PreRegistration preReg){
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+
+        try {
+            conn = connection.connect();
+            sql = "UPDATE pre_registration SET fk_student = ? WHERE id=?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,preReg.getFk_student());
+            pstmt.setInt(2, preReg.getId());
+
+            return pstmt.executeUpdate() >0;
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+            return false;
         } finally {
             connection.disconnect(conn);
         }

@@ -1,5 +1,6 @@
 package com.school.miniinter.controller.Admin;
 
+import com.school.miniinter.config.HashConfig;
 import com.school.miniinter.dao.TeachersDAO;
 import com.school.miniinter.models.Teacher.Teacher;
 import com.school.miniinter.utils.EmailUtils;
@@ -12,11 +13,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.util.List;
 
 @WebServlet(name="adminTeachers", urlPatterns = "/adminTeachers")
 public class AdminTeachers extends HttpServlet {
+    TeachersDAO teach = new TeachersDAO();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -36,6 +39,12 @@ public class AdminTeachers extends HttpServlet {
                 case ("editTeacher") -> {
                     editTeacher(req, resp);
                 }
+                case ("createTeacher") -> {
+                    createTeacher(req,resp);
+                }
+                case ("insertTeacher") -> {
+                    insertTeacher(req,resp);
+                }
                 case ("updateTeacher") -> {
                     updateTeacher(req, resp);
                 }
@@ -50,7 +59,6 @@ public class AdminTeachers extends HttpServlet {
     }
 
     private void showTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        TeachersDAO teach = new TeachersDAO();
         Teacher teacher = teach.read(Integer.parseInt(req.getParameter("teacher")));
         HttpSession session = req.getSession();
         session.setAttribute("teacher", teacher);
@@ -59,7 +67,6 @@ public class AdminTeachers extends HttpServlet {
     }
 
     private void showTeachers(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        TeachersDAO teach = new TeachersDAO();
         List<Teacher> teachers = teach.read();
         HttpSession session = req.getSession();
         session.setAttribute("teachers", teachers);
@@ -68,7 +75,6 @@ public class AdminTeachers extends HttpServlet {
     }
 
     private void editTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        TeachersDAO teach = new TeachersDAO();
         Teacher teacher = teach.read(Integer.parseInt(req.getParameter("teacher")));
         HttpSession session = req.getSession();
         session.setAttribute("teacher", teacher);
@@ -76,9 +82,51 @@ public class AdminTeachers extends HttpServlet {
         req.getRequestDispatcher("WEB-INF/admin/teacherEdit.jsp").forward(req, resp);
     }
 
+    private void createTeacher(HttpServletRequest req,
+                               HttpServletResponse resp) throws ServletException, IOException{
+        req.getRequestDispatcher("WEB-INF/admin/teacherInsert.jsp").forward(req,resp);
+    }
+
+    private void insertTeacher(HttpServletRequest req,
+                               HttpServletResponse resp) throws ServletException, IOException {
+        try {
+
+            String name = req.getParameter("name");
+            String email = req.getParameter("email");
+            Date birth =  Date.valueOf(req.getParameter("birth"));
+            String password = req.getParameter("pass");
+            String phone = req.getParameter("phone");
+
+            try{
+                password = HashConfig.hashSenha(password);
+            }catch(NoSuchAlgorithmException nsae){
+                nsae.printStackTrace();
+            }
+            if (!EmailUtils.verifyEmail(email)) {
+                throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
+            }
+            email = email.substring(0, email.indexOf("@"));
+
+            Teacher teacher = new Teacher(name,email,phone,password,birth);
+
+            if (teach.insert(teacher)) {
+                HttpSession session = req.getSession();
+                session.setAttribute("success", "Dados do professor " + teacher.getName() + " alterados com sucesso!");
+            } else {
+                HttpSession session = req.getSession();
+                session.setAttribute("success", "Dados do professor " + teacher.getName() + " não foram alterados!");
+            }
+
+            req.getRequestDispatcher("/adminTeachers?type=noot").forward(req, resp);
+        } catch (NullPointerException exc) {
+            HttpSession session = req.getSession();
+            session.setAttribute("error", "Alguns dados não foram preenchidos!");
+            req.getRequestDispatcher("adminTeachers?type=createTeacher").forward(req, resp);
+        }
+    }
+
     private void updateTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            TeachersDAO teach = new TeachersDAO();
             Teacher teacher = teach.read(Integer.parseInt(req.getParameter("teacher")));
 
             String nome = req.getParameter("name");
@@ -101,6 +149,11 @@ public class AdminTeachers extends HttpServlet {
                 teacher.setBirthDate(birth);
             }
             if (!password.isBlank() && !password.equals(teacher.getPassword())) {
+                try{
+                    password = HashConfig.hashSenha(password);
+                }catch(NoSuchAlgorithmException nsae){
+                    nsae.printStackTrace();
+                }
                 teacher.setPassword(password);
             }
 
@@ -122,7 +175,6 @@ public class AdminTeachers extends HttpServlet {
 
     private void deleteTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            TeachersDAO teach = new TeachersDAO();
             Teacher teacher = teach.read(Integer.parseInt(req.getParameter("teacher")));
 
             if (teach.delete(teacher.getId()) == 1) {

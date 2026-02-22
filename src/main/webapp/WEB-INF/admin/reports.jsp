@@ -18,6 +18,7 @@
 <body>
 <%@include file="../common/menuCRUD.jsp"%>
 <%@include file="../common/error.jsp"%>
+<form action="adminReports?type=createReport" method="post"><input type="submit" value="Criar Observação"></form>
 <%
     if (reports == null || reports.isEmpty()) {
 %>
@@ -52,19 +53,20 @@
         </td>
         <td><%=report.getSend_at()%></td>
         <td>
-            <form action="<%=request.getContextPath()%>/adminReports?type=showReports" method="post">
+            <form
+                    action="<%=request.getContextPath()%>/adminReports?type=showReport" method="post">
                 <input name="report" id="report" value="<%=report.getId()%>" type="hidden">
                 <input value="Ver" type="submit">
             </form>
         </td>
         <td>
-            <form action="<%=request.getContextPath()%>/adminReports?type=editReports" method="post">
+            <form action="<%=request.getContextPath()%>/adminReports?type=editReport" method="post">
                 <input name="report" id="report" value="<%=report.getId()%>" type="hidden">
                 <input value="Editar" type="submit">
             </form>
         </td>
         <td>
-            <form action="<%=request.getContextPath()%>/adminReports?type=deleteReports" method="post">
+            <form action="<%=request.getContextPath()%>/adminReports?type=deleteReport" method="post">
                 <input name="report" id="report" value="<%=report.getId()%>" type="hidden">
                 <input value="Deletar" type="submit">
             </form>

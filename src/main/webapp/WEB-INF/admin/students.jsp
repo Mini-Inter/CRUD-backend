@@ -18,6 +18,7 @@
 <body>
 <%@include file="../common/menuCRUD.jsp"%>
 <%@include file="../common/error.jsp"%>
+<form action="<%=request.getContextPath()%>/adminStudents?type=createStudent" method="post"><input value="Criar" type="submit"></form>
 <%
     if (students.isEmpty()) {
 %>
@@ -25,9 +26,6 @@
 <%
 } else {
 %>
-<form action="<%=request.getContextPath()%>/adminStudents?type=createStudent" method="post">
-    <input value="Criar" type="submit">
-</form>
 <table>
     <tr>
         <th>Nome Completo</th>

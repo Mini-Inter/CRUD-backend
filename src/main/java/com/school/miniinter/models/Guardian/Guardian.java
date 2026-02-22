@@ -9,6 +9,13 @@ public class Guardian {
     private String lastName;
     private Date birthDate;
 
+    public Guardian(String name, Date birthDate) {
+        this.name = name;
+        this.birthDate = birthDate;
+        setFirstName();
+        setLastName();
+    }
+
     public Guardian(int id, String name, Date birthDate) {
         this.id = id;
         this.name = name;

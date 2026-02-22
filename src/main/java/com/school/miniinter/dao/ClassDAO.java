@@ -3,6 +3,7 @@ package com.school.miniinter.dao;
 import com.itextpdf.layout.element.Link;
 import com.school.miniinter.connection.ConnectionFactory;
 
+import java.net.ConnectException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -41,6 +42,29 @@ public class ClassDAO {
             sqle.printStackTrace();
             return null;
         }finally{
+            connection.disconnect(conn);
+        }
+    }
+
+    public boolean insert(Class classInsert){
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+
+        try{
+            conn = connection.connect();
+
+            sql = "INSERT INTO class(series,classroom,academic_year) VALUES" +
+                    "(?,?,EXTRACT(YEAR FROM CURRENT_DATE))";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,String.valueOf(classInsert.getSeries()));
+            pstmt.setString(2,String.valueOf(classInsert.getSeries()));
+
+            return pstmt.execute();
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return false;
+        }finally {
             connection.disconnect(conn);
         }
     }
@@ -133,13 +157,13 @@ public class ClassDAO {
             conn = connection.connect();
 
             sql = "UPDATE class " +
-                    "SET series = ? AND classroom = ? " +
+                    "SET series = ?, classroom = ? " +
                     "WHERE id_class = ?";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setInt(1, classroom.getSeries());
-            pstmt.setInt(2, classroom.getClassroom());
+            pstmt.setString(1, String.valueOf(classroom.getSeries()));
+            pstmt.setString(2, String.valueOf(classroom.getClassroom()));
             pstmt.setInt(3, classroom.getId());
 
             return pstmt.executeUpdate() > 0;

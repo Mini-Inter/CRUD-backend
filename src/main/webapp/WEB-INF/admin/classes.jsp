@@ -17,6 +17,7 @@
 <body>
 <%@include file="../common/menuCRUD.jsp"%>
 <%@include file="../common/error.jsp"%>
+<form action="adminClasses?type=createClass" method="post"><input type="submit" value="Adicionar"></form>
 <%
     if (classes.isEmpty()) {
 %>

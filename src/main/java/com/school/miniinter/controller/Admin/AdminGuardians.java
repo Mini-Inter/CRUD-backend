@@ -16,8 +16,11 @@ import java.util.List;
 
 @WebServlet(name="adminGuardians", urlPatterns = "/adminGuardians")
 public class AdminGuardians extends HttpServlet {
+
+    GuardiansDAO gar = new GuardiansDAO();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         HttpSession session = req.getSession();
         Object admin = session.getAttribute("admin");
         String type = "noot noot";
@@ -35,6 +38,12 @@ public class AdminGuardians extends HttpServlet {
                 case ("editGuardian") -> {
                     editGuardian(req, resp);
                 }
+                case ("createGuardian") -> {
+                    createGuardian(req,resp);
+                }
+                case ("insertGuardian") -> {
+                    insertGuardian(req,resp);
+                }
                 case ("updateGuardian") -> {
                     updateGuardian(req, resp);
                 }
@@ -48,7 +57,6 @@ public class AdminGuardians extends HttpServlet {
         }
     }
     private void showGuardian(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        GuardiansDAO gar = new GuardiansDAO();
         Guardian guardian = gar.read(Integer.parseInt(req.getParameter("guardian")));
         HttpSession session = req.getSession();
         session.setAttribute("guardian", guardian);
@@ -56,12 +64,43 @@ public class AdminGuardians extends HttpServlet {
         req.getRequestDispatcher("WEB-INF/admin/guardianShow.jsp").forward(req, resp);
     }
     private void showGuardians(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        GuardiansDAO gar = new GuardiansDAO();
         List<Guardian> guardians = gar.read();
         HttpSession session = req.getSession();
         session.setAttribute("guardians", guardians);
 
         req.getRequestDispatcher("WEB-INF/admin/guardians.jsp").forward(req, resp);
+    }
+
+    private void createGuardian(HttpServletRequest req,
+                                HttpServletResponse resp) throws  ServletException, IOException{
+        req.getRequestDispatcher("WEB-INF/admin/guardianInsert.jsp").forward(req,resp);
+    }
+    private void insertGuardian(HttpServletRequest req,
+                                HttpServletResponse resp)throws ServletException, IOException{
+        try {
+            String name = req.getParameter("name");
+            Date date = Date.valueOf(req.getParameter("birth"));
+
+            Guardian guardianInsert = new Guardian(name, date);
+
+            if (gar.insert(guardianInsert)) {
+                HttpSession session = req.getSession();
+                session.setAttribute("success", "Dados do estudante " +
+                        "responsável inseridos com sucesso!");
+            } else {
+                HttpSession session = req.getSession();
+                session.setAttribute("error", "Ocorreu um erro ao inserir os " +
+                        "dados do responsável,tente novamente!");
+            }
+
+            req.getRequestDispatcher("/adminGuardians?type=noot").forward(req,
+                    resp);
+        }catch (NullPointerException exc) {
+            HttpSession session = req.getSession();
+            session.setAttribute("error", "Alguns dados não foram preenchidos!");
+            req.getRequestDispatcher("WEB-INF/admin/guardianInsert.jsp").forward(req, resp);
+        }
+
     }
     private void editGuardian(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         GuardiansDAO gar = new GuardiansDAO();

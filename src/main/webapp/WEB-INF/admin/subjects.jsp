@@ -17,6 +17,7 @@
 <body>
 <%@include file="../common/menuCRUD.jsp"%>
 <%@include file="../common/error.jsp"%>
+<form action="adminSubjects?type=createSubject" method="post"><input type="submit" value="Criar matéria"></form>
 <%
     if (subjects == null || subjects.isEmpty()) {
 %>

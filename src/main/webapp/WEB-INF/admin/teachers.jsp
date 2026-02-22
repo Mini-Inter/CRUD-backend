@@ -17,7 +17,7 @@
 <body>
 <%@include file="../common/menuCRUD.jsp"%>
 <%@include file="../common/error.jsp"%>
-
+<form action="adminTeachers?type=createTeacher" method="post"><input type="submit" value="Criar Professor"></form>
     <%
     if (teachers == null || teachers.isEmpty()) {
     %>

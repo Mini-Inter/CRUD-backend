@@ -1,14 +1,14 @@
 package com.school.miniinter.controller.Admin;
 
-import com.school.miniinter.dao.ClassDAO;
-import com.school.miniinter.dao.SubjectsDAO;
-import com.school.miniinter.dao.TeachersDAO;
-import com.school.miniinter.dao.TeachingDAO;
+import com.school.miniinter.dao.*;
 import com.school.miniinter.models.Class.Class;
+import com.school.miniinter.models.Students.Students;
 import com.school.miniinter.models.Subject.Subject;
 import com.school.miniinter.models.TeachingAssignment.Teaching;
 import com.school.miniinter.models.Teacher.Teacher;
 import com.school.miniinter.models.TeachingAssignment.TeachingAssignment;
+import com.school.miniinter.utils.ClassUtils;
+import com.school.miniinter.utils.EmailUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,6 +18,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @WebServlet(name="adminClasses", urlPatterns = "/adminClasses")
@@ -41,6 +43,12 @@ public class AdminClasses extends HttpServlet {
                 case ("editClass") -> {
                     editClass(req, resp);
                 }
+                case ("createClass") -> {
+                    createClass(req,resp);
+                }
+                case ("insertClass") -> {
+                    insertClass(req,resp);
+                }
                 case ("updateClass") -> {
                     updateClass(req, resp);
                 }
@@ -58,9 +66,13 @@ public class AdminClasses extends HttpServlet {
         ClassDAO clas = new ClassDAO();
         Class classroom = clas.read(Integer.parseInt(req.getParameter("classroom")));
         HttpSession session = req.getSession();
-        session.setAttribute("classroom", classroom);
+        session.setAttribute("class", classroom);
+        TeachingDAO assign = new TeachingDAO();
+        Teaching[] aulas = assign.readByIdClas(classroom.getId());
 
-        req.getRequestDispatcher("WEB-INF/admin/classroomShow.jsp").forward(req, resp);
+        session.setAttribute("aulas", aulas);
+
+        req.getRequestDispatcher("WEB-INF/admin/classShow.jsp").forward(req, resp);
     }
 
     private void showClasses(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -87,10 +99,52 @@ public class AdminClasses extends HttpServlet {
         session.setAttribute("subjects", subjects);
 
         TeachingDAO assign = new TeachingDAO();
-        Teaching[] aulas = assign.read();
+        Teaching[] aulas = assign.readByIdClas(classroom.getId());
         session.setAttribute("aulas", aulas);
 
-        req.getRequestDispatcher("WEB-INF/admin/classroomEdit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/classEdit.jsp").forward(req, resp);
+    }
+
+    private void createClass(HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException{
+        req.getRequestDispatcher("WEB-INF/admin/classInsert.jsp").forward(req,
+                resp);
+    }
+
+    private void insertClass(HttpServletRequest req,
+                             HttpServletResponse resp) throws ServletException, IOException{
+        try {
+            ClassDAO clas = new ClassDAO();
+
+            String series = req.getParameter("series");
+            String classroom = req.getParameter("classroom");
+
+            if (!ClassUtils.verifySeries(series) || !ClassUtils.verifyClassroom(classroom)) {
+                throw new RuntimeException("Digite uma série compatível (1,2," +
+                        "3,6,7,8,9) e uma classe compatível (A-Z).");
+            }
+            Character classChar = Character.toUpperCase(classroom.charAt(0));
+
+            Class classInsert = new Class(series.charAt(0),
+                    classChar);
+
+            if (clas.insert(classInsert)) {
+                HttpSession session = req.getSession();
+                session.setAttribute("success", "Classe adicionada com " +
+                        "sucesso!");
+            } else {
+                HttpSession session = req.getSession();
+                session.setAttribute("error", "Ocorreu um erro ao alterar os " +
+                        "dados da classe, tente novamente!");
+            }
+
+            req.getRequestDispatcher("/adminClasses?type=noot").forward(req,
+                    resp);
+        } catch (NullPointerException exc) {
+            HttpSession session = req.getSession();
+            session.setAttribute("error", "Alguns dados não foram preenchidos!");
+            req.getRequestDispatcher("/adminClasses?type=createClass").forward(req,
+                    resp);
+        }
     }
 
     private void updateClass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -112,8 +166,15 @@ public class AdminClasses extends HttpServlet {
             clas.update(classroom);
 
             for (int n = 0; n < 6; n++) {
+                Object result =  req.getParameter("aula"+n+"Id");
+                Integer idTeaching;
+                if(result != null){
+                    idTeaching = Integer.parseInt(String.valueOf(result));
+                }else{
+                    idTeaching = -1;
+                }
                 aulas[n] = new TeachingAssignment(
-                        Integer.parseInt(req.getParameter("aula"+n+"Id")),
+                        idTeaching,
                         idClass,
                         Integer.parseInt(req.getParameter("aula"+n+"Subject")),
                         Integer.parseInt(req.getParameter("aula"+n+"Teacher")),

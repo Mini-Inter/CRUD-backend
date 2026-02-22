@@ -1,6 +1,9 @@
-package com.school.miniinter.controller.AuthenticationSystem;
+package com.school.miniinter.controller.authenticationSystem;
 
+import com.school.miniinter.config.HashConfig;
 import com.school.miniinter.dao.*;
+import com.school.miniinter.models.PreRegistration.PreRegistration;
+import com.school.miniinter.models.Students.Students;
 import com.school.miniinter.models.Subject.Subject;
 import com.school.miniinter.utils.EmailUtils;
 import jakarta.servlet.ServletException;
@@ -11,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +23,10 @@ import java.util.regex.Pattern;
 
 @WebServlet(name="auth", value = {"/auth"})
 public class AuthenticationSystem extends HttpServlet {
+
+    PreRegistrationDAO preDAO = new PreRegistrationDAO();
+    StudentsDAO stud = new StudentsDAO();
+    TeachersDAO teach = new TeachersDAO();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         auth(req, resp);
@@ -48,6 +56,11 @@ public class AuthenticationSystem extends HttpServlet {
     private void login(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         String login = req.getParameter("login").toLowerCase().strip();
         String password = req.getParameter("pw");
+        try {
+            password = HashConfig.hashSenha(password);
+        }catch(NoSuchAlgorithmException nsae){
+            nsae.printStackTrace();
+        }
 
         try {
             if (!EmailUtils.verifyEmail(login))
@@ -56,7 +69,6 @@ public class AuthenticationSystem extends HttpServlet {
 
             switch (verifyLogin(login, password)) {
                 case (2) -> {
-                    TeachersDAO teach = new TeachersDAO();
                     int idTeacher = teach.readByLogin(login).getId();
                     HttpSession session = req.getSession();
                     session.setAttribute("idTeacher", idTeacher);
@@ -70,7 +82,6 @@ public class AuthenticationSystem extends HttpServlet {
                     req.getRequestDispatcher("/homeTeacher").forward(req, resp);
                 }
                 case (1) -> {
-                    StudentsDAO stud = new StudentsDAO();
                     int idStudent = stud.readByLogin(login).getId_student();
                     HttpSession session = req.getSession();
                     session.setAttribute("idStudent", idStudent);
@@ -103,6 +114,12 @@ public class AuthenticationSystem extends HttpServlet {
         String password = req.getParameter("pw");
 
         try {
+            password = HashConfig.hashSenha(password);
+        }catch(NoSuchAlgorithmException nsae){
+            nsae.printStackTrace();
+        }
+
+        try {
             if (!EmailUtils.verifyEmail(login))
                 throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
             login = login.substring(0, login.indexOf("@"));
@@ -132,12 +149,12 @@ public class AuthenticationSystem extends HttpServlet {
         }
     }
     private void preRegister(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-        PreRegistrationDAO preDAO = new PreRegistrationDAO();
         String cpf = req.getParameter("cpf");
 
         try {
             if (preDAO.read(cpf) != null) {
                 HttpSession session = req.getSession();
+                session.setAttribute("cpf", cpf);
                 session.setAttribute("preRegistered", true);
                 req.getRequestDispatcher("/WEB-INF/student/signUp.jsp").forward(req, resp);
             } else
@@ -152,13 +169,14 @@ public class AuthenticationSystem extends HttpServlet {
     }
     private void signUp(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 
-        if (req.getSession().getAttribute("preRegistered")!=null && req.getSession().getAttribute("preRegistered").equals(true)) {
+        HttpSession session = req.getSession();
+        if (session.getAttribute("preRegistered")!=null && session.getAttribute(
+                "preRegistered").equals(true)) {
             String name = req.getParameter("name");
             String birthDateString = req.getParameter("birth");
             String login = req.getParameter("email");
             String password = req.getParameter("password");
             String passConf = req.getParameter("passwordConf");
-            Date createdAt = Date.valueOf(LocalDate.now());
 
             try {
                 if ( name == null || birthDateString == null || login == null || password == null || passConf == null)
@@ -180,17 +198,19 @@ public class AuthenticationSystem extends HttpServlet {
                 if (!password.equals(passConf))
                     throw new RuntimeException("Senhas não são iguais");
 
-                String firstName = name.substring(0, name.indexOf(" "));
-                String lastName = name.substring(name.lastIndexOf(" "));
-
-                // ADICIONAR INSERÇÃO NO BANCO AQUI
-                // + relacionamento com Pre_registration quando for adicionado
+                PreRegistration preModel =
+                        preDAO.read((String)session.getAttribute(
+                        "cpf"));
+                password = HashConfig.hashSenha(password);
+                Students student = new Students(name,birthDate,login,password);
+                stud.insertInitial(student);
+                Integer id_student = stud.readIdByName(name);
+                preDAO.insertIdStudentOnCpf(id_student,preModel.getId());
 
                 resp.sendRedirect(req.getContextPath()+"/authentication/login.jsp");
 
             } catch (RuntimeException exc) {
                 String error = exc.getMessage();
-                HttpSession session = req.getSession();
                 session.setAttribute("error", error);
                 session.setAttribute("name", name);
                 session.setAttribute("birth", birthDateString);
@@ -198,9 +218,10 @@ public class AuthenticationSystem extends HttpServlet {
                 session.setAttribute("pw", password);
                 session.setAttribute("pc", passConf);
                 req.getRequestDispatcher("/WEB-INF/student/signUp.jsp").forward(req, resp);
+            } catch(NoSuchAlgorithmException nsae){
+                nsae.printStackTrace();
             }
         } else {
-            HttpSession session = req.getSession();
             session.setAttribute("error", "Passe pelo pré-registro antes do cadastro");
             req.getRequestDispatcher(req.getContextPath() + "/authentication/cpf.jsp").forward(req, resp);
         }
@@ -212,8 +233,6 @@ public class AuthenticationSystem extends HttpServlet {
         if (login == null || pw == null) {
             throw new NullPointerException();
         }
-        StudentsDAO stud = new StudentsDAO();
-        TeachersDAO teach = new TeachersDAO();
         if (stud.isStudent(login, pw)) {
             return 1;
         } else if (teach.isTeacher(login, pw))

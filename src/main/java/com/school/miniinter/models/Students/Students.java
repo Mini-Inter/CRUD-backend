@@ -1,4 +1,6 @@
 package com.school.miniinter.models.Students;
+import com.school.miniinter.dao.StudentsDAO;
+
 import java.sql.Date;
 
 public class Students {
@@ -23,6 +25,16 @@ public class Students {
         this.login = login;
         this.password = password;
         this.created_at = created_at;
+    }
+
+    public Students(String full_name,Date birth_date, String login,
+                    String password){
+        this.full_name = full_name;
+        this.first_name = full_name.substring(0, full_name.indexOf(" "));
+        this.last_name = full_name.substring(full_name.lastIndexOf(" "));
+        this.birth_date = birth_date;
+        this.login = login;
+        this.password = password;
     }
 
     public Students(){}

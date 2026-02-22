@@ -11,20 +11,35 @@ public class Teacher {
     private String lastName;
     private String name;
     private String login;
+    private String phone;
     private String password;
     private Date birthDate;
     private Date createdAt;
 
     // Métodos
-    public Teacher(int id, String name, String login, String password, Date birthDate, Date createdAt) {
+    public Teacher(int id, String name, String login,
+                   String phone, String password, Date birthDate,
+                   Date createdAt) {
         this.id = id;
         this.name = name;
         this.firstName = name.substring(0, name.indexOf(" "));
         this.lastName = name.substring(name.lastIndexOf(" "));
         this.login = login;
+        this.phone = phone;
         this.password = password;
         this.birthDate = birthDate;
         this.createdAt = createdAt;
+    }
+
+    public Teacher(String name, String login,String phone, String password,
+                   Date birthDate){
+        this.name = name;
+        this.firstName = name.substring(0, name.indexOf(" "));
+        this.lastName = name.substring(name.lastIndexOf(" "));
+        this.login = login;
+        this.phone = phone;
+        this.password = password;
+        this.birthDate = birthDate;
     }
     public int getId() {
         return id;
@@ -72,5 +87,11 @@ public class Teacher {
     }
     public Date getCreatedAt() {
         return createdAt;
+    }
+    public String getPhone() {
+        return phone;
+    }
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

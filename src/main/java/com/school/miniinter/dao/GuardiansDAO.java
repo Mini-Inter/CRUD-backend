@@ -38,6 +38,30 @@ public class GuardiansDAO {
         }
 
     }
+
+    public boolean insert(Guardian g){
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+
+        try {
+            conn = connection.connect();
+            String sql = "INSERT INTO guardian(full_name,first_name," +
+                    "last_name,birth_date) VALUES(?,?,?,?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,g.getName());
+            pstmt.setString(2,g.getFirstName());
+            pstmt.setString(3,g.getLastName());
+            pstmt.setDate(4,g.getBirthDate());
+
+            return pstmt.execute();
+        } catch (SQLException exc) {
+            exc.printStackTrace();
+            return false;
+        } finally {
+            connection.disconnect(conn);
+        }
+    }
     public Guardian read(int idGuardian) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;

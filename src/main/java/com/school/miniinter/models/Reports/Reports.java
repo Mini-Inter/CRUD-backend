@@ -9,6 +9,12 @@ public class Reports {
     private String description;
     private Date send_at;
 
+    public Reports(Integer fk_teacher, String description, String type) {
+        this.fk_teachers = fk_teacher;
+        this.description = description;
+        this.type = type;
+    }
+
     public Reports(int fk_teachers, String type, String description, Date send_at) {
         this.type = type;
         this.fk_teachers = fk_teachers;

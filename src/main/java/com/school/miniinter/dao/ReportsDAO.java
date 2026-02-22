@@ -1,9 +1,7 @@
 package com.school.miniinter.dao;
 
 import com.school.miniinter.connection.ConnectionFactory;
-import com.school.miniinter.models.Reports.CompleteReport;
-import com.school.miniinter.models.Reports.Reports;
-import com.school.miniinter.models.Reports.CompleteInformationReport;
+import com.school.miniinter.models.Reports.*;
 import com.school.miniinter.models.Reports.Reports;
 
 import java.sql.*;
@@ -127,27 +125,52 @@ public class ReportsDAO {
             connection.disconnect(conn);
         }
     }
-    public boolean insert(Reports report) {
+    public boolean insert(Reports insertReport) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
         try {
             conn = connection.connect();
-            sql = "INSERT INTO reports (type, fk_teacher, description, send_at) VALUES " +
-                    "(?, ?, ?, ?)";
+            sql = "INSERT INTO reports (type, fk_teacher, description) VALUES " +
+                    "(?, ?, ?)";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setString(1, report.getType());
-            pstmt.setInt(2, report.getFk_teachers());
-            pstmt.setString(3, report.getDescription());
-            pstmt.setDate(4, report.getSend_at());
+            pstmt.setString(1, insertReport.getType());
+            pstmt.setInt(2, insertReport.getFk_teachers());
+            pstmt.setString(3, insertReport.getDescription());
 
             return pstmt.execute();
         } catch (SQLException exc) {
             exc.printStackTrace();
             return false;
         } finally {
+            connection.disconnect(conn);
+        }
+    }
+
+    public Integer readIdByDescription(String description){
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+
+        try{
+            conn = connection.connect();
+
+            sql = "SELECT id FROM reports WHERE description LIKE ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,description);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if(rs.next()){
+                return rs.getInt("id");
+            }
+            return 0;
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return 0;
+        }finally {
             connection.disconnect(conn);
         }
     }
@@ -195,15 +218,18 @@ public class ReportsDAO {
 
         try {
             conn = connection.connect();
-            String sql = "SELECT R.send_at, R.type, R.description, T.full_name \"teacher\", STRING_AGG(S.full_name, '|') \"students\" FROM reports R " +
+            String sql = "SELECT R.id AS id,R.send_at, R.type, R.description," +
+                    " T.full_name \"teacher\", STRING_AGG(S.full_name, '|') \"students\" FROM reports R " +
                     "JOIN receive H ON R.id = H.fk_report " +
                     "JOIN students S ON H.fk_student = S.id_student " +
                     "JOIN teachers T ON R.fk_teacher = T.id_employee " +
                     "WHERE R.id = ? " +
-                    "GROUP BY 1, 2, 3, 4";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+                    "GROUP BY 1, 2, 3, 4,5";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            ResultSet rset = stmt.executeQuery();
+            pstmt.setInt(1,id);
+
+            ResultSet rset = pstmt.executeQuery();
 
             if (rset.next()) {
                 rep = new CompleteReport();
@@ -224,6 +250,7 @@ public class ReportsDAO {
         }
 
     }
+
     public List<Reports> read() {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;

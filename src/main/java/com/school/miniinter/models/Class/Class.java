@@ -11,6 +11,11 @@ public class Class {
         this.classroom = classroom;
     }
 
+    public Class(Character series, Character classroom){
+        this.series = series;
+        this.classroom = classroom;
+    }
+
     public int getId() {
         return id;
     }

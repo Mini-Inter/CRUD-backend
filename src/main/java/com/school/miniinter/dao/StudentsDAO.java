@@ -52,18 +52,43 @@ public class StudentsDAO {
             conn = conexao.connect();
             sql = "INSERT INTO " +
                     "students(id_student,fk_class,full_name,first_name,last_name,birth_date,login,password,created_at) " +
-                    "VALUES(?,?,?,?,?,?,?,?,?)";
+                    "VALUES(floor(random() * (999999 - 100000 + 1) + 100000)::bigint,?,?,?,?,?,?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setInt(1, idStudent);
-            pstmt.setInt(2,fk_class);
-            pstmt.setString(3,full_name);
-            pstmt.setString(4,first_name);
-            pstmt.setString(5,last_name);
-            pstmt.setDate(6,birth_date);
-            pstmt.setString(7,login);
-            pstmt.setString(8, password);
-            pstmt.setString(9,created_at);
+            pstmt.setInt(1,fk_class);
+            pstmt.setString(2,full_name);
+            pstmt.setString(3,first_name);
+            pstmt.setString(4,last_name);
+            pstmt.setDate(5,birth_date);
+            pstmt.setString(6,login);
+            pstmt.setString(7, password);
+            pstmt.setString(8,created_at);
+
+            return pstmt.executeUpdate()>0;
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return false;
+        }finally {
+            conexao.disconnect(conn);
+        }
+    }
+    public boolean insertInitial(Students student){
+        ConnectionFactory conexao = new ConnectionFactory();
+        Connection conn = null;
+        try{
+            conn = conexao.connect();
+            sql = "INSERT INTO " +
+                    "students(id_student,full_name,first_name,last_name,birth_date,login,password) " +
+                    "VALUES(floor(random() * (999999 - 100000 + 1) + 100000)::bigint,?,?,?,?,?,?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,student.getFull_name());
+            pstmt.setString(2,student.getFirst_name());
+            pstmt.setString(3,student.getLast_name());
+            pstmt.setDate(4,student.getBirth_date());
+            pstmt.setString(5,student.getLogin());
+            pstmt.setString(6, student.getPassword());
 
             return pstmt.executeUpdate()>0;
 
@@ -80,19 +105,17 @@ public class StudentsDAO {
         try{
             conn = conexao.connect();
             sql = "INSERT INTO " +
-                    "students(id_student,fk_class,full_name,first_name,last_name,birth_date,login,password,created_at) " +
-                    "VALUES(?,?,?,?,?,?,?,?,?)";
+                    "students(id_student,fk_class,full_name,first_name,last_name,birth_date,login,password) " +
+                    "VALUES(floor(random() * (999999 - 100000 + 1) + 100000)::bigint,?,?,?,?,?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setInt(1, student.getId_student());
-            pstmt.setInt(2,student.getFk_class());
-            pstmt.setString(3,student.getFull_name());
-            pstmt.setString(4,student.getFirst_name());
-            pstmt.setString(5,student.getLast_name());
-            pstmt.setDate(6,student.getBirth_date());
-            pstmt.setString(7,student.getLogin());
-            pstmt.setString(8, student.getPassword());
-            pstmt.setDate(9, student.getCreated_at());
+            pstmt.setInt(1,student.getFk_class());
+            pstmt.setString(2,student.getFull_name());
+            pstmt.setString(3,student.getFirst_name());
+            pstmt.setString(4,student.getLast_name());
+            pstmt.setDate(5,student.getBirth_date());
+            pstmt.setString(6,student.getLogin());
+            pstmt.setString(7, student.getPassword());
 
             return pstmt.executeUpdate()>0;
 
@@ -138,7 +161,32 @@ public class StudentsDAO {
         connection.disconnect(conn);
     }
 }
+    public Integer readIdByName(String name){
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        Students student = null;
+        try {
+            conn = connection.connect();
 
+            sql = "SELECT id_student FROM students WHERE full_name LIKE ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,name);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if(rs.next()) {
+               return rs.getInt("id_student");
+            }
+            return 0;
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return 0;
+        }finally {
+            connection.disconnect(conn);
+        }
+    }
     public Students readById(int id_student){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;

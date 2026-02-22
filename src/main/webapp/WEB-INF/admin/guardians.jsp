@@ -17,6 +17,7 @@
 <body>
 <%@include file="../common/menuCRUD.jsp"%>
 <%@include file="../common/error.jsp"%>
+<form action="adminGuardians?type=createGuardian" method="post"><input type="submit" value="Criar Responsável"></form>
 <%
     if (guardians.isEmpty()) {
 %>

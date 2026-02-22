@@ -10,7 +10,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Class classroom = (Class) session.getAttribute("class");
-    List<Teaching> aulas = (List<Teaching>) session.getAttribute("teachings");
+    Teaching[] aulas = (Teaching[]) session.getAttribute("aulas");
 %>
 <html>
 <head>
@@ -32,8 +32,12 @@
     %>
     <tr>
         <th><%=n++%>° Aula :</th>
+        <%if(aula.getSubject() == null){%>
+        <td rowspan="2">Ainda não definido</td>
+        <%}else{%>
         <td><%=aula.getSubject()%></td>
         <td><%=aula.getTeacher()%></td>
+        <%}%>
     </tr>
     <%
         }

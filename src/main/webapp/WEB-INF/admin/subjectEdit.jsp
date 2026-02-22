@@ -23,20 +23,21 @@
 <form action="<%=request.getContextPath()%>/adminSubject?type=updateSubject" method="post">
     <input name="subject" id="subject" value="<%=subject.getId()%>" type="hidden">
     <table>
-        <tr>
-            <th><label for="classroom">Turma:</label></th>
-            <td>
-                <select name="classroom" id="classroom">
-                    <%
-                        for (Class classroom : classes) {
-                    %>
-                    <option value="<%=classroom.getId()%>"><%=classroom.getSeries()%>°<%=classroom.getClassroom()%></option>
-                    <%
-                        }
-                    %>
-                </select>
-            </td>
-        </tr>
+<%--        Era para ter essas informações mesmo Vini?--%>
+<%--        <tr>--%>
+<%--            <th><label for="classroom">Turma:</label></th>--%>
+<%--            <td>--%>
+<%--                <select name="classroom" id="classroom">--%>
+<%--                    <%--%>
+<%--                        for (Class classroom : classes) {--%>
+<%--                    %>--%>
+<%--                    <option value="<%=classroom.getId()%>"><%=classroom.getSeries()%>°<%=classroom.getClassroom()%></option>--%>
+<%--                    <%--%>
+<%--                        }--%>
+<%--                    %>--%>
+<%--                </select>--%>
+<%--            </td>--%>
+<%--        </tr>--%>
         <tr>
             <th><label for="name">Nome:</label></th>
             <td><input value="<%=subject.getName()%>" name="name" id="name" type="text"></td>

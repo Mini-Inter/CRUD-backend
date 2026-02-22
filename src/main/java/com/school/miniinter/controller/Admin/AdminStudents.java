@@ -1,8 +1,11 @@
 package com.school.miniinter.controller.Admin;
 
+import com.school.miniinter.config.HashConfig;
 import com.school.miniinter.dao.ClassDAO;
+import com.school.miniinter.dao.PreRegistrationDAO;
 import com.school.miniinter.models.Class.Class;
 import com.school.miniinter.dao.StudentsDAO;
+import com.school.miniinter.models.PreRegistration.PreRegistration;
 import com.school.miniinter.models.Students.Students;
 import com.school.miniinter.utils.EmailUtils;
 import jakarta.servlet.ServletException;
@@ -13,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
@@ -58,46 +62,53 @@ public class AdminStudents extends HttpServlet {
     }
 
     private void createStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        StudentsDAO stud = new StudentsDAO();
-        Students student = stud.readById(Integer.parseInt(req.getParameter("student")));
+
         HttpSession session = req.getSession();
-        session.setAttribute("student", student);
 
         ClassDAO cla = new ClassDAO();
         List<Class> classes = cla.read();
         session.setAttribute("classes", classes);
 
-        req.getRequestDispatcher("WEB-INF/admin/studentEdit.jsp").forward(req, resp);
+        PreRegistrationDAO pre = new PreRegistrationDAO();
+        List<PreRegistration> preRegistrations = pre.readAllAvailableCpf();
+        session.setAttribute("cpfs",preRegistrations);
+
+        req.getRequestDispatcher("WEB-INF/admin/studentInsert.jsp").forward(req,
+                resp);
     }
 
     private void insertStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+            PreRegistrationDAO preDAO = new PreRegistrationDAO();
             StudentsDAO stud = new StudentsDAO();
             Students student = new Students();
 
-            // Não sei criar matricula (??)
-            int matricula = 0;
-
+            int idCpf = Integer.parseInt(req.getParameter("cpf"));
             int idClass = Integer.parseInt(req.getParameter("classroom"));
-            String nome = req.getParameter("name");
+            String name = req.getParameter("name");
             String email = req.getParameter("email");
             Date birth =  Date.valueOf(req.getParameter("birth"));
             String password = req.getParameter("pass");
-            Date createdAt = Date.valueOf(LocalDate.now());
 
             if (!EmailUtils.verifyEmail(email)) {
                 throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
             }
             email = email.substring(0, email.indexOf("@"));
 
-            student.setId_student(matricula);
             student.setFk_class(idClass);
-            student.setFull_name(nome);
+            student.setFull_name(name);
             student.setLogin(email);
             student.setBirth_date(birth);
+            try{
+                password = HashConfig.hashSenha(password);
+            }catch(NoSuchAlgorithmException nsae){
+                nsae.printStackTrace();
+            }
             student.setPassword(password);
+            Integer id_student = stud.readIdByName(name);
+            PreRegistration pre = new PreRegistration(id_student,idCpf);
 
-            if (stud.insert(student)) {
+            if (stud.insert(student) && preDAO.updateFkStudentById(pre)) {
                 HttpSession session = req.getSession();
                 session.setAttribute("success", "Dados do estudante " + student.getFull_name() + " alterados com sucesso!");
             } else {
@@ -109,7 +120,7 @@ public class AdminStudents extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminStudents?type=editStudent").forward(req, resp);
+            req.getRequestDispatcher("adminStudents?type=createStudent").forward(req, resp);
         }
     }
 
@@ -137,7 +148,13 @@ public class AdminStudents extends HttpServlet {
         List<Class> classes = cla.read();
         session.setAttribute("classes", classes);
 
-        req.getRequestDispatcher("WEB-INF/admin/studentCreate.jsp").forward(req, resp);
+        StudentsDAO stud = new StudentsDAO();
+        Integer idStudent = Integer.parseInt(req.getParameter("student"));
+        Students students = stud.readById(idStudent);
+        session.setAttribute("student",students);
+
+        req.getRequestDispatcher("WEB-INF/admin/studentEdit.jsp").forward(req,
+                resp);
     }
 
     private void updateStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -170,6 +187,11 @@ public class AdminStudents extends HttpServlet {
                 student.setBirth_date(birth);
             }
             if (!password.isBlank() && !password.equals(student.getPassword())) {
+                try {
+                    password = HashConfig.hashSenha(password);
+                }catch(NoSuchAlgorithmException nsae){
+                    nsae.printStackTrace();
+                }
                 student.setPassword(password);
             }
 
