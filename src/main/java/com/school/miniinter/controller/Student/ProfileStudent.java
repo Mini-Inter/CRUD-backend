@@ -20,6 +20,7 @@ public class ProfileStudent extends HttpServlet {
             IOException{
         HttpSession session = request.getSession();
         Integer id_student = (Integer) session.getAttribute("idStudent");
+        System.out.println(id_student);
 
         CompleteInfo completeInfo =
                 studentsDAO.readCompleteInfoStudent(id_student);

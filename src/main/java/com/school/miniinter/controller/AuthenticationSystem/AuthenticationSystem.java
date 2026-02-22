@@ -136,7 +136,7 @@ public class AuthenticationSystem extends HttpServlet {
         String cpf = req.getParameter("cpf");
 
         try {
-            if (preDAO.readByCpf(cpf) != null) {
+            if (preDAO.read(cpf) != null) {
                 HttpSession session = req.getSession();
                 session.setAttribute("preRegistered", true);
                 req.getRequestDispatcher("/WEB-INF/student/signUp.jsp").forward(req, resp);

@@ -20,8 +20,8 @@
         <p><%=c.getSend_at()%></p>
     <hr>
     <%}%>
-    <a href="observations?filter=Elogio">Filtrar por Elogio</a>
-    <a href="observations?filter=Aviso">Filtrar por Aviso</a>
-    <a href="observations?filter=Informativo">Filtrar por Informativo</a>
+    <form action="observations?filter=Elogio" method="post"><input type="submit" value="Filtrar por Elogio"></form>
+    <form action="observations?filter=Aviso" method="post"><input type="submit" value="Filtrar por Aviso"></form>
+    <form action="observations?filter=Informativo" method="post"><input type="submit" value="Filtrar por Informativo"></form>
 </body>
 </html>

@@ -60,7 +60,8 @@ public class ReportsDAO {
         try{
             conn = connection.connect();
 
-            sql = "SELECT teachers.full_name AS teacher_name, repo.description, repo.type AS type, CAST(repo.send_at AS DATE) FROM students s JOIN receive r on r.fk_student = s.id_student JOIN reports repo on repo.id = r.fk_report JOIN teachers ON teachers.id_employee = repo.fk_teacher WHERE id_employee = ?";
+            sql = "SELECT DISTINCT teachers.full_name AS teacher_name, repo" +
+                    ".description, repo.type AS type, CAST(repo.send_at AS DATE) FROM students s JOIN receive r on r.fk_student = s.id_student JOIN reports repo on repo.id = r.fk_report JOIN teachers ON teachers.id_employee = repo.fk_teacher WHERE id_employee = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1, id_teacher);

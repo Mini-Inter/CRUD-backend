@@ -1,0 +1,13 @@
+<%@ page import="com.school.miniinter.models.Students.CompleteInfo" %><%
+    CompleteInfo completeInfo = (CompleteInfo)
+            request.getAttribute("completeInfoStudent");
+%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>Title</title>
+</head>
+<body>
+    <p><%=completeInfo%></p>
+</body>
+</html>

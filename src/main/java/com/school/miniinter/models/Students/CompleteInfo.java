@@ -15,13 +15,12 @@ public class CompleteInfo {
     private Date birth_date;
     private String login;
     private String phone;
-    private String formated_address;
 
     public CompleteInfo(String full_name, Integer id_student,
                         String firstName_guardian, Class studentClass,
                         Date created_at,Integer school_year, Date birth_date,
                         String login,
-                        String phone, String full_address) {
+                        String phone) {
         this.full_name = full_name;
         this.id_student = id_student;
         this.firstName_guardian = firstName_guardian;
@@ -30,7 +29,6 @@ public class CompleteInfo {
         this.birth_date = birth_date;
         this.login = login+"@vidya.org.br";
         this.phone = phone;
-        this.formated_address = full_address;
         this.school_year = school_year;
         this.status = "Ativo";
     }
@@ -115,13 +113,6 @@ public class CompleteInfo {
         this.phone = phone;
     }
 
-    public String getFormated_address() {
-        return formated_address;
-    }
-
-    public void setFormated_address(String full_address) {
-        this.formated_address = full_address;
-    }
 
     @Override
     public String toString() {
@@ -136,7 +127,6 @@ public class CompleteInfo {
                 ", birth_date=" + birth_date +
                 ", login='" + login + '\'' +
                 ", phone='" + phone + '\'' +
-                ", full_address='" + formated_address + '\'' +
                 '}';
     }
 }

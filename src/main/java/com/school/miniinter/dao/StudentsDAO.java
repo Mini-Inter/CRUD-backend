@@ -370,12 +370,10 @@ public class StudentsDAO {
                     "CURRENT_DATE) as school_year, CAST(s" +
                     ".created_at AS DATE) AS date_registration,CAST(s" +
                     ".birth_date AS DATE) AS birth_dateStudent,s.login AS " +
-                    "login," +
-                    "s.phone AS phone,a.formated_address AS full_address FROM" +
-                    " " +
-                    "students s JOIN guardian g ON g.fk_student = s" +
-                    ".id_student JOIN class c ON c.id_class = s.fk_class JOIN" +
-                    " adress_student a ON a.fk_student = s.id_student WHERE s" +
+                    "login, s.phone AS phone FROM" +
+                    " students s JOIN guardian g ON g.id_guardian = s" +
+                    ".fk_guardian JOIN class c ON c.id_class = s.fk_class " +
+                    " WHERE s" +
                     ".id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -395,11 +393,10 @@ public class StudentsDAO {
                 Date birth_dateStudent = rs.getDate("birth_dateStudent");
                 String login = rs.getString("login");
                 String phone = rs.getString("phone");
-                String full_address = rs.getString("full_address");
 
                 completeInfo = new CompleteInfo(full_name,id_student,
                         nameGuardian,studentClass,created_at,school_year,
-                        birth_dateStudent,login,phone,full_address);
+                        birth_dateStudent,login,phone);
             }
             return completeInfo;
         }catch (SQLException sqle){

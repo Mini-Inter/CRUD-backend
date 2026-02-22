@@ -184,7 +184,10 @@ public class TeachersDAO {
             }
 
 //            Amount Class
-            sql = "SELECT count(DISTINCT c.id_class) AS amountClass FROM teachers te JOIN teachingAssignment t ON te.id_employee = t.id_teacher JOIN class c ON  c.id_class = t.fk_class JOIN subject sub ON sub.id_subject = t.fk_subject WHERE te.id_employee = ? AND sub.id_subject = ?";
+            sql = "SELECT count(DISTINCT c.id_class) AS amountClass FROM " +
+                    "teachers te JOIN teachingAssignment t ON te.id_employee " +
+                    "= t.fk_teacher JOIN class c ON  c.id_class = t.fk_class " +
+                    "JOIN subjects sub ON sub.id_subject = t.fk_subject WHERE te.id_employee = ? AND sub.id_subject = ?";
             pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_teacher);

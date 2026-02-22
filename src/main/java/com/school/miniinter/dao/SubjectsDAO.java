@@ -56,7 +56,7 @@ public class SubjectsDAO {
             rset = pstmt.executeQuery();
             if (rset.next()) {
                 return new Subject(
-                        rset.getInt("id"),
+                        rset.getInt("id_subject"),
                         rset.getString("description"),
                         rset.getString("name")
                 );
@@ -141,7 +141,8 @@ public class SubjectsDAO {
         try {
             conn = connection.connect();
 
-            String sql = "SELECT S.* FROM teachers T JOIN teachingAssignment P ON T.id_employee = P.fk_teacher JOIN subjects S on P.fk_subject = S.id_subject WHERE T.id_employee = ?";
+            String sql = "SELECT DISTINCT S.* FROM teachers T JOIN " +
+                    "teachingAssignment P ON T.id_employee = P.fk_teacher JOIN subjects S on P.fk_subject = S.id_subject WHERE T.id_employee = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1, idTeacher);

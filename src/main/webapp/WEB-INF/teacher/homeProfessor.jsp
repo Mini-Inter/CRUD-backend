@@ -34,14 +34,10 @@
         </select>
         <input value="Trocar matéria" type="submit">
     </form>
-    <form action="updateGrade" method="post">
-        <input type="submit" value="Ver notas alunos">
-    </form>
-    <form action="<%=request.getContextPath()%>/teacherStudents" method="post">
-        <input value="Alunos" type="submit">
-    </form>
-    <form action="<%=request.getContextPath()%>/teacherReports" method="post">
-        <input value="Observações" type="submit">
-    </form>
+    <form action="<%=request.getContextPath()%>/homeTeacher" method="post"><input type="submit" value="Home"></form>
+    <form action="<%=request.getContextPath()%>/updateGrade" method="post"><input type="submit" value="Ver notas alunos"></form>
+    <form action="<%=request.getContextPath()%>/teacherStudents" method="post"><input value="Alunos" type="submit"></form>
+    <form action="<%=request.getContextPath()%>/teacherReports" method="post"><input value="Observações" type="submit"></form>
+    <form action="<%=request.getContextPath()%>/teacherProfile" method="post"><input type="submit" value="Profile"></form>
 </body>
 </html>
