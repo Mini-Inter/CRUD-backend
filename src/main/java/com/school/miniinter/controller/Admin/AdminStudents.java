@@ -1,5 +1,7 @@
 package com.school.miniinter.controller.Admin;
 
+import com.school.miniinter.dao.ClassDAO;
+import com.school.miniinter.models.Class.Class;
 import com.school.miniinter.dao.StudentsDAO;
 import com.school.miniinter.models.Students.Students;
 import com.school.miniinter.utils.EmailUtils;
@@ -12,22 +14,21 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @WebServlet(name="adminStudents", urlPatterns = "/adminStudents")
 public class AdminStudents extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        Object idAdmin = session.getAttribute("idAdmin");
+        Object admin = session.getAttribute("admin");
         String type = "noot noot";
         if (req.getParameter("type") != null) {
             type = req.getParameter("type");
         }
 
-        if (idAdmin == null) {
+        if (admin == null) {
             resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
         } else {
             switch (type) {
@@ -43,6 +44,12 @@ public class AdminStudents extends HttpServlet {
                 case ("deleteStudent") -> {
                     deleteStudent(req, resp);
                 }
+                case ("createStudent") -> {
+                    createStudent(req, resp);
+                }
+                case ("insertStudent") -> {
+                    insertStudent(req, resp);
+                }
                 default -> {
                     showStudents(req, resp);
                 }
@@ -50,13 +57,69 @@ public class AdminStudents extends HttpServlet {
         }
     }
 
-    private void showStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void createStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         StudentsDAO stud = new StudentsDAO();
-        Students student = stud.readById((Integer) req.getAttribute("student"));
+        Students student = stud.readById(Integer.parseInt(req.getParameter("student")));
         HttpSession session = req.getSession();
         session.setAttribute("student", student);
 
-        req.getRequestDispatcher("WEB-INF/admin/studentShow.jsp");
+        ClassDAO cla = new ClassDAO();
+        List<Class> classes = cla.read();
+        session.setAttribute("classes", classes);
+
+        req.getRequestDispatcher("WEB-INF/admin/studentEdit.jsp").forward(req, resp);
+    }
+
+    private void insertStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            StudentsDAO stud = new StudentsDAO();
+            Students student = new Students();
+
+            // Não sei criar matricula (??)
+            int matricula = 0;
+
+            int idClass = Integer.parseInt(req.getParameter("classroom"));
+            String nome = req.getParameter("name");
+            String email = req.getParameter("email");
+            Date birth =  Date.valueOf(req.getParameter("birth"));
+            String password = req.getParameter("pass");
+            Date createdAt = Date.valueOf(LocalDate.now());
+
+            if (!EmailUtils.verifyEmail(email)) {
+                throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
+            }
+            email = email.substring(0, email.indexOf("@"));
+
+            student.setId_student(matricula);
+            student.setFk_class(idClass);
+            student.setFull_name(nome);
+            student.setLogin(email);
+            student.setBirth_date(birth);
+            student.setPassword(password);
+
+            if (stud.insert(student)) {
+                HttpSession session = req.getSession();
+                session.setAttribute("success", "Dados do estudante " + student.getFull_name() + " alterados com sucesso!");
+            } else {
+                HttpSession session = req.getSession();
+                session.setAttribute("error", "Ocorreu um erro ao alterar os dados do estudante " + student.getFull_name() + ", tente novamente!");
+            }
+
+            req.getRequestDispatcher("/adminStudents?type=noot").forward(req, resp);
+        } catch (NullPointerException exc) {
+            HttpSession session = req.getSession();
+            session.setAttribute("error", "Alguns dados não foram preenchidos!");
+            req.getRequestDispatcher("adminStudents?type=editStudent").forward(req, resp);
+        }
+    }
+
+    private void showStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        StudentsDAO stud = new StudentsDAO();
+        Students student = stud.readById(Integer.parseInt(req.getParameter("student")));
+        HttpSession session = req.getSession();
+        session.setAttribute("student", student);
+
+        req.getRequestDispatcher("WEB-INF/admin/studentShow.jsp").forward(req, resp);
     }
 
     private void showStudents(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -65,16 +128,16 @@ public class AdminStudents extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("students", students);
 
-        req.getRequestDispatcher("WEB-INF/admin/student.jsp");
+        req.getRequestDispatcher("WEB-INF/admin/students.jsp").forward(req, resp);
     }
 
     private void editStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        StudentsDAO stud = new StudentsDAO();
-        Students student = stud.readById(Integer.parseInt(req.getParameter("student")));
         HttpSession session = req.getSession();
-        session.setAttribute("student", student);
+        ClassDAO cla = new ClassDAO();
+        List<Class> classes = cla.read();
+        session.setAttribute("classes", classes);
 
-        req.getRequestDispatcher("WEB-INF/admin/studentEdit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/studentCreate.jsp").forward(req, resp);
     }
 
     private void updateStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -84,7 +147,7 @@ public class AdminStudents extends HttpServlet {
             Students student = stud.readById(Integer.parseInt(req.getParameter("student")));
 
             int idClass = Integer.parseInt(req.getParameter("classroom"));
-            String nome = req.getParameter("nome");
+            String nome = req.getParameter("name");
             String email = req.getParameter("email");
             Date birth =  Date.valueOf(req.getParameter("birth"));
             String password = req.getParameter("pass");
@@ -106,16 +169,26 @@ public class AdminStudents extends HttpServlet {
             if (!birth.equals(student.getBirth_date())) {
                 student.setBirth_date(birth);
             }
-            if (!password.equals(student.getPassword())) {
+            if (!password.isBlank() && !password.equals(student.getPassword())) {
                 student.setPassword(password);
             }
 
-            stud.update(student);
+            switch (stud.update(student)) {
+                case (1) -> {
+                    HttpSession session = req.getSession();
+                    session.setAttribute("success", "Dados do estudante " + student.getFull_name() + " alterados com sucesso!");
+                }
+                case (0) -> {
+                    HttpSession session = req.getSession();
+                    session.setAttribute("error", "Dados do estudante " + student.getFull_name() + " não puderam ser alterados!");
+                }
+                case (-1) -> {
+                    HttpSession session = req.getSession();
+                    session.setAttribute("error", "Ocorreu um erro ao alterar os dados do estudante " + student.getFull_name() + ", tente novamente!");
+                }
+            }
 
-            req.getRequestDispatcher("/adminStudents").forward(req, resp);
-
-            HttpSession session = req.getSession();
-            session.setAttribute("success", "Dados do professor" + student.getFull_name() + "alterados com sucesso!");
+            req.getRequestDispatcher("/adminStudents?type=noot").forward(req, resp);
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
@@ -129,13 +202,13 @@ public class AdminStudents extends HttpServlet {
             Students student = stud.readById(Integer.parseInt(req.getParameter("student")));
 
             if (stud.delete(student.getId_student()) == 1) {
-                req.getRequestDispatcher("/adminStudents").forward(req, resp);
+                req.getRequestDispatcher("/adminStudents?type=noot").forward(req, resp);
 
                 HttpSession session = req.getSession();
-                session.setAttribute("success", "Professor " + student.getFull_name() + " deletado com sucesso!");
+                session.setAttribute("success", "Estudante " + student.getFull_name() + " deletado com sucesso!");
             }
             else
-                throw new UnavailableException("Professor " + student.getFull_name() + " não pôde ser deletado...");
+                throw new UnavailableException("Estudante " + student.getFull_name() + " não pôde ser deletado...");
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");

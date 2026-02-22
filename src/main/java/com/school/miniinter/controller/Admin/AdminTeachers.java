@@ -14,21 +14,19 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @WebServlet(name="adminTeachers", urlPatterns = "/adminTeachers")
 public class AdminTeachers extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        Object idAdmin = session.getAttribute("idAdmin");
+        Object admin = session.getAttribute("admin");
         String type = "noot noot";
         if (req.getParameter("type") != null) {
             type = req.getParameter("type");
         }
 
-        if (idAdmin == null) {
+        if (admin == null) {
             resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
         } else {
             switch (type) {
@@ -53,11 +51,11 @@ public class AdminTeachers extends HttpServlet {
 
     private void showTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         TeachersDAO teach = new TeachersDAO();
-        Teacher teacher = teach.read((Integer) req.getAttribute("teacher"));
+        Teacher teacher = teach.read(Integer.parseInt(req.getParameter("teacher")));
         HttpSession session = req.getSession();
         session.setAttribute("teacher", teacher);
 
-        req.getRequestDispatcher("WEB-INF/admin/teacherShow.jsp");
+        req.getRequestDispatcher("WEB-INF/admin/teacherShow.jsp").forward(req, resp);
     }
 
     private void showTeachers(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -66,7 +64,7 @@ public class AdminTeachers extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("teachers", teachers);
 
-        req.getRequestDispatcher("WEB-INF/admin/teachers.jsp");
+        req.getRequestDispatcher("WEB-INF/admin/teachers.jsp").forward(req, resp);
     }
 
     private void editTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -75,7 +73,7 @@ public class AdminTeachers extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("teacher", teacher);
 
-        req.getRequestDispatcher("WEB-INF/admin/teacherEDit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/teacherEdit.jsp").forward(req, resp);
     }
 
     private void updateTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -83,7 +81,7 @@ public class AdminTeachers extends HttpServlet {
             TeachersDAO teach = new TeachersDAO();
             Teacher teacher = teach.read(Integer.parseInt(req.getParameter("teacher")));
 
-            String nome = req.getParameter("nome");
+            String nome = req.getParameter("name");
             String email = req.getParameter("email");
             Date birth =  Date.valueOf(req.getParameter("birth"));
             String password = req.getParameter("pass");
@@ -102,16 +100,19 @@ public class AdminTeachers extends HttpServlet {
             if (!birth.equals(teacher.getBirthDate())) {
                 teacher.setBirthDate(birth);
             }
-            if (!password.equals(teacher.getPassword())) {
+            if (!password.isBlank() && !password.equals(teacher.getPassword())) {
                 teacher.setPassword(password);
             }
 
-            teach.update(teacher);
+            if (teach.update(teacher)) {
+                HttpSession session = req.getSession();
+                session.setAttribute("success", "Dados do professor " + teacher.getName() + " alterados com sucesso!");
+            } else {
+                HttpSession session = req.getSession();
+                session.setAttribute("success", "Dados do professor " + teacher.getName() + " não foram alterados!");
+            }
 
-            req.getRequestDispatcher("/adminTeachers").forward(req, resp);
-
-            HttpSession session = req.getSession();
-            session.setAttribute("success", "Dados do professor" + teacher.getName() + "alterados com sucesso!");
+            req.getRequestDispatcher("/adminTeachers?type=noot").forward(req, resp);
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
@@ -125,7 +126,7 @@ public class AdminTeachers extends HttpServlet {
             Teacher teacher = teach.read(Integer.parseInt(req.getParameter("teacher")));
 
             if (teach.delete(teacher.getId()) == 1) {
-                req.getRequestDispatcher("/adminTeachers").forward(req, resp);
+                req.getRequestDispatcher("/adminTeachers?type=noot").forward(req, resp);
 
                 HttpSession session = req.getSession();
                 session.setAttribute("success", "Professor " + teacher.getName() + " deletado com sucesso!");

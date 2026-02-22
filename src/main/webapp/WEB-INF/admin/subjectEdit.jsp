@@ -1,4 +1,4 @@
-<%@ page import="com.school.miniinter.models.Students.Students" %>
+<%@ page import="com.school.miniinter.models.Subject.Subject" %>
 <%@ page import="com.school.miniinter.models.Class.Class" %>
 <%@ page import="java.util.List" %>
 <%--
@@ -10,7 +10,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    Students student = (Students) session.getAttribute("student");
+    Subject subject = (Subject) session.getAttribute("subject");
 
     List<Class> classes = (List<Class>)  session.getAttribute("classes");
 %>
@@ -20,8 +20,8 @@
 </head>
 <body>
 <%@include file="../common/error.jsp"%>
-<form action="<%=request.getContextPath()%>/adminStudents?type=updateStudent" method="post">
-    <input name="student" id="student" value="<%=student.getId_student()%>" type="hidden">
+<form action="<%=request.getContextPath()%>/adminSubject?type=updateSubject" method="post">
+    <input name="subject" id="subject" value="<%=subject.getId()%>" type="hidden">
     <table>
         <tr>
             <th><label for="classroom">Turma:</label></th>
@@ -39,19 +39,11 @@
         </tr>
         <tr>
             <th><label for="name">Nome:</label></th>
-            <td><input value="<%=student.getFull_name()%>" name="name" id="name" type="text"></td>
+            <td><input value="<%=subject.getName()%>" name="name" id="name" type="text"></td>
         </tr>
         <tr>
-            <th><label for="email">Email:</label></th>
-            <td><input value="<%=student.getLogin()%>@vidya.org.br" name="email" id="email" type="email"></td>
-        </tr>
-        <tr>
-            <th><label for="birth">Data de nascimento:</label></th>
-            <td><input value="<%=student.getBirth_date()%>" name="birth" id="birth" type="date"></td>
-        </tr>
-        <tr>
-            <th><label for="pass">Senha:</label></th>
-            <td><input value="" name="pass" id="pass" type="password"></td>
+            <th><label for="description">Descrição:</label></th>
+            <td><input value="<%=subject.getDescription()%>" name="description" id="description" type="text"></td>
         </tr>
     </table>
     <input value="Enviar" type="submit">

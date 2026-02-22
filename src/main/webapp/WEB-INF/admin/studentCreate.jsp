@@ -20,8 +20,8 @@
 </head>
 <body>
 <%@include file="../common/error.jsp"%>
-<form action="<%=request.getContextPath()%>/adminStudents?type=updateStudent" method="post">
-    <input name="student" id="student" value="<%=student.getId_student()%>" type="hidden">
+<form action="<%=request.getContextPath()%>/adminStudents?type=insertStudent" method="post">
+    <input name="student" id="student"  type="hidden">
     <table>
         <tr>
             <th><label for="classroom">Turma:</label></th>
@@ -30,7 +30,7 @@
                     <%
                         for (Class classroom : classes) {
                     %>
-                    <option value="<%=classroom.getId()%>"><%=classroom.getSeries()%>°<%=classroom.getClassroom()%></option>
+                    <option ><%=classroom.getSeries()%>°<%=classroom.getClassroom()%></option>
                     <%
                         }
                     %>
@@ -39,22 +39,22 @@
         </tr>
         <tr>
             <th><label for="name">Nome:</label></th>
-            <td><input value="<%=student.getFull_name()%>" name="name" id="name" type="text"></td>
+            <td><input name="name" id="name" type="text"></td>
         </tr>
         <tr>
             <th><label for="email">Email:</label></th>
-            <td><input value="<%=student.getLogin()%>@vidya.org.br" name="email" id="email" type="email"></td>
+            <td><input name="email" id="email" type="email"></td>
         </tr>
         <tr>
             <th><label for="birth">Data de nascimento:</label></th>
-            <td><input value="<%=student.getBirth_date()%>" name="birth" id="birth" type="date"></td>
+            <td><input name="birth" id="birth" type="date"></td>
         </tr>
         <tr>
             <th><label for="pass">Senha:</label></th>
-            <td><input value="" name="pass" id="pass" type="password"></td>
+            <td><input name="pass" id="pass" type="password"></td>
         </tr>
     </table>
-    <input value="Enviar" type="submit">
+    <input  type="submit">
 </form>
 </body>
 </html>

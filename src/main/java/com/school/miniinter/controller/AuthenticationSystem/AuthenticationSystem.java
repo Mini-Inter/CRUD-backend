@@ -110,7 +110,7 @@ public class AuthenticationSystem extends HttpServlet {
             if (isAdmin(login, password)) {
                 HttpSession session = req.getSession();
                 session.setAttribute("admin", login);
-                req.getRequestDispatcher("/homeAdmin").forward(req, resp);
+                req.getRequestDispatcher("/adminStudents").forward(req, resp);
             } else {
                 throw new RuntimeException("login não pertence a nenhuma conta!");
             }

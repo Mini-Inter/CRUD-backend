@@ -8,22 +8,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Teacher teacher = (Teacher) session.getAttribute("teacher");
-    String error = (String) session.getAttribute("error");
 %>
 <html>
 <head>
     <title>Vidya - Admin</title>
 </head>
 <body>
-<%
-    if (!error.equals("null")) {
-%>
-<p style="color: red"><%=error%></p>
-<%
-        session.setAttribute("error", null);
-    }
-%>
-<form action="<%=request.getContextPath()%>/adminTeachers?type=editTeacher">
+<%@include file="../common/error.jsp"%>
+<form action="<%=request.getContextPath()%>/adminTeachers?type=updateTeacher" method="post">
     <input name="teacher" id="teacher" value="<%=teacher.getId()%>" type="hidden">
     <table>
         <tr>
@@ -32,7 +24,7 @@
         </tr>
         <tr>
             <th><label for="email">Email:</label></th>
-            <td><input value="<%=teacher.getLogin()%>" name="email" id="email" type="email"></td>
+            <td><input value="<%=teacher.getLogin()%>@vidya.org.br" name="email" id="email" type="email"></td>
         </tr>
         <tr>
             <th><label for="birth">Data de nascimento:</label></th>
@@ -40,9 +32,10 @@
         </tr>
         <tr>
             <th><label for="pass">Senha:</label></th>
-            <td><input value="<%=teacher.getPassword()%>" name="pass" id="pass" type="password"></td>
+            <td><input value="" name="pass" id="pass" type="password"></td>
         </tr>
     </table>
+    <input value="Enviar" type="submit">
 </form>
 </body>
 </html>

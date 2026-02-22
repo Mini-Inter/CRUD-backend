@@ -24,7 +24,7 @@ public class StudentsDAO {
         try{
             conn = connection.connect();
 
-            sql = "DELETE FROM students WHERE id=?";
+            sql = "DELETE FROM students WHERE id_student=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id);
@@ -43,7 +43,7 @@ public class StudentsDAO {
         }
     }
 
-    public boolean insert(int fk_class, String full_name, String first_name,
+    public boolean insert(int idStudent, int fk_class, String full_name, String first_name,
                            String last_name, Date birth_date,String login,
                            String password, String created_at){
         ConnectionFactory conexao = new ConnectionFactory();
@@ -51,19 +51,48 @@ public class StudentsDAO {
         try{
             conn = conexao.connect();
             sql = "INSERT INTO " +
-                    "students(fk_class,full_name,first_name,last_name," +
-                    "birth_date,login,password,created_at) VALUES(?,?,?,?,?," +
-                    "?,?,?)";
+                    "students(id_student,fk_class,full_name,first_name,last_name,birth_date,login,password,created_at) " +
+                    "VALUES(?,?,?,?,?,?,?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setInt(1,fk_class);
-            pstmt.setString(2,full_name);
-            pstmt.setString(3,first_name);
-            pstmt.setString(4,last_name);
-            pstmt.setDate(5,birth_date);
-            pstmt.setString(6,login);
-            pstmt.setString(7,password);
-            pstmt.setString(8,created_at);
+            pstmt.setInt(1, idStudent);
+            pstmt.setInt(2,fk_class);
+            pstmt.setString(3,full_name);
+            pstmt.setString(4,first_name);
+            pstmt.setString(5,last_name);
+            pstmt.setDate(6,birth_date);
+            pstmt.setString(7,login);
+            pstmt.setString(8, password);
+            pstmt.setString(9,created_at);
+
+            return pstmt.executeUpdate()>0;
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return false;
+        }finally {
+            conexao.disconnect(conn);
+        }
+    }
+    public boolean insert(Students student){
+        ConnectionFactory conexao = new ConnectionFactory();
+        Connection conn = null;
+        try{
+            conn = conexao.connect();
+            sql = "INSERT INTO " +
+                    "students(id_student,fk_class,full_name,first_name,last_name,birth_date,login,password,created_at) " +
+                    "VALUES(?,?,?,?,?,?,?,?,?)";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, student.getId_student());
+            pstmt.setInt(2,student.getFk_class());
+            pstmt.setString(3,student.getFull_name());
+            pstmt.setString(4,student.getFirst_name());
+            pstmt.setString(5,student.getLast_name());
+            pstmt.setDate(6,student.getBirth_date());
+            pstmt.setString(7,student.getLogin());
+            pstmt.setString(8, student.getPassword());
+            pstmt.setDate(9, student.getCreated_at());
 
             return pstmt.executeUpdate()>0;
 
@@ -85,7 +114,7 @@ public class StudentsDAO {
         conn = connection.connect();
 
         sql = "UPDATE students SET fk_class = ?, full_name = ?, first_name = ?, last_name = ?, birth_date = ?, login =?, password = ?" +
-                " WHERE id=?";
+                " WHERE id_student=?";
         PreparedStatement pstmt = conn.prepareStatement(sql);
 
         pstmt.setInt(1, student.getFk_class());
@@ -132,7 +161,7 @@ public class StudentsDAO {
                 Date birth_date = rs.getDate("birth_date");
                 String login = rs.getString("login");
                 String password = rs.getString("password");
-                String created_at = rs.getString("created_at");
+                Date created_at = rs.getDate("created_at");
                 student = new Students(id_student,fk_class,full_name,
                         birth_date,login,password,created_at);
             }
@@ -168,7 +197,7 @@ public class StudentsDAO {
                 Date birth_date = rs.getDate("birth_date");
                 String login = rs.getString("login");
                 String password = rs.getString("password");
-                String created_at = rs.getString("created_at");
+                Date created_at = rs.getDate("created_at");
 
                 list.add(new Students(id_student,fk_class,full_name,birth_date,login,password,created_at));
             }
@@ -234,7 +263,7 @@ public class StudentsDAO {
                 Date birth_date = rs.getDate("birth_date");
                 String login = rs.getString("login");
                 String password = rs.getString("password");
-                String created_at = rs.getString("created_at");
+                Date created_at = rs.getDate("created_at");
 
                 Students students1 = new Students(id_student,fk_class,full_name,birth_date,login,password,created_at);
                 students.add(students1);
@@ -270,7 +299,7 @@ public class StudentsDAO {
                 Date birth_date = rs.getDate("birth_date");
                 int id_student = rs.getInt("id_student");
                 String password = rs.getString("password");
-                String created_at = rs.getString("created_at");
+                Date created_at = rs.getDate("created_at");
                 student = new Students(id_student,fk_class,full_name,birth_date,login,password,created_at);
             }
 

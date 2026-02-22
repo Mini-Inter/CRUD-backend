@@ -15,7 +15,13 @@ public class Reports {
         this.description = description;
         this.send_at = send_at;
     }
-
+    public Reports(int id, int fk_teachers, String type, String description, Date send_at) {
+        this.id = id;
+        this.fk_teachers = fk_teachers;
+        this.type = type;
+        this.description = description;
+        this.send_at = send_at;
+    }
     public int getId() {
         return id;
     }

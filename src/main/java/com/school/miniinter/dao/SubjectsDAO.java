@@ -3,10 +3,7 @@ package com.school.miniinter.dao;
 import com.school.miniinter.connection.ConnectionFactory;
 import com.school.miniinter.models.Subject.Subject;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,8 +36,36 @@ public class SubjectsDAO {
             connection.disconnect(conn);
         }
     }
+    public List<Subject> read() {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+        ResultSet rset = null;
+        List<Subject> subjects = new LinkedList<>();
 
-    public Subject readById(int id) {
+        try {
+            conn = connection.connect();
+
+            String sql = "SELECT * FROM Subjects";
+            Statement pstmt = conn.createStatement();
+
+            rset = pstmt.executeQuery(sql);
+            while (rset.next()) {
+                subjects.add(new Subject(
+                        rset.getInt("id_subject"),
+                        rset.getString("description"),
+                        rset.getString("name")
+                ));
+            }
+
+            return subjects;
+        } catch(SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        } finally {
+            connection.disconnect(conn);
+        }
+    }
+    public Subject read(int id) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
         ResultSet rset;
@@ -68,7 +93,6 @@ public class SubjectsDAO {
         }
         return null;
     }
-
     public List<Subject> readByName(String name) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -100,7 +124,6 @@ public class SubjectsDAO {
             connection.disconnect(conn);
         }
     }
-
     public List<Subject> readByStudent(int idStudent) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -131,7 +154,6 @@ public class SubjectsDAO {
             connection.disconnect(conn);
         }
     }
-
     public List<Subject> readByTeacher(int idTeacher) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -163,8 +185,7 @@ public class SubjectsDAO {
             connection.disconnect(conn);
         }
     }
-
-    public int update(Subject subject) {
+    public boolean update(Subject subject) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
@@ -178,14 +199,10 @@ public class SubjectsDAO {
             pstmt.setString(2, subject.getDescription());
             pstmt.setInt(3, subject.getId());
 
-            if (pstmt.executeUpdate() == 0) {
-                return 0;
-            } else {
-                return 1;
-            }
+            return  pstmt.executeUpdate() > 0;
         } catch (SQLException sqle) {
             sqle.printStackTrace();
-            return -1;
+            return false;
         } finally {
             connection.disconnect(conn);
         }

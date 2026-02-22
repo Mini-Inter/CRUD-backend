@@ -75,6 +75,6 @@ public class TeacherReports extends HttpServlet {
         Date sendAt = Date.valueOf(LocalDate.now());
         Reports report = new Reports(idTeacher, type, description, sendAt);
         ReportsDAO rep = new ReportsDAO();
-        rep.createReport(report);
+        rep.insert(report);
     }
 }

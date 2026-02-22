@@ -45,7 +45,7 @@ public class ClassDAO {
         }
     }
 
-    public Class readClassById(int id_class){
+    public Class read(int id_class){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
@@ -74,6 +74,27 @@ public class ClassDAO {
         }
     }
 
+    public boolean delete(int id_class){
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+
+        try{
+            conn = connection.connect();
+
+            sql = "DELETE FROM class WHERE id_class = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,id_class);
+
+            return pstmt.executeUpdate() > 0;
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return false;
+        }finally{
+            connection.disconnect(conn);
+        }
+    }
+
     public List<Class> read(){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -88,7 +109,7 @@ public class ClassDAO {
             ResultSet rs = pstmt.executeQuery(sql);
 
             while (rs.next()) {
-                int id_class = rs.getString("id_class").charAt(0);
+                int id_class = Integer.parseInt(rs.getString("id_class"));
                 char series = rs.getString("series").charAt(0);
                 char classroom = rs.getString("classroom").charAt(0);
 
@@ -100,6 +121,32 @@ public class ClassDAO {
             sqle.printStackTrace();
             return null;
         }finally{
+            connection.disconnect(conn);
+        }
+    }
+
+    public boolean update(Class classroom) {
+        ConnectionFactory connection = new ConnectionFactory();
+        Connection conn = null;
+
+        try {
+            conn = connection.connect();
+
+            sql = "UPDATE class " +
+                    "SET series = ? AND classroom = ? " +
+                    "WHERE id_class = ?";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, classroom.getSeries());
+            pstmt.setInt(2, classroom.getClassroom());
+            pstmt.setInt(3, classroom.getId());
+
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException exc) {
+            exc.printStackTrace();
+            return false;
+        } finally {
             connection.disconnect(conn);
         }
     }
