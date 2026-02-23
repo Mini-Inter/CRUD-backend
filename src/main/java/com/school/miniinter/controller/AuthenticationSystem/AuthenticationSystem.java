@@ -56,18 +56,21 @@ public class AuthenticationSystem extends HttpServlet {
     private void login(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         String login = req.getParameter("login").toLowerCase().strip();
         String password = req.getParameter("pw");
+        String hashedPassword = "";
         try {
-            password = HashConfig.hashSenha(password);
+            hashedPassword = HashConfig.hashSenha(password);
         }catch(NoSuchAlgorithmException nsae){
             nsae.printStackTrace();
         }
 
         try {
-            if (!EmailUtils.verifyEmail(login))
+            if (!EmailUtils.verifyEmail(login)) {
+                login = login.substring(0, login.indexOf("@"));
                 throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
+            }
             login = login.substring(0, login.indexOf("@"));
 
-            switch (verifyLogin(login, password)) {
+            switch (verifyLogin(login, hashedPassword)) {
                 case (2) -> {
                     int idTeacher = teach.readByLogin(login).getId();
                     HttpSession session = req.getSession();
@@ -96,7 +99,7 @@ public class AuthenticationSystem extends HttpServlet {
             String error = "Alguns dados não foram preenchidos!";
             HttpSession session = req.getSession();
             session.setAttribute("error", error);
-            session.setAttribute("login", login);
+            session.setAttribute("login", login+"@vidya.org.br");
             session.setAttribute("password", password);
             resp.sendRedirect(req.getContextPath() + "/authentication/login.jsp");
         }
@@ -104,7 +107,7 @@ public class AuthenticationSystem extends HttpServlet {
             String error = exc.getMessage();
             HttpSession session = req.getSession();
             session.setAttribute("error", error);
-            session.setAttribute("login", login);
+            session.setAttribute("login", login+"@vidya.org.br");
             session.setAttribute("password", password);
             resp.sendRedirect(req.getContextPath() + "/authentication/login.jsp");
         }
@@ -112,19 +115,22 @@ public class AuthenticationSystem extends HttpServlet {
     private void loginRest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login").toLowerCase().strip();
         String password = req.getParameter("pw");
+        String hashedPassword = "";
 
         try {
-            password = HashConfig.hashSenha(password);
+            hashedPassword = HashConfig.hashSenha(password);
         }catch(NoSuchAlgorithmException nsae){
             nsae.printStackTrace();
         }
 
         try {
-            if (!EmailUtils.verifyEmail(login))
+            if (!EmailUtils.verifyEmail(login)){
+                login = login.substring(0, login.indexOf("@"));
                 throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
+            }
             login = login.substring(0, login.indexOf("@"));
 
-            if (isAdmin(login, password)) {
+            if (isAdmin(login, hashedPassword)) {
                 HttpSession session = req.getSession();
                 session.setAttribute("admin", login);
                 req.getRequestDispatcher("/adminStudents").forward(req, resp);
@@ -201,8 +207,8 @@ public class AuthenticationSystem extends HttpServlet {
                 PreRegistration preModel =
                         preDAO.read((String)session.getAttribute(
                         "cpf"));
-                password = HashConfig.hashSenha(password);
-                Students student = new Students(name,birthDate,login,password);
+                String hasedPassword = HashConfig.hashSenha(password);
+                Students student = new Students(name,birthDate,login,hasedPassword);
                 stud.insertInitial(student);
                 Integer id_student = stud.readIdByName(name);
                 preDAO.insertIdStudentOnCpf(id_student,preModel.getId());
@@ -214,7 +220,7 @@ public class AuthenticationSystem extends HttpServlet {
                 session.setAttribute("error", error);
                 session.setAttribute("name", name);
                 session.setAttribute("birth", birthDateString);
-                session.setAttribute("email", login);
+                session.setAttribute("email", login+"@vidya.org.br");
                 session.setAttribute("pw", password);
                 session.setAttribute("pc", passConf);
                 req.getRequestDispatcher("/WEB-INF/student/signUp.jsp").forward(req, resp);
