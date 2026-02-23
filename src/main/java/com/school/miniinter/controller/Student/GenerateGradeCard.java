@@ -171,7 +171,24 @@ public class GenerateGradeCard extends HttpServlet {
             table.addCell(celulaNota(g.getN2()));
             table.addCell(celulaNota(g.getAverage()));
 
-            table.addCell(celulaPadrao(g.getSituation(), TextAlignment.CENTER));
+            String situation = g.getSituation();
+            if(situation == "Reprovado"){
+                table.addCell(new Cell()
+                        .add(new Paragraph(situation).setFontSize(9))
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .setBorder(new SolidBorder(ColorConstants.BLACK, 1))
+                        .setFontColor(ColorConstants.RED)
+                        .setPadding(4));
+            }else{
+                table.addCell(new Cell()
+                        .add(new Paragraph(situation).setFontSize(9))
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .setBorder(new SolidBorder(ColorConstants.BLACK, 1))
+                        .setFontColor(ColorConstants.GREEN)
+                        .setPadding(4));
+            }
         }
 
         document.add(table);
