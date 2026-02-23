@@ -52,38 +52,52 @@
             <input value="<%=n%>" name="aula<%=n%>ClassNum" type="hidden">
             <td>
                 <select name="aula<%=n%>Subject" id="aula<%=n%>Subject">
+
                     <%
-                        if(aulas[n].isEmpty()){%>
-                    <option selected >Indefinido</option>
-                        <%
-                            for(Subject subject: subjects){%>
-                    <option value="<%=subject.getId()%>"><%=subject.getName()%></option>
-                            <%}
-                        }else{
-                        for (Subject subject : subjects) {
-                            if(aulas[n].getSubject().equals(subject.getName()) ){%>
-                    <option selected value="<%=subject.getId()%>"><%=subject.getName()%></option>
-                    <%}else{%>
-                    <option value="<%=subject.getId()%>"><%=subject.getName()%></option>
-                    <%
-                            }}}
+                        if(aulas[n].isEmpty()) {
                     %>
+                        <option selected value="">Indefinido</option>
+                        <%
+                            for(Subject subject: subjects) {
+                        %>
+                            <option value="<%=subject.getId()%>"><%=subject.getName()%></option>
+                        <%
+                            }
+                        } else {
+                            for (Subject subject : subjects) {
+                                if(aulas[n].getSubject().equals(subject.getName())) {
+                        %>
+                            <option selected value="<%=subject.getId()%>"><%=subject.getName()%></option>
+                    <%
+                                } else {
+                    %>
+                            <option value="<%=subject.getId()%>"><%=subject.getName()%></option>
+                    <%
+                                }
+                            }
+                        }
+                    %>
+
                 </select>
             </td>
             <td>
                 <select name="aula<%=n%>Teacher" id="aula<%=n%>Teacher">
                     <%
                         if(aulas[n].isEmpty()){%>
-                    <option selected>Indefinido</option>
+                    <option selected value="">Indefinido</option>
                     <%
-                        for(Teacher teacher: teachers){%>
+                        for(Teacher teacher: teachers){
+                    %>
                     <option value="<%=teacher.getId()%>"><%=teacher.getName()%></option>
-                    <%}
+                    <% }
                     }else{
                         for (Teacher teacher : teachers) {
-                            if(aulas[n].getTeacher().equals(teacher.getName())){%>
+                            if(aulas[n].getTeacher().equals(teacher.getName())){
+                    %>
                     <option selected value="<%=teacher.getId()%>"><%=teacher.getName()%></option>
-                    <%}else{%>
+                    <%
+                            }else{
+                    %>
                     <option value="<%=teacher.getId()%>"><%=teacher.getName()%></option>
                     <%
                             }}}

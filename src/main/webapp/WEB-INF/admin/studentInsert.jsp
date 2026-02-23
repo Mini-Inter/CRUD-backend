@@ -62,6 +62,10 @@
             <td><input name="birth" id="birth" type="date"></td>
         </tr>
         <tr>
+            <th><label for="phone">Telefone:</label></th>
+            <td><input name="phone" id="phone" type="tel"></td>
+        </tr>
+        <tr>
             <th><label for="email">Email:</label></th>
             <td><input name="email" id="email" type="email"></td>
         </tr>

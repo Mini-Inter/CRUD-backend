@@ -166,28 +166,33 @@ public class AdminClasses extends HttpServlet {
             clas.update(classroom);
 
             for (int n = 0; n < 6; n++) {
-                Object result =  req.getParameter("aula"+n+"Id");
-                Integer idTeaching;
-                if(result != null){
-                    idTeaching = Integer.parseInt(String.valueOf(result));
-                }else{
-                    idTeaching = -1;
-                }
+                String result =  req.getParameter("aula"+n+"Id");
+                int idTeaching = isNull(result);
+
+                String subject =  req.getParameter("aula"+n+"Subject");
+                int idSubject = isNull(subject);
+
+                String teacher =  req.getParameter("aula"+n+"Teacher");
+                int idTeacher = isNull(teacher);
+
                 aulas[n] = new TeachingAssignment(
                         idTeaching,
                         idClass,
-                        Integer.parseInt(req.getParameter("aula"+n+"Subject")),
-                        Integer.parseInt(req.getParameter("aula"+n+"Teacher")),
-                        n
+                        idSubject,
+                        idTeacher,
+                        (n+1)
                 );
             }
 
             boolean exito = false;
+
             for (TeachingAssignment aula : aulas) {
-                if ((aula.getId() == null) && !aula.isNull()) {
-                    exito = assign.insert(aula);
-                } else {
-                    exito = assign.update(aula);
+                if (aula.getIdSubject() != -1 && aula.getIdTeacher() != -1) {
+                    if ((aula.getId() == -1) && !aula.isNull()) {
+                        exito = assign.insert(aula);
+                    } else {
+                        exito = assign.update(aula);
+                    }
                 }
             }
 
@@ -227,6 +232,14 @@ public class AdminClasses extends HttpServlet {
             HttpSession session = req.getSession();
             session.setAttribute("error", exc.getMessage());
             req.getRequestDispatcher("adminClasses?type=editClass").forward(req, resp);
+        }
+    }
+
+    private int isNull(String object) {
+        if(object != null && !object.isBlank()){
+            return  Integer.parseInt(object);
+        }else{
+            return -1;
         }
     }
 }

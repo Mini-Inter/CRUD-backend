@@ -27,6 +27,10 @@
             <td><input value="<%=teacher.getLogin()%>@vidya.org.br" name="email" id="email" type="email"></td>
         </tr>
         <tr>
+            <th><label for="phone">Data de nascimento:</label></th>
+            <td><input value="<%=teacher.getPhone()%>" name="phone" id="phone" type="date"></td>
+        </tr>
+        <tr>
             <th><label for="birth">Data de nascimento:</label></th>
             <td><input value="<%=teacher.getBirthDate()%>" name="birth" id="birth" type="date"></td>
         </tr>

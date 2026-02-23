@@ -133,6 +133,7 @@ public class AdminTeachers extends HttpServlet {
             String email = req.getParameter("email");
             Date birth =  Date.valueOf(req.getParameter("birth"));
             String password = req.getParameter("pass");
+            String phone = req.getParameter("phone");
 
             if (!EmailUtils.verifyEmail(email)) {
                 throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
@@ -148,6 +149,9 @@ public class AdminTeachers extends HttpServlet {
             if (!birth.equals(teacher.getBirthDate())) {
                 teacher.setBirthDate(birth);
             }
+            if (!phone.equals(teacher.getPhone())) {
+                teacher.setPhone(phone);
+            }
             if (!password.isBlank() && !password.equals(teacher.getPassword())) {
                 try{
                     password = HashConfig.hashSenha(password);
@@ -162,13 +166,16 @@ public class AdminTeachers extends HttpServlet {
                 session.setAttribute("success", "Dados do professor " + teacher.getName() + " alterados com sucesso!");
             } else {
                 HttpSession session = req.getSession();
-                session.setAttribute("success", "Dados do professor " + teacher.getName() + " não foram alterados!");
+                session.setAttribute("error", "Dados do professor " + teacher.getName() + " não foram alterados!");
             }
-
             req.getRequestDispatcher("/adminTeachers?type=noot").forward(req, resp);
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
+            req.getRequestDispatcher("adminTeachers?type=editTeacher").forward(req, resp);
+        } catch (RuntimeException exc) {
+            HttpSession session = req.getSession();
+            session.setAttribute("error", exc.getMessage());
             req.getRequestDispatcher("adminTeachers?type=editTeacher").forward(req, resp);
         }
     }

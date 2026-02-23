@@ -78,8 +78,8 @@ public class AdminReports extends HttpServlet {
         Reports report = rep.read(Integer.parseInt(req.getParameter("report")));
         HttpSession session = req.getSession();
         session.setAttribute("report", report);
-        String[] students_report =
-                rep.readCompleteReport(report.getId()).getStudents();
+
+        String[] students_report = rep.readCompleteReport(report.getId()).getStudents();
         session.setAttribute("students_report", students_report);
 
         req.getRequestDispatcher("WEB-INF/admin/reportEdit.jsp").forward(req, resp);
@@ -131,17 +131,20 @@ public class AdminReports extends HttpServlet {
     }
     private void updateReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-
             Reports report = rep.read(Integer.parseInt(req.getParameter("report")));
 
-            String type = req.getParameter("type");
+            String type = req.getParameter("typeReport");
             String desc =  req.getParameter("description");
+            String[] students = req.getParameterValues("students");
 
             if (!desc.equals(report.getDescription())) {
                 report.setDescription(desc);
             }
             if (!type.equals(report.getType())) {
                 report.setType(type);
+            }
+            if (!students.equals(report.getFk_students())) {
+                report.setFk_students(students);
             }
 
             if (rep.update(report)) {

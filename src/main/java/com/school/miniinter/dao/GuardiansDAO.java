@@ -99,7 +99,7 @@ public class GuardiansDAO {
         try {
             conn = connection.connect();
             String sql = "UPDATE guardian " +
-                    "SET full_name = ? AND first_name = ? AND last_name = ? AND birth_date = ? " +
+                    "SET full_name = ?, first_name = ?, last_name = ?, birth_date = ? " +
                     "WHERE id_guardian = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 

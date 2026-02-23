@@ -127,10 +127,10 @@ public class AdminGuardians extends HttpServlet {
 
             if (gar.update(guardian)) {
                 HttpSession session = req.getSession();
-                session.setAttribute("success", "Dados do professor" + guardian.getName() + "alterados com sucesso!");
+                session.setAttribute("success", "Dados do responsável " + guardian.getName() + " alterados com sucesso!");
             } else {
                 HttpSession session = req.getSession();
-                session.setAttribute("error", "Dados do professor " + guardian.getName() + " não foram alterados!");
+                session.setAttribute("error", "Dados do responsável  " + guardian.getName() + " não foram alterados!");
             }
 
             req.getRequestDispatcher("/adminGuardians?type=noot").forward(req, resp);
@@ -149,10 +149,10 @@ public class AdminGuardians extends HttpServlet {
                 req.getRequestDispatcher("/adminGuardians?type=noot").forward(req, resp);
 
                 HttpSession session = req.getSession();
-                session.setAttribute("success", "Professor " + guardian.getName() + " deletado com sucesso!");
+                session.setAttribute("success", "Responsável " + guardian.getName() + " deletado com sucesso!");
             }
             else
-                throw new UnavailableException("Professor " + guardian.getName() + " não pôde ser deletado...");
+                throw new UnavailableException("Responsável " + guardian.getName() + " não pôde ser deletado...");
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");

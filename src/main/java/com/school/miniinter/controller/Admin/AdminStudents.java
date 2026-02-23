@@ -89,6 +89,7 @@ public class AdminStudents extends HttpServlet {
             String email = req.getParameter("email");
             Date birth =  Date.valueOf(req.getParameter("birth"));
             String password = req.getParameter("pass");
+            String phone = req.getParameter("phone");
 
             if (!EmailUtils.verifyEmail(email)) {
                 throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
@@ -99,6 +100,7 @@ public class AdminStudents extends HttpServlet {
             student.setFull_name(name);
             student.setLogin(email);
             student.setBirth_date(birth);
+            student.setPhone(phone);
             try{
                 password = HashConfig.hashSenha(password);
             }catch(NoSuchAlgorithmException nsae){
@@ -168,6 +170,7 @@ public class AdminStudents extends HttpServlet {
             String email = req.getParameter("email");
             Date birth =  Date.valueOf(req.getParameter("birth"));
             String password = req.getParameter("pass");
+            String phone = req.getParameter("phone");
 
             if (!EmailUtils.verifyEmail(email)) {
                 throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
@@ -185,6 +188,9 @@ public class AdminStudents extends HttpServlet {
             }
             if (!birth.equals(student.getBirth_date())) {
                 student.setBirth_date(birth);
+            }
+            if (!phone.equals(student.getPhone())) {
+                student.setPhone(phone);
             }
             if (!password.isBlank() && !password.equals(student.getPassword())) {
                 try {

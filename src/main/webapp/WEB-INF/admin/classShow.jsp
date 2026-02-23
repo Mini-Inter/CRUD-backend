@@ -33,7 +33,7 @@
     <tr>
         <th><%=n++%>° Aula :</th>
         <%if(aula.getSubject() == null){%>
-        <td rowspan="2">Ainda não definido</td>
+        <td colspan="2">Ainda não definido</td>
         <%}else{%>
         <td><%=aula.getSubject()%></td>
         <td><%=aula.getTeacher()%></td>

@@ -15,6 +15,7 @@
     <p>Total de observações: <%=request.getAttribute("amountReports")%></p>
 
     <form action="<%=request.getContextPath()%>/homeStudent" method="post"><input value="Home" type="submit"></form>
+    <form action="<%=request.getContextPath()%>/generateGradeCard" method="post"><input value="Gerar " type="submit"></form>
     <form action="<%=request.getContextPath()%>/gradeCard" method="post"><input value="Boletim" type="submit"></form>
     <form action="<%=request.getContextPath()%>/studentSubjects" method="post"><input value="Matérias" type="submit"></form>
     <form action="<%=request.getContextPath()%>/observations" method="post"><input value="Observações" type="submit"></form>

@@ -105,8 +105,8 @@ public class StudentsDAO {
         try{
             conn = conexao.connect();
             sql = "INSERT INTO " +
-                    "students(id_student,fk_class,full_name,first_name,last_name,birth_date,login,password) " +
-                    "VALUES(floor(random() * (999999 - 100000 + 1) + 100000)::bigint,?,?,?,?,?,?,?)";
+                    "students(id_student,fk_class,full_name,first_name,last_name,birth_date,login,password, phone) " +
+                    "VALUES(floor(random() * (999999 - 100000 + 1) + 100000)::bigint,?,?,?,?,?,?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,student.getFk_class());
@@ -116,6 +116,7 @@ public class StudentsDAO {
             pstmt.setDate(5,student.getBirth_date());
             pstmt.setString(6,student.getLogin());
             pstmt.setString(7, student.getPassword());
+            pstmt.setString(8, student.getPhone());
 
             return pstmt.executeUpdate()>0;
 
@@ -127,8 +128,6 @@ public class StudentsDAO {
         }
     }
 
-//   Precisa de mais informação de funcionamento, pois não sabemos o que
-//   precisa ser mudado!
     public int update(Students student) {
     ConnectionFactory connection = new ConnectionFactory();
     Connection conn = null;
@@ -136,7 +135,7 @@ public class StudentsDAO {
     try {
         conn = connection.connect();
 
-        sql = "UPDATE students SET fk_class = ?, full_name = ?, first_name = ?, last_name = ?, birth_date = ?, login =?, password = ?" +
+        sql = "UPDATE students SET fk_class = ?, full_name = ?, first_name = ?, last_name = ?, birth_date = ?, login =?, password = ?, phone = ?" +
                 " WHERE id_student=?";
         PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -147,7 +146,8 @@ public class StudentsDAO {
         pstmt.setDate(5, student.getBirth_date());
         pstmt.setString(6, student.getLogin());
         pstmt.setString(7, student.getPassword());
-        pstmt.setInt(8, student.getId_student());
+        pstmt.setString(8, student.getPhone());
+        pstmt.setInt(9, student.getId_student());
 
         if (pstmt.executeUpdate() == 0) {
             return 0;
@@ -210,8 +210,9 @@ public class StudentsDAO {
                 String login = rs.getString("login");
                 String password = rs.getString("password");
                 Date created_at = rs.getDate("created_at");
+                String phone = rs.getString("phone");
                 student = new Students(id_student,fk_class,full_name,
-                        birth_date,login,password,created_at);
+                        birth_date,login,password,created_at, phone);
             }
 
             return student;
@@ -246,8 +247,9 @@ public class StudentsDAO {
                 String login = rs.getString("login");
                 String password = rs.getString("password");
                 Date created_at = rs.getDate("created_at");
+                String phone = rs.getString("phone");
 
-                list.add(new Students(id_student,fk_class,full_name,birth_date,login,password,created_at));
+                list.add(new Students(id_student,fk_class,full_name,birth_date,login,password,created_at, phone));
             }
             return list;
         }catch(SQLException sqle){
@@ -312,8 +314,9 @@ public class StudentsDAO {
                 String login = rs.getString("login");
                 String password = rs.getString("password");
                 Date created_at = rs.getDate("created_at");
+                String phone = rs.getString("phone");
 
-                Students students1 = new Students(id_student,fk_class,full_name,birth_date,login,password,created_at);
+                Students students1 = new Students(id_student,fk_class,full_name,birth_date,login,password,created_at, phone);
                 students.add(students1);
             }
             return students;
@@ -348,7 +351,8 @@ public class StudentsDAO {
                 int id_student = rs.getInt("id_student");
                 String password = rs.getString("password");
                 Date created_at = rs.getDate("created_at");
-                student = new Students(id_student,fk_class,full_name,birth_date,login,password,created_at);
+                String phone = rs.getString("phone");
+                student = new Students(id_student,fk_class,full_name,birth_date,login,password,created_at, phone);
             }
 
             return student;

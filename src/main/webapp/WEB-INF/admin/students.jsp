@@ -31,6 +31,7 @@
         <th>Nome Completo</th>
         <th>Email</th>
         <th>Data de nascimento</th>
+        <th>Telefone</th>
         <th colspan="4">Ações</th>
     </tr>
     <%
@@ -40,6 +41,7 @@
         <td><%=student.getFull_name()%></td>
         <td><%=student.getLogin()%>@vidya.org.br</td>
         <td><%=student.getBirth_date()%></td>
+        <td><%=student.getPhone()%></td>
         <td>
             <form action="<%=request.getContextPath()%>/adminStudents?type=showStudent" method="post">
                 <input name="student" id="student" value="<%=student.getId_student()%>" type="hidden">
@@ -57,7 +59,6 @@
                 <input name="student" id="student" value="<%=student.getId_student()%>" type="hidden">
                 <input value="Deletar" type="submit">
             </form>
-        </td>
         </td>
     </tr>
     <%

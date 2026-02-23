@@ -35,8 +35,8 @@
     <table>
         <tr>
             <th>Nome completo</th>
-            <th>N1</th>
-            <th>N2</th>
+            <th colspan="2">N1</th>
+            <th colspan="2">N2</th>
             <th>Média final</th>
         </tr>
         <%

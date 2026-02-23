@@ -317,19 +317,44 @@ public class ReportsDAO {
     public boolean update(Reports report) {
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
+        int n = 1;
 
         try {
             conn = connection.connect();
-            String sql = "UPDATE reports " +
-                    "SET type = ? AND description = ? " +
-                    "WHERE id = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setString(1, report.getType());
-            pstmt.setString(2, report.getDescription());
-            pstmt.setInt(3, report.getId());
+            conn.setAutoCommit(false);
+            try {
+                String sql = "UPDATE reports " +
+                        "SET type = ?, description = ? " +
+                        "WHERE id = ?; " +
+                        "DELETE FROM receive WHERE fk_report = ?; ";
 
-            return pstmt.executeUpdate() > 0;
+                for (String idStudents : report.getFk_students()) {
+                    sql += "INSERT INTO receive (fk_student, fk_report) " +
+                            "VALUES (?, ?); ";
+                }
+
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+
+                pstmt.setString(n++, report.getType());
+                pstmt.setString(n++, report.getDescription());
+                pstmt.setInt(n++, report.getId());
+                pstmt.setInt(n++, report.getId());
+
+                for (String idStudents : report.getFk_students()) {
+                    pstmt.setInt(n++, Integer.parseInt(idStudents));
+                    pstmt.setInt(n++, report.getId());
+                }
+
+                pstmt.execute();
+
+                conn.commit();
+                return true;
+            } catch (SQLException exc) {
+                exc.printStackTrace();
+                conn.rollback();
+                return false;
+            }
         } catch (SQLException exc) {
             exc.printStackTrace();
             return false;

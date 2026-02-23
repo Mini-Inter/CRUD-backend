@@ -20,7 +20,7 @@
 </head>
 <body>
 <%@include file="../common/error.jsp"%>
-<form action="<%=request.getContextPath()%>/adminSubject?type=updateSubject" method="post">
+<form action="<%=request.getContextPath()%>/adminSubjects?type=updateSubject" method="post">
     <input name="subject" id="subject" value="<%=subject.getId()%>" type="hidden">
     <table>
 <%--        Era para ter essas informações mesmo Vini?--%>

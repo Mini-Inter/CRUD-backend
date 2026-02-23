@@ -50,6 +50,10 @@
             <td><input value="<%=student.getBirth_date()%>" name="birth" id="birth" type="date"></td>
         </tr>
         <tr>
+            <th><label for="phone">Telefone:</label></th>
+            <td><input value="<%=student.getPhone()%>" name="phone" id="phone" type="tel"></td>
+        </tr>
+        <tr>
             <th><label for="pass">Senha:</label></th>
             <td><input value="" name="pass" id="pass" type="password"></td>
         </tr>

@@ -8,13 +8,13 @@ public class Reports {
     private String type;
     private String description;
     private Date send_at;
+    private String[] fk_students;
 
     public Reports(Integer fk_teacher, String description, String type) {
         this.fk_teachers = fk_teacher;
         this.description = description;
         this.type = type;
     }
-
     public Reports(int fk_teachers, String type, String description, Date send_at) {
         this.type = type;
         this.fk_teachers = fk_teachers;
@@ -27,6 +27,13 @@ public class Reports {
         this.type = type;
         this.description = description;
         this.send_at = send_at;
+    }
+
+    public String[] getFk_students() {
+        return fk_students;
+    }
+    public void setFk_students(String[] fk_students) {
+        this.fk_students = fk_students;
     }
     public int getId() {
         return id;

@@ -12,10 +12,8 @@
 <%
     Reports reports = (Reports) session.getAttribute("report");
 
-    List<Students> students = (List<Students>)
-            session.getAttribute("students");
-    String[] students_report = (String[])
-            session.getAttribute("students_report");
+    List<Students> students = (List<Students>) session.getAttribute("students");
+    String[] students_report = (String[]) session.getAttribute("students_report");
 %>
 <html>
 <head>
@@ -24,11 +22,11 @@
 <body>
 <%@include file="../common/error.jsp"%>
 <form action="<%=request.getContextPath()%>/adminReports?type=updateReport" method="post">
-    <input name="reports" id="reports" value="<%=reports.getId()%>" type="hidden">
+    <input name="report" id="report" value="<%=reports.getId()%>" type="hidden">
     <table>
         <tr>
-            <th><label for="type">Tipo:</label></th>
-            <td><input value="<%=reports.getType()%>" name="type" id="type" type="text"></td>
+            <th><label for="typeReport">Tipo:</label></th>
+            <td><input value="<%=reports.getType()%>" name="typeReport" id="typeReport" type="text"></td>
         </tr>
         <tr>
             <th><label for="description">Descrição:</label></th>

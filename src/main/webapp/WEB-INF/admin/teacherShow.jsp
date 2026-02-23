@@ -21,7 +21,7 @@
         </tr>
         <tr>
             <th>Email:</th>
-            <td><%=teacher.getLogin()%></td>
+            <td><%=teacher.getLogin()%>@vidya.org.br</td>
         </tr>
         <tr>
             <th>Data de nascimento:</th>
@@ -30,6 +30,10 @@
         <tr>
             <th>Data de cadastro:</th>
             <td><%=teacher.getCreatedAt()%></td>
+        </tr>
+        <tr>
+            <th>Telefone:</th>
+            <td><%=teacher.getPhone()%></td>
         </tr>
     </table>
 </body>

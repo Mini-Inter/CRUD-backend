@@ -12,10 +12,11 @@ public class Students {
     private Date birth_date;
     private String login;
     private String password;
+    private String phone;
     private Date created_at;
 
     public Students(int id_student, int fk_class,
-    String full_name, Date birth_date, String login, String password, Date created_at) {
+    String full_name, Date birth_date, String login, String password, Date created_at, String phone) {
         this.id_student = id_student;
         this.fk_class = fk_class;
         this.full_name = full_name;
@@ -25,6 +26,7 @@ public class Students {
         this.login = login;
         this.password = password;
         this.created_at = created_at;
+        this.phone = phone;
     }
 
     public Students(String full_name,Date birth_date, String login,
@@ -38,6 +40,14 @@ public class Students {
     }
 
     public Students(){}
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public int getId_student() {
         return id_student;

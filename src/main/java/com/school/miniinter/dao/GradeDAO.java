@@ -48,7 +48,7 @@ public class GradeDAO {
 
                 if (!existe) {
                     int type = rs.getInt("grade_type");
-                    grade.setSubject(rs.getString("name"));
+                    grade.setSubject(rs.getString("name_subject"));
                     if (type == 1) {
                         grade.setN1(rs.getDouble("value"));
                         grade.setN2();

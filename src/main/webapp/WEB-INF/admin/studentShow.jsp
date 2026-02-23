@@ -31,6 +31,10 @@
         <th>Data de cadastro:</th>
         <td><%=student.getCreated_at()%></td>
     </tr>
+    <tr>
+        <th>Telefone:</th>
+        <td><%=student.getPhone()%></td>
+    </tr>
 </table>
 </body>
 </html>

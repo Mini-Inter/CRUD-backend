@@ -30,6 +30,7 @@
             <th>Nome Completo</th>
             <th>Email</th>
             <th>Data de nascimento</th>
+            <th>Telefone</th>
             <th colspan="3">Ações</th>
         </tr>
         <%
@@ -39,6 +40,7 @@
             <td><%=teacher.getName()%></td>
             <td><%=teacher.getLogin()%>@vidya.org.br</td>
             <td><%=teacher.getBirthDate()%></td>
+            <td><%=teacher.getPhone()%></td>
             <td>
                 <form action="<%=request.getContextPath()%>/adminTeachers?type=showTeacher" method="post">
                     <input name="teacher" id="teacher" value="<%=teacher.getId()%>" type="hidden">

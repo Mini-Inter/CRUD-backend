@@ -410,7 +410,7 @@ public class TeachersDAO {
         }
     }
 
-    public List<AmountStudentByTeacher> amountStudentByTeacherAndClass(int id_teacher, int id_subject){
+    public List<AmountStudentByTeacher> amountStudentByTeacherAndClass(int id_teacher, int id_class){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
         ResultSet rs;
@@ -422,12 +422,12 @@ public class TeachersDAO {
                     "students s JOIN class c on s.fk_class = c.id_class JOIN " +
                     "teachingAssignment t on t.fk_class = c.id_class JOIN " +
                     "teachers te on t.fk_teacher = te.id_employee WHERE te" +
-                    ".id_employee = ? AND c.id_subject =? GROUP BY 1 ";
+                    ".id_employee = ? AND c.id_class =? GROUP BY 1 ";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_teacher);
-            pstmt.setInt(2,id_subject);
+            pstmt.setInt(2,id_class);
 
             rs = pstmt.executeQuery();
             AmountStudentByTeacher amountStuentByTeacher = null;
@@ -486,7 +486,7 @@ public class TeachersDAO {
         try {
             conn = connection.connect();
 
-            sql = "UPDATE teachers SET first_name=?, last_name=?, full_name=?, birth_date=?, login=?, password=?, created_at=? WHERE id=?";
+            sql = "UPDATE teachers SET first_name=?, last_name=?, full_name=?, birth_date=?, login=?, password=?, created_at=?, phone = ? WHERE id_employee=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, teacher.getFirstName());
@@ -496,7 +496,8 @@ public class TeachersDAO {
             pstmt.setString(5, teacher.getLogin());
             pstmt.setString(6, teacher.getPassword());
             pstmt.setDate(7, teacher.getCreatedAt());
-            pstmt.setInt(8, teacher.getId());
+            pstmt.setString(8, teacher.getPhone());
+            pstmt.setInt(9, teacher.getId());
 
             return  pstmt.executeUpdate() > 0;
         } catch (SQLException sqle) {

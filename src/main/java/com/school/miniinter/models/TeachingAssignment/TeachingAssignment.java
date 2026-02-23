@@ -37,6 +37,12 @@ public class TeachingAssignment {
         }
     }
 
+    public String getClass_hour() {
+        return class_hour;
+    }
+    public void setClass_hour(String class_hour) {
+        this.class_hour = class_hour;
+    }
     public Integer getId() {
         return id;
     }
@@ -67,7 +73,6 @@ public class TeachingAssignment {
     public void setClassNumber(Integer classNumber) {
         this.classNumber = classNumber;
     }
-
     public boolean isNull() {
         return (this.id == null && this.idSubject == null && this.idTeacher == null);
     }

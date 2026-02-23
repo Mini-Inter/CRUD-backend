@@ -117,8 +117,8 @@ public class TeachingDAO {
 
         try {
             conn = connection.connect();
-            String sql = "INSERT INTO teachingassignment (fk_class, fk_subject, fk_teacher, class_num) VALUES " +
-                    "(?, ?, ?, ?)";
+            String sql = "INSERT INTO teachingassignment (fk_class, fk_subject, fk_teacher, class_num, class_hour) VALUES " +
+                    "(?, ?, ?, ?, ?)";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -126,6 +126,7 @@ public class TeachingDAO {
             pstmt.setInt(2, aula.getIdSubject());
             pstmt.setInt(3, aula.getIdTeacher());
             pstmt.setInt(4, aula.getClassNumber());
+            pstmt.setString(5, aula.getClass_hour());
 
             return pstmt.executeUpdate() > 0;
 
@@ -144,14 +145,15 @@ public class TeachingDAO {
         try {
             conn = connection.connect();
             String sql = "UPDATE teachingassignment " +
-                    "SET fk_subject = ? AND fk_teacher = ?" +
+                    "SET fk_subject = ?, fk_teacher = ?, class_hour = ? " +
                     "WHERE id = ?";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1, aula.getIdSubject());
             pstmt.setInt(2, aula.getIdTeacher());
-            pstmt.setObject(3, aula.getId());
+            pstmt.setString(3, aula.getClass_hour());
+            pstmt.setObject(4, aula.getId());
 
             return pstmt.executeUpdate() > 0;
         } catch (SQLException exc) {
