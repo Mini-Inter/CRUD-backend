@@ -11,7 +11,7 @@
     <title>Vidya</title>
 </head>
 <body>
-    <a href="./authentication/login.jsp">Login</a>
-    <a href="./authentication/loginaa.jsp">Area Restrita</a>
+    <a href="authentication/login.jsp">Login</a>
+    <a href="authentication/loginaa.jsp">Area Restrita</a>
 </body>
 </html>

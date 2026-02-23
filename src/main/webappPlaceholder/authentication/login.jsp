@@ -40,6 +40,6 @@
     <%
         session.invalidate();
     %>
-    <p>Ainda não tem conta? <a href="./cpf.jsp">Cadastre-se</a></p>
+    <p>Ainda não tem conta? <a href="cpf.jsp">Cadastre-se</a></p>
 </body>
 </html>
