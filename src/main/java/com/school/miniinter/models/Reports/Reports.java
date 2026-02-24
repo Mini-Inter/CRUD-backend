@@ -1,14 +1,19 @@
 package com.school.miniinter.models.Reports;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.util.Locale;
 
 public class Reports {
     private int id;
     private int fk_teachers;
     private String type;
     private String description;
-    private Date send_at;
+    private String send_at;
     private String[] fk_students;
+
+    DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+            new Locale("pt","BR"));
 
     public Reports(Integer fk_teacher, String description, String type) {
         this.fk_teachers = fk_teacher;
@@ -19,14 +24,14 @@ public class Reports {
         this.type = type;
         this.fk_teachers = fk_teachers;
         this.description = description;
-        this.send_at = send_at;
+        this.send_at = format.format(send_at);
     }
     public Reports(int id, int fk_teachers, String type, String description, Date send_at) {
         this.id = id;
         this.fk_teachers = fk_teachers;
         this.type = type;
         this.description = description;
-        this.send_at = send_at;
+        this.send_at = format.format(send_at);
     }
 
     public String[] getFk_students() {
@@ -59,10 +64,10 @@ public class Reports {
     public void setType(String type) {
         this.type = type;
     }
-    public Date getSend_at() {
+    public String getSend_at() {
         return send_at;
     }
-    public void setSend_at(Date send_at) {
+    public void setSend_at(String send_at) {
         this.send_at = send_at;
     }
 

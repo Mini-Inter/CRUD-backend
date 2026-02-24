@@ -1,11 +1,13 @@
 package com.school.miniinter.models.Administrator;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.util.Locale;
 
 public class Administrator {
         private int id;
         private String name;
-        private Date birthDate;
+        private String birthDate;
         private String type;
         private String login;
         private String password;
@@ -15,7 +17,9 @@ public class Administrator {
     public Administrator(int id, String name, Date birthDate, String type, String login, String password) {
         this.id = id;
         this.name = name;
-        this.birthDate = birthDate;
+        DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+                new Locale("pt","BR"));
+        this.birthDate = format.format(birthDate);
         this.type = type;
         this.login = login;
         this.password = password;
@@ -32,10 +36,10 @@ public class Administrator {
     public void setName(String name) {
         this.name = name;
     }
-    public Date getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
     public String getType() {

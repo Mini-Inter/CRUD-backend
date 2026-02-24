@@ -1,7 +1,9 @@
 package com.school.miniinter.models.Reports;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class CompleteReport {
     private int id;
@@ -9,7 +11,7 @@ public class CompleteReport {
     private String teacher;
     private String description;
     private String type;
-    private Date send_at;
+    private String send_at;
 
     public int getId() {
         return id;
@@ -41,10 +43,12 @@ public class CompleteReport {
     public void setType(String type) {
         this.type = type;
     }
-    public Date getSend_at() {
-        return send_at;
+    public String getSend_at() {
+        DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+                new Locale("pt","BR"));
+        return format.format(this.send_at);
     }
     public void setSend_at(Date send_at) {
-        this.send_at = send_at;
+        this.send_at = String.valueOf(send_at);
     }
 }

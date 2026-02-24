@@ -3,7 +3,9 @@ package com.school.miniinter.models.Teacher;
 import com.school.miniinter.models.Subject.Subject;
 
 import java.sql.Date;
+import java.text.DateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class Teacher {
     private int id;
@@ -13,9 +15,11 @@ public class Teacher {
     private String login;
     private String phone;
     private String password;
-    private Date birthDate;
-    private Date createdAt;
+    private String birthDate;
+    private String createdAt;
 
+    DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+            new Locale("pt","BR"));
     // Métodos
     public Teacher(int id, String name, String login,
                    String phone, String password, Date birthDate,
@@ -27,8 +31,8 @@ public class Teacher {
         this.login = login;
         this.phone = phone;
         this.password = password;
-        this.birthDate = birthDate;
-        this.createdAt = createdAt;
+        this.birthDate = format.format(birthDate);
+        this.createdAt = format.format(createdAt);
     }
 
     public Teacher(String name, String login,String phone, String password,
@@ -39,7 +43,7 @@ public class Teacher {
         this.login = login;
         this.phone = phone;
         this.password = password;
-        this.birthDate = birthDate;
+        this.birthDate = format.format(birthDate);
     }
     public int getId() {
         return id;
@@ -79,13 +83,13 @@ public class Teacher {
     public void setPassword(String password) {
         this.password = password;
     }
-    public Date getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
     public String getPhone() {

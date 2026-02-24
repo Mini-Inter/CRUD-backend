@@ -1,5 +1,9 @@
 package com.school.miniinter.models.Grades;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class Grades {
     private int id;
     private int fk_student;
@@ -9,12 +13,14 @@ public class Grades {
     private String send_at;
 
     public Grades(int fk_student, int fk_subject, int type, double value,
-                  String send_at) {
+                  Date send_at) {
         this.fk_student = fk_student;
         this.fk_subject = fk_subject;
         this.type = type;
         this.value = value;
-        this.send_at = send_at;
+        DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+                new Locale("pt","BR"));
+        this.send_at = format.format(send_at);
     }
 
     public int getId() {

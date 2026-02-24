@@ -5,7 +5,7 @@ import com.school.miniinter.models.Teach.Teach;
 
 public class Has {
     private int id;
-    private com.school.miniinter.models.Class.Class classroom;
+    private Class classroom;
     private Teach professoria;
 
     // Métodos

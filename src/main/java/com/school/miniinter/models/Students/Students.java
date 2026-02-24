@@ -2,6 +2,8 @@ package com.school.miniinter.models.Students;
 import com.school.miniinter.dao.StudentsDAO;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.util.Locale;
 
 public class Students {
     private int id_student;
@@ -9,12 +11,14 @@ public class Students {
     private String full_name;
     private String first_name;
     private String last_name;
-    private Date birth_date;
+    private String birth_date;
     private String login;
     private String password;
     private String phone;
-    private Date created_at;
+    private String created_at;
 
+    DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+            new Locale("pt","BR"));
     public Students(int id_student, int fk_class,
     String full_name, Date birth_date, String login, String password, Date created_at, String phone) {
         this.id_student = id_student;
@@ -22,10 +26,10 @@ public class Students {
         this.full_name = full_name;
         this.first_name = full_name.substring(0, full_name.indexOf(" "));
         this.last_name = full_name.substring(full_name.lastIndexOf(" "));
-        this.birth_date = birth_date;
+        this.birth_date = format.format(birth_date);
         this.login = login;
         this.password = password;
-        this.created_at = created_at;
+        this.created_at = format.format(created_at);
         this.phone = phone;
     }
 
@@ -34,7 +38,7 @@ public class Students {
         this.full_name = full_name;
         this.first_name = full_name.substring(0, full_name.indexOf(" "));
         this.last_name = full_name.substring(full_name.lastIndexOf(" "));
-        this.birth_date = birth_date;
+        this.birth_date = format.format(birth_date);
         this.login = login;
         this.password = password;
     }
@@ -91,11 +95,11 @@ public class Students {
         this.last_name = full_name.substring(full_name.lastIndexOf(" "));
     }
 
-    public Date getBirth_date() {
+    public String getBirth_date() {
         return birth_date;
     }
 
-    public void setBirth_date(Date birth_date) {
+    public void setBirth_date(String birth_date) {
         this.birth_date = birth_date;
     }
 
@@ -115,11 +119,11 @@ public class Students {
         this.password = password;
     }
 
-    public Date getCreated_at() {
+    public String getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(Date created_at) {
+    public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
 

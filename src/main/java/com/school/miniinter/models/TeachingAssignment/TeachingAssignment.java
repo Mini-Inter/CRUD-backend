@@ -73,6 +73,7 @@ public class TeachingAssignment {
     public void setClassNumber(Integer classNumber) {
         this.classNumber = classNumber;
     }
+
     public boolean isNull() {
         return (this.id == null && this.idSubject == null && this.idTeacher == null);
     }

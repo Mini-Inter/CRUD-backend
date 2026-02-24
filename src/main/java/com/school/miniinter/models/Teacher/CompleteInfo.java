@@ -1,24 +1,28 @@
 package com.school.miniinter.models.Teacher;
 
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class CompleteInfo {
 
     private String full_name;
     private String subject;
-    private Date created_at;
+    private String created_at;
     private Integer school_year;
     private String status;
-    private Date birth_date;
+    private String birth_date;
     private String login;
     private String phone;
 
+    DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+            new Locale("pt","BR"));
     public CompleteInfo(Date created_at, String full_name, Integer school_year, String status, Date birth_date, String login, String phone) {
-        this.created_at = created_at;
+        this.created_at = format.format(created_at);
         this.full_name = full_name;
         this.school_year = school_year;
         this.status = status;
-        this.birth_date = birth_date;
+        this.birth_date = format.format(birth_date);
         this.login = login+"@vidya.org.br";
         this.phone = phone;
     }
@@ -39,11 +43,11 @@ public class CompleteInfo {
         this.subject = subject;
     }
 
-    public Date getCreated_at() {
+    public String getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(Date created_at) {
+    public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
 
@@ -63,11 +67,11 @@ public class CompleteInfo {
         this.status = status;
     }
 
-    public Date getBirth_date() {
+    public String getBirth_date() {
         return birth_date;
     }
 
-    public void setBirth_date(Date birth_date) {
+    public void setBirth_date(String birth_date) {
         this.birth_date = birth_date;
     }
 
