@@ -32,7 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
-@WebServlet(name="GenerateGradeCard", value={"/generateGradeCard"})
+@WebServlet(name="GerarBoletim", value={"/generateGradeCard"})
 public class GenerateGradeCard extends HttpServlet {
 
     StudentsDAO studentsDAO = new StudentsDAO();

@@ -73,6 +73,7 @@ public class StudentsDAO {
             conexao.disconnect(conn);
         }
     }
+
     public boolean insertInitial(Students student){
         ConnectionFactory conexao = new ConnectionFactory();
         Connection conn = null;
@@ -99,6 +100,7 @@ public class StudentsDAO {
             conexao.disconnect(conn);
         }
     }
+
     public boolean insert(Students student){
         ConnectionFactory conexao = new ConnectionFactory();
         Connection conn = null;
@@ -161,6 +163,7 @@ public class StudentsDAO {
         connection.disconnect(conn);
     }
 }
+
     public Integer readIdByName(String name){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -187,6 +190,7 @@ public class StudentsDAO {
             connection.disconnect(conn);
         }
     }
+
     public Students readById(int id_student){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
@@ -368,11 +372,10 @@ public class StudentsDAO {
     public BasicInfo readBasicInfoStudent(String email){
         ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
-        BasicInfo basicInfo = new BasicInfo();
         try{
             conn = connection.connect();
 
-            sql = "SELECT s.full_name, c.classroom, c.series, s" +
+            sql = "SELECT s.full_name,s.first_name, c.classroom, c.series, s" +
                     ".id_student, EXTRACT(YEAR FROM CURRENT_DATE) AS " +
                     "School_year FROM" +
                     " class c JOIN students s ON c.id_class = s.fk_class WHERE login LIKE ?";
@@ -383,13 +386,16 @@ public class StudentsDAO {
             ResultSet rs = pstmt.executeQuery();
 
             if(rs.next()) {
-                basicInfo.setId_student(rs.getInt("id_student"));
-                basicInfo.setClassroom(rs.getString("classroom"));
-                basicInfo.setSeries(rs.getString("series"));
-                basicInfo.setFull_name(rs.getString("full_name"));
-                basicInfo.setSchool_year(rs.getInt("School_year"));
+                int id_student = rs.getInt("id_student");
+                String classroom = rs.getString("classroom");
+                String series = rs.getString("series");
+                String full_name = rs.getString("full_name");
+                String first_name = rs.getString("first_name");
+                int school_year = rs.getInt("School_year");
+                return new BasicInfo(id_student,full_name,first_name,
+                        classroom,series,school_year);
             }
-            return basicInfo;
+            return null;
 
         }catch (SQLException sqle){
             sqle.printStackTrace();

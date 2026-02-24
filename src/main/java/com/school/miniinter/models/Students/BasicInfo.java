@@ -4,9 +4,19 @@ public class BasicInfo {
 
     private int id_student;
     private String full_name;
+    private String first_name;
     private String classroom;
     private String series;
     private int school_year;
+
+    public BasicInfo(int id_student, String full_name, String first_name, String classroom, String series, int school_year) {
+        this.id_student = id_student;
+        this.full_name = full_name;
+        this.first_name = first_name;
+        this.classroom = classroom;
+        this.series = series;
+        this.school_year = school_year;
+    }
 
     public int getId_student() {
         return id_student;
@@ -46,5 +56,17 @@ public class BasicInfo {
 
     public void setSchool_year(int school_year) {
         this.school_year = school_year;
+    }
+
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
+    public String showClass(){
+        return this.series+"° ano "+this.classroom;
     }
 }

@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebServlet(name="home", value = {"/homeStudent"})
+@WebServlet(name="HomeEstudante", value = {"/homeStudent"})
 public class HomeStudent extends HttpServlet {
 
     StudentsDAO studentsDAO = new StudentsDAO();
@@ -47,7 +47,7 @@ public class HomeStudent extends HttpServlet {
             request.setAttribute("amountReports", amountReports);
 
 //        Ainda tem que mudar esse caminho quando o fluxo estiver completo
-            request.getRequestDispatcher("WEB-INF/student/homeAluno.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/student/studentHome.jsp").forward(request, response);
         }
     }
 }
