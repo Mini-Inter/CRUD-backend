@@ -7,6 +7,7 @@ import com.school.miniinter.models.Class.Class;
 import com.school.miniinter.dao.StudentsDAO;
 import com.school.miniinter.models.PreRegistration.PreRegistration;
 import com.school.miniinter.models.Students.Students;
+import com.school.miniinter.models.Students.Summary;
 import com.school.miniinter.utils.EmailUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
@@ -36,9 +37,6 @@ public class AdminStudents extends HttpServlet {
             resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
         } else {
             switch (type) {
-                case ("showStudent") -> {
-                    showStudent(req, resp);
-                }
                 case ("editStudent") -> {
                     editStudent(req, resp);
                 }
@@ -126,18 +124,9 @@ public class AdminStudents extends HttpServlet {
         }
     }
 
-    private void showStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        StudentsDAO stud = new StudentsDAO();
-        Students student = stud.readById(Integer.parseInt(req.getParameter("student")));
-        HttpSession session = req.getSession();
-        session.setAttribute("student", student);
-
-        req.getRequestDispatcher("WEB-INF/admin/studentShow.jsp").forward(req, resp);
-    }
-
     private void showStudents(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         StudentsDAO stud = new StudentsDAO();
-        List<Students> students = stud.readAll();
+        List<Summary> students = stud.readSummary();
         HttpSession session = req.getSession();
         session.setAttribute("students", students);
 
@@ -151,17 +140,15 @@ public class AdminStudents extends HttpServlet {
         session.setAttribute("classes", classes);
 
         StudentsDAO stud = new StudentsDAO();
-        Integer idStudent = Integer.parseInt(req.getParameter("student"));
+        int idStudent = Integer.parseInt(req.getParameter("student"));
         Students students = stud.readById(idStudent);
         session.setAttribute("student",students);
 
-        req.getRequestDispatcher("WEB-INF/admin/studentEdit.jsp").forward(req,
-                resp);
+        req.getRequestDispatcher("WEB-INF/admin/studentEdit.jsp").forward(req, resp);
     }
 
     private void updateStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-
             StudentsDAO stud = new StudentsDAO();
             Students student = stud.readById(Integer.parseInt(req.getParameter("student")));
 
