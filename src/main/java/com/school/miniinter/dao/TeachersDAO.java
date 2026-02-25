@@ -11,18 +11,22 @@ import com.school.miniinter.models.Teacher.Teacher;
 
 import javax.swing.plaf.nimbus.State;
 import java.sql.*;
+import java.text.DateFormat;
 import java.util.*;
 import java.util.Date;
 
 public class TeachersDAO {
 
     String sql;
+    DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+            new Locale("en","US"));
+
     public boolean insert(Teacher teacher){
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
             sql = "INSERT INTO teachers" +
                     "(last_name, first_name, full_name, birth_date, login," +
                     "phone, password)" +
@@ -32,7 +36,7 @@ public class TeachersDAO {
             pstmt.setString(1,teacher.getLastName());
             pstmt.setString(2,teacher.getFirstName());
             pstmt.setString(3,teacher.getName());
-            pstmt.setDate(4,teacher.getBirthDate());
+            pstmt.setDate(4, java.sql.Date.valueOf((format.format(teacher.getBirthDate()))));
             pstmt.setString(5,teacher.getLogin());
             pstmt.setString(6,teacher.getPhone());
             pstmt.setString(7,teacher.getPassword());
@@ -41,20 +45,18 @@ public class TeachersDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return false;
-        }finally {
-            connection.disconnect(conn);
         }
     }
 
 
     public List<Teacher> read() {
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
         ResultSet rset = null;
         List<Teacher> teachers = new LinkedList<>();
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "SELECT * FROM teachers";
             Statement pstmt = conn.createStatement();
@@ -76,19 +78,17 @@ public class TeachersDAO {
             return teachers;
         } catch(SQLException sqle){
             sqle.printStackTrace();
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
         return null;
     }
 
     public Teacher read(int id) {
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
         ResultSet rset;
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "SELECT * FROM teachers WHERE id_employee=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -109,20 +109,18 @@ public class TeachersDAO {
             }
         } catch(SQLException sqle){
             sqle.printStackTrace();
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
         return null;
     }
 
     public List<Teacher> read(String name) {
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
         ResultSet rset;
         List<Teacher> teachers = new LinkedList<>();
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "SELECT * FROM teachers WHERE full_name=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -146,19 +144,17 @@ public class TeachersDAO {
         } catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
 
     public HomeTeacherInfo readHomeInfoTeacher(int id_teacher, int id_subject){
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
         ResultSet rs;
         PreparedStatement pstmt;
         HomeTeacherInfo homeTeacherInfo = new HomeTeacherInfo();
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
 //            Read full_name
             sql = "SELECT full_name FROM teachers WHERE id_employee = ?";
@@ -215,18 +211,16 @@ public class TeachersDAO {
         } catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
 
     public Teacher readByLogin(String login) {
-            ConnectionFactory connection = new ConnectionFactory();
+            
             Connection conn = null;
             ResultSet rset = null;
 
             try {
-                conn = connection.connect();
+                conn = ConnectionFactory.connect();
 
                 sql = "SELECT * FROM teachers WHERE login=?";
                 PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -248,17 +242,17 @@ public class TeachersDAO {
             } catch(SQLException sqle){
                 sqle.printStackTrace();
             } finally {
-                connection.disconnect(conn);
+                ConnectionFactory.disconnect();
             }
             return null;
     }
 
     public List<GradeForStudent> readGradeStudentBySubjectAndClass(int id_teacher, int id_subject, int id_class){
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
         List<GradeForStudent> list = new ArrayList<>();
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "SELECT DISTINCT S.full_name, S.id_student, D.name, g.grade_type, G.value, G.id_grade FROM students S JOIN class C ON S.fk_class = C.id_class JOIN teachingAssignment P ON C.id_class = P.fk_class JOIN teachers T ON P.fk_teacher = T.id_employee JOIN grades G ON S.id_student = G.fk_student JOIN subjects D ON P.fk_subject = D.id_subject AND G.fk_subject = D.id_subject WHERE EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) AND T.id_employee=? AND D.id_subject = ? AND C.id_class = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -311,18 +305,16 @@ public class TeachersDAO {
             return list;
         } catch(SQLException sqle){
             sqle.printStackTrace();
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
         return null;
     }
 
     public List<GradeForSubject> readGradesByStudent(int id_student) {
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
         List<GradeForSubject> grades = new LinkedList<>();
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "SELECT S.full_name ,D.name, G.grade_type, G.value FROM students S JOIN class C ON S.fk_class = C.id_class JOIN teachingAssignment P ON c.id_class = P.fk_class JOIN teachers T ON P.fk_teacher = T.id_employee JOIN grades G ON S.id_student = G.fk_student RIGHT JOIN subjects D ON P.fk_subject = D.id_subject AND G.fk_subject = D.id_subject WHERE EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) AND S.id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -370,18 +362,16 @@ public class TeachersDAO {
             return grades;
         } catch(SQLException sqle){
             sqle.printStackTrace();
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
         return null;
     }
 
     public CompleteInfo readCompleteInfoTeacher(int id_teacher){
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
 
         try{
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "SELECT te.full_name,te.created_at AS date_admission, EXTRACT(YEAR FROM CURRENT_DATE) as school_year,te.birth_date,te.login,te.phone FROM teachers te WHERE te.id_employee = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -406,17 +396,17 @@ public class TeachersDAO {
             sqle.printStackTrace();
             return null;
         }finally{
-            connection.disconnect(conn);
+            ConnectionFactory.disconnect();
         }
     }
 
     public List<AmountStudentByTeacher> amountStudentByTeacherAndClass(int id_teacher, int id_class){
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
         ResultSet rs;
         List<AmountStudentByTeacher> list = new ArrayList<>();
         try{
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "SELECT c.*, count(s.id_student) AS qtd_students FROM " +
                     "students s JOIN class c on s.fk_class = c.id_class JOIN " +
@@ -445,17 +435,17 @@ public class TeachersDAO {
             sqle.printStackTrace();
             return null;
         }finally{
-            connection.disconnect(conn);
+            ConnectionFactory.disconnect();
         }
     }
 
     public boolean isTeacher(String login, String pw) throws IllegalArgumentException {
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
         ResultSet rset = null;
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "SELECT * FROM teachers WHERE login=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -474,17 +464,15 @@ public class TeachersDAO {
         } catch(SQLException sqle){
             sqle.printStackTrace();
             return false;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
 
     public boolean update(Teacher teacher) {
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "UPDATE teachers SET first_name=?, last_name=?, full_name=?, birth_date=?, login=?, password=?, created_at=?, phone = ? WHERE id_employee=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -492,10 +480,11 @@ public class TeachersDAO {
             pstmt.setString(1, teacher.getFirstName());
             pstmt.setString(2, teacher.getLastName());
             pstmt.setString(3, teacher.getFirstName() + " " + teacher.getLastName());
-            pstmt.setDate(4, teacher.getBirthDate());
+            pstmt.setDate(4,
+                    java.sql.Date.valueOf(format.format(teacher.getBirthDate())));
             pstmt.setString(5, teacher.getLogin());
             pstmt.setString(6, teacher.getPassword());
-            pstmt.setDate(7, teacher.getCreatedAt());
+            pstmt.setDate(7, java.sql.Date.valueOf(format.format(teacher.getCreatedAt())));
             pstmt.setString(8, teacher.getPhone());
             pstmt.setInt(9, teacher.getId());
 
@@ -503,17 +492,15 @@ public class TeachersDAO {
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             return false;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
 
     public int delete(int id) {
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
             sql = "DELETE FROM teachers WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -527,8 +514,6 @@ public class TeachersDAO {
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             return -1;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
 }

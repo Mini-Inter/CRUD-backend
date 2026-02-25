@@ -1,5 +1,7 @@
 package com.school.miniinter.models.Students;
 
+import java.text.DecimalFormat;
+
 public class GradeForStudent {
     private String full_name;
     private Integer id_student;
@@ -8,6 +10,8 @@ public class GradeForStudent {
     private Double n2;
     private Integer idN2;
     private Double average;
+
+    DecimalFormat df = new DecimalFormat("#.00");
 
     public GradeForStudent(String full_name,Integer id_student, Double n1,
                            Integer idN1,
@@ -21,11 +25,12 @@ public class GradeForStudent {
         if(n1 == -1.0 && n2 == -1.0){
             this.average = -1.0;
         } else if(n1 == -1.0){
-            this.average = n2/2;
+            this.average = Double.parseDouble(df.format(n2/2).replace(',','.'));
         } else if(n2 == -1.0){
-            this.average = n1/2;
+            this.average = Double.parseDouble(df.format(n2/1).replace(',','.'));
         }else{
-            this.average = (n1+n2)/2;
+            this.average =
+                    Double.parseDouble(df.format((n1+n2)/2).replace(',','.'));
         }
     }
     public GradeForStudent() {
@@ -67,7 +72,8 @@ public class GradeForStudent {
     }
 
     public void setAverage() {
-        this.average = (n1+n2)/2;
+        this.average = Double.parseDouble(df.format((n1+n2)/2).replace(',',
+                '.'));
     }
 
     public Integer getId_student() {

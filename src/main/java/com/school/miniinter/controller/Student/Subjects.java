@@ -12,10 +12,10 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name="Subjects", urlPatterns = "/studentSubjects")
+@WebServlet(name="MateriasEstudante", urlPatterns = "/studentSubjects")
 public class Subjects extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         Object idStudentRaw = session.getAttribute("idStudent");
 

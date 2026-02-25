@@ -12,12 +12,13 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name="Observations",urlPatterns = {"/observations"})
+@WebServlet(name="ObservacoesEstudante",urlPatterns = {"/observations"})
 public class Observations extends HttpServlet {
 
     ReportsDAO reportsDAO = new ReportsDAO();
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    public void doGet(HttpServletRequest request,
+                     HttpServletResponse response) throws ServletException, IOException{
         HttpSession session = request.getSession();
         Object idStudentRaw = session.getAttribute("idStudent");
 
@@ -42,7 +43,8 @@ public class Observations extends HttpServlet {
 
         request.setAttribute("List",list);
 
-        request.getRequestDispatcher("WEB-INF/student/observations.jsp").forward(request,
+        request.getRequestDispatcher("WEB-INF/student/studentObservations" +
+                ".jsp").forward(request,
                 response);
     }
 

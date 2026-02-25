@@ -11,11 +11,11 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebServlet(name="ProfileStudent", value={"/profileStudent"})
+@WebServlet(name="PerfilEstudante", value={"/profileStudent"})
 public class ProfileStudent extends HttpServlet {
 
     StudentsDAO studentsDAO = new StudentsDAO();
-    public void doPost(HttpServletRequest request,
+    public void doGet(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException,
             IOException{
         HttpSession session = request.getSession();
@@ -27,6 +27,6 @@ public class ProfileStudent extends HttpServlet {
 
         request.setAttribute("completeInfoStudent",completeInfo);
 
-        request.getRequestDispatcher("WEB-INF/profileAluno.jsp").forward(request,response);
+        request.getRequestDispatcher("WEB-INF/Aluno/studentProfile.jsp").forward(request,response);
     }
 }

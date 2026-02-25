@@ -1,17 +1,22 @@
 package com.school.miniinter.models.Guardian;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.util.Locale;
 
 public class Guardian {
     private int id;
     private String name;
     private String firstName;
     private String lastName;
-    private Date birthDate;
+    private String birthDate;
+
+    DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+            new Locale("pt","BR"));
 
     public Guardian(String name, Date birthDate) {
         this.name = name;
-        this.birthDate = birthDate;
+        this.birthDate = format.format(birthDate);
         setFirstName();
         setLastName();
     }
@@ -19,7 +24,7 @@ public class Guardian {
     public Guardian(int id, String name, Date birthDate) {
         this.id = id;
         this.name = name;
-        this.birthDate = birthDate;
+        this.birthDate = format.format(birthDate);
         setFirstName();
         setLastName();
     }
@@ -48,10 +53,10 @@ public class Guardian {
     public void setLastName() {
         this.lastName = this.name.substring(this.name.lastIndexOf(" "));
     }
-    public Date getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 }

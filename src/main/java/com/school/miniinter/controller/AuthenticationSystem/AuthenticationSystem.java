@@ -82,14 +82,14 @@ public class AuthenticationSystem extends HttpServlet {
                     session.setAttribute("subjects", subjects);
                     session.setAttribute("subject", subjects.get(0).getId());
 
-                    req.getRequestDispatcher("/homeTeacher").forward(req, resp);
+                    resp.sendRedirect(req.getContextPath()+"/homeTeacher");
                 }
                 case (1) -> {
                     int idStudent = stud.readByLogin(login).getId_student();
                     HttpSession session = req.getSession();
                     session.setAttribute("idStudent", idStudent);
                     session.setAttribute("email", login);
-                    req.getRequestDispatcher("/homeStudent").forward(req, resp);
+                    resp.sendRedirect(req.getContextPath()+"/homeStudent");
                 }
                 case (0) -> {
                     throw new RuntimeException("login não pertence a nenhuma conta!");
@@ -101,7 +101,7 @@ public class AuthenticationSystem extends HttpServlet {
             session.setAttribute("error", error);
             session.setAttribute("login", login+"@vidya.org.br");
             session.setAttribute("password", password);
-            resp.sendRedirect(req.getContextPath() + "/authentication/login.jsp");
+            resp.sendRedirect(req.getContextPath() + "/Inicio/login.jsp");
         }
         catch (RuntimeException exc) {
             String error = exc.getMessage();
@@ -109,7 +109,7 @@ public class AuthenticationSystem extends HttpServlet {
             session.setAttribute("error", error);
             session.setAttribute("login", login+"@vidya.org.br");
             session.setAttribute("password", password);
-            resp.sendRedirect(req.getContextPath() + "/authentication/login.jsp");
+            resp.sendRedirect(req.getContextPath() + "/Inicio/login.jsp");
         }
     }
     private void loginRest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -133,7 +133,7 @@ public class AuthenticationSystem extends HttpServlet {
             if (isAdmin(login, hashedPassword)) {
                 HttpSession session = req.getSession();
                 session.setAttribute("admin", login);
-                req.getRequestDispatcher("/adminStudents").forward(req, resp);
+                resp.sendRedirect(req.getContextPath()+"/adminStudent");
             } else {
                 throw new RuntimeException("login não pertence a nenhuma conta!");
             }
@@ -162,7 +162,8 @@ public class AuthenticationSystem extends HttpServlet {
                 HttpSession session = req.getSession();
                 session.setAttribute("cpf", cpf);
                 session.setAttribute("preRegistered", true);
-                req.getRequestDispatcher("/WEB-INF/student/signUp.jsp").forward(req, resp);
+                req.getRequestDispatcher("/inicio/cadastro.jsp").forward(req,
+                        resp);
             } else
                 throw new RuntimeException("CPF não cadastrado para registro!");
         } catch (RuntimeException exc) {
@@ -170,7 +171,7 @@ public class AuthenticationSystem extends HttpServlet {
             HttpSession session = req.getSession();
             session.setAttribute("error", error);
             session.setAttribute("cpf", cpf);
-            resp.sendRedirect(req.getContextPath() + "/authentication/cpf.jsp");
+            resp.sendRedirect(req.getContextPath() + "/inicio/login.jsp");
         }
     }
     private void signUp(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
@@ -223,13 +224,14 @@ public class AuthenticationSystem extends HttpServlet {
                 session.setAttribute("email", login+"@vidya.org.br");
                 session.setAttribute("pw", password);
                 session.setAttribute("pc", passConf);
-                req.getRequestDispatcher("/WEB-INF/student/signUp.jsp").forward(req, resp);
+                resp.sendRedirect(req.getContextPath()+"/Inicio/cadastro.jsp");
             } catch(NoSuchAlgorithmException nsae){
                 nsae.printStackTrace();
             }
         } else {
             session.setAttribute("error", "Passe pelo pré-registro antes do cadastro");
-            req.getRequestDispatcher(req.getContextPath() + "/authentication/cpf.jsp").forward(req, resp);
+            resp.sendRedirect(req.getContextPath() + "/Inicio/login" +
+                    ".jsp");
         }
     }
 

@@ -10,11 +10,11 @@ import java.sql.SQLException;
 public class ReceiveDAO {
     String sql;
     public boolean insert(Receive receive){
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
 
         try{
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "INSERT INTO receive(fk_student,fk_report) VALUES(?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -26,8 +26,6 @@ public class ReceiveDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return false;
-        }finally {
-            connection.disconnect(conn);
         }
     }
 }

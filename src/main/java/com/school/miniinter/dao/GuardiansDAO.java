@@ -4,17 +4,22 @@ import com.school.miniinter.connection.ConnectionFactory;
 import com.school.miniinter.models.Guardian.Guardian;
 
 import java.sql.*;
+import java.text.DateFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 public class GuardiansDAO {
+    DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+            new Locale("en","US"));
+
     public List<Guardian> read() {
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
         List<Guardian> guardians = new LinkedList<>();
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
             String sql = "SELECT * FROM guardian";
             Statement stmt = conn.createStatement();
 
@@ -33,18 +38,16 @@ public class GuardiansDAO {
         } catch (SQLException exc) {
             exc.printStackTrace();
             return null;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
 
     }
 
     public boolean insert(Guardian g){
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
             String sql = "INSERT INTO guardian(full_name,first_name," +
                     "last_name,birth_date) VALUES(?,?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -52,23 +55,21 @@ public class GuardiansDAO {
             pstmt.setString(1,g.getName());
             pstmt.setString(2,g.getFirstName());
             pstmt.setString(3,g.getLastName());
-            pstmt.setDate(4,g.getBirthDate());
+            pstmt.setDate(4,Date.valueOf(format.format(g.getBirthDate())));
 
             return pstmt.execute();
         } catch (SQLException exc) {
             exc.printStackTrace();
             return false;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
     public Guardian read(int idGuardian) {
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
         List<Guardian> guardians = new LinkedList<>();
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
             String sql = "SELECT * FROM guardian WHERE id_guardian = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -88,16 +89,14 @@ public class GuardiansDAO {
         } catch (SQLException exc) {
             exc.printStackTrace();
             return null;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
     public boolean update(Guardian guardian) {
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
             String sql = "UPDATE guardian " +
                     "SET full_name = ?, first_name = ?, last_name = ?, birth_date = ? " +
                     "WHERE id_guardian = ?";
@@ -106,23 +105,22 @@ public class GuardiansDAO {
             pstmt.setString(1, guardian.getName());
             pstmt.setString(2, guardian.getFirstName());
             pstmt.setString(3, guardian.getLastName());
-            pstmt.setDate(4, guardian.getBirthDate());
+            pstmt.setDate(4,
+                    Date.valueOf(format.format(guardian.getBirthDate())));
             pstmt.setInt(5, guardian.getId());
 
             return pstmt.executeUpdate() > 0;
         } catch (SQLException exc) {
             exc.printStackTrace();
             return false;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
     public boolean delete(int idGuardian) {
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
             String sql = "DELETE FROM guardian WHERE id_guardian = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -132,8 +130,6 @@ public class GuardiansDAO {
         } catch (SQLException exc) {
             exc.printStackTrace();
             return false;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
 }

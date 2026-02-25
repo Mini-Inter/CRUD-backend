@@ -12,7 +12,6 @@ import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.properties.TextAlignment;
-import com.itextpdf.layout.properties.UnitValue;
 import com.itextpdf.layout.properties.VerticalAlignment;
 import com.school.miniinter.dao.GradeDAO;
 import com.school.miniinter.dao.StudentsDAO;
@@ -32,12 +31,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
-@WebServlet(name="GenerateGradeCard", value={"/generateGradeCard"})
+@WebServlet(name="GerarBoletim", value={"/generateGradeCard"})
 public class GenerateGradeCard extends HttpServlet {
 
     StudentsDAO studentsDAO = new StudentsDAO();
     GradeDAO gradeDAO = new GradeDAO();
-    public void doPost(HttpServletRequest request,
+    public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException,
             IOException{
         HttpSession session = request.getSession();

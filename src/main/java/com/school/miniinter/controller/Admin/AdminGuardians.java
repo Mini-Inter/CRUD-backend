@@ -133,7 +133,7 @@ public class AdminGuardians extends HttpServlet {
                 guardian.setName(nome);
             }
             if (!birth.equals(guardian.getBirthDate())) {
-                guardian.setBirthDate(birth);
+                guardian.setBirthDate(String.valueOf(birth));
             }
 
             if (gar.update(guardian)) {

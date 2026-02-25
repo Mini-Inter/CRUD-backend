@@ -2,17 +2,19 @@ package com.school.miniinter.models.Students;
 
 import com.school.miniinter.models.Class.Class;
 
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class CompleteInfo {
     private String full_name;
     private Integer id_student;
     private String firstName_guardian;
     private Class studentClass;
-    private Date created_at;
+    private String created_at;
     private Integer school_year;
     private String status;
-    private Date birth_date;
+    private String birth_date;
     private String login;
     private String phone;
 
@@ -21,12 +23,14 @@ public class CompleteInfo {
                         Date created_at,Integer school_year, Date birth_date,
                         String login,
                         String phone) {
+        DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+                new Locale("pt","BR"));
         this.full_name = full_name;
         this.id_student = id_student;
         this.firstName_guardian = firstName_guardian;
         this.studentClass = studentClass;
-        this.created_at = created_at;
-        this.birth_date = birth_date;
+        this.created_at = format.format(created_at);
+        this.birth_date = format.format(birth_date);
         this.login = login+"@vidya.org.br";
         this.phone = phone;
         this.school_year = school_year;
@@ -65,11 +69,11 @@ public class CompleteInfo {
         this.studentClass = studentClass;
     }
 
-    public Date getCreated_at() {
+    public String getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(Date created_at) {
+    public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
 
@@ -89,11 +93,11 @@ public class CompleteInfo {
         this.status = status;
     }
 
-    public Date getBirth_date() {
+    public String getBirth_date() {
         return birth_date;
     }
 
-    public void setBirth_date(Date birth_date) {
+    public void setBirth_date(String birth_date) {
         this.birth_date = birth_date;
     }
 

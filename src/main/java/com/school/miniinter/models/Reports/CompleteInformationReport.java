@@ -1,19 +1,23 @@
 package com.school.miniinter.models.Reports;
 
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class CompleteInformationReport {
 
     private String teacher_name;
     private String description;
     private String type;
-    private Date send_at;
+    private String send_at;
 
     public CompleteInformationReport(String teacher_name, String description, String type, Date send_at) {
         this.teacher_name = teacher_name;
         this.description = description;
         this.type = type;
-        this.send_at = send_at;
+        DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+                new Locale("pt","BR"));
+        this.send_at = format.format(send_at);
     }
 
     public String getTeacher_name() {
@@ -39,12 +43,11 @@ public class CompleteInformationReport {
     public void setType(String type) {
         this.type = type;
     }
-
-    public Date getSend_at() {
+    public String getSend_at() {
         return send_at;
     }
 
-    public void setSend_at(Date send_at) {
+    public void setSend_at(String send_at) {
         this.send_at = send_at;
     }
 }

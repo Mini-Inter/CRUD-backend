@@ -15,12 +15,12 @@ public class ClassDAO {
     String sql;
     public List<Class> readClassByTeacherAndSubject(int id_teacher,
                                                     int id_subject){
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
         List<Class> list = new ArrayList<>();
 
         try{
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "SELECT c.* FROM class c JOIN teachingAssignment t ON t.fk_class = c.id_class JOIN teachers te ON te.id_employee = t.fk_teacher JOIN subjects s ON s.id_subject = t.fk_subject WHERE te.id_employee = ? AND s.id_subject = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -42,16 +42,16 @@ public class ClassDAO {
             sqle.printStackTrace();
             return null;
         }finally{
-            connection.disconnect(conn);
+            ConnectionFactory.disconnect();
         }
     }
 
     public boolean insert(Class classInsert){
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
 
         try{
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "INSERT INTO class(series,classroom,academic_year) VALUES" +
                     "(?,?,EXTRACT(YEAR FROM CURRENT_DATE))";
@@ -64,17 +64,15 @@ public class ClassDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return false;
-        }finally {
-            connection.disconnect(conn);
         }
     }
 
     public Class read(int id_class){
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
 
         try{
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "SELECT * FROM class WHERE id_class = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -94,16 +92,16 @@ public class ClassDAO {
             sqle.printStackTrace();
             return null;
         }finally{
-            connection.disconnect(conn);
+            ConnectionFactory.disconnect();
         }
     }
 
     public boolean delete(int id_class){
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
 
         try{
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "DELETE FROM class WHERE id_class = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -115,17 +113,17 @@ public class ClassDAO {
             sqle.printStackTrace();
             return false;
         }finally{
-            connection.disconnect(conn);
+            ConnectionFactory.disconnect();
         }
     }
 
     public List<Class> read(){
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
         List<Class> classes = new LinkedList<>();
 
         try{
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "SELECT * FROM class";
             Statement pstmt = conn.createStatement();
@@ -145,16 +143,16 @@ public class ClassDAO {
             sqle.printStackTrace();
             return null;
         }finally{
-            connection.disconnect(conn);
+            ConnectionFactory.disconnect();
         }
     }
 
     public boolean update(Class classroom) {
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "UPDATE class " +
                     "SET series = ?, classroom = ? " +
@@ -170,8 +168,6 @@ public class ClassDAO {
         } catch (SQLException exc) {
             exc.printStackTrace();
             return false;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
 }
