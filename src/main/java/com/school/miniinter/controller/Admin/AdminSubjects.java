@@ -16,6 +16,32 @@ import java.util.List;
 @WebServlet(name="adminSubjects", urlPatterns = "/adminSubjects")
 public class AdminSubjects extends HttpServlet {
     SubjectsDAO sub = new SubjectsDAO();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        Object admin = session.getAttribute("admin");
+        String type = "noot noot";
+        if (req.getParameter("type") != null) {
+            type = req.getParameter("type");
+        }
+
+        if (admin == null) {
+            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+        } else {
+            switch (type) {
+                case ("editSubject") -> {
+                    editSubject(req, resp);
+                }
+                case ("createSubject") -> {
+                    createSubject(req,resp);
+                }
+                default -> {
+                    showSubjects(req, resp);
+                }
+            }
+        }
+    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -29,22 +55,13 @@ public class AdminSubjects extends HttpServlet {
             resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
         } else {
             switch (type) {
-                case ("showSubject") -> {
-                    showSubject(req, resp);
-                }
-                case ("editSubject") -> {
-                    editSubject(req, resp);
-                }
-                case ("createSubject") -> {
-                    createSubject(req,resp);
-                }
-                case ("insertSubject") -> {
+                case ("insert") -> {
                     insertSubject(req,resp);
                 }
-                case ("updateSubject") -> {
+                case ("update") -> {
                     updateSubject(req, resp);
                 }
-                case ("deleteSubject") -> {
+                case ("delete") -> {
                     deleteSubject(req, resp);
                 }
                 default -> {
@@ -54,14 +71,7 @@ public class AdminSubjects extends HttpServlet {
         }
     }
 
-    private void showSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Subject subject = sub.read(Integer.parseInt(req.getParameter("subject")));
-        HttpSession session = req.getSession();
-        session.setAttribute("subject", subject);
-
-        req.getRequestDispatcher("WEB-INF/admin/subjectShow.jsp").forward(req, resp);
-    }
-
+    // Métodos de redirecionamento
     private void showSubjects(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Subject> subjects = sub.read();
         HttpSession session = req.getSession();
@@ -69,14 +79,19 @@ public class AdminSubjects extends HttpServlet {
 
         req.getRequestDispatcher("WEB-INF/admin/subjects.jsp").forward(req, resp);
     }
+    private void editSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Subject subject = sub.read(Integer.parseInt(req.getParameter("subject")));
+        HttpSession session = req.getSession();
+        session.setAttribute("subject", subject);
 
-    private void createSubject(HttpServletRequest req,
-                               HttpServletResponse resp) throws ServletException, IOException{
+        req.getRequestDispatcher("WEB-INF/admin/subjectEdit.jsp").forward(req, resp);
+    }
+    private void createSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         req.getRequestDispatcher("WEB-INF/admin/subjectInsert.jsp").forward(req,resp);
     }
 
-    private void insertSubject(HttpServletRequest req,
-                               HttpServletResponse resp) throws ServletException, IOException{
+    // Métodos de acesso ao banco
+    private void insertSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         try{
             String description = req.getParameter("description");
             String name = req.getParameter("name");
@@ -101,14 +116,6 @@ public class AdminSubjects extends HttpServlet {
             req.getRequestDispatcher("adminSubjects?type=createSubject").forward(req, resp);
         }
     }
-    private void editSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Subject subject = sub.read(Integer.parseInt(req.getParameter("subject")));
-        HttpSession session = req.getSession();
-        session.setAttribute("subject", subject);
-
-        req.getRequestDispatcher("WEB-INF/admin/subjectEdit.jsp").forward(req, resp);
-    }
-
     private void updateSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             Subject subject = sub.read(Integer.parseInt(req.getParameter("subject")));
@@ -138,7 +145,6 @@ public class AdminSubjects extends HttpServlet {
             req.getRequestDispatcher("adminSubjects?type=editSubject").forward(req, resp);
         }
     }
-
     private void deleteSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             Subject subject = sub.read(Integer.parseInt(req.getParameter("subject")));

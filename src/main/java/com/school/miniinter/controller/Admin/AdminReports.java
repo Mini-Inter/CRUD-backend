@@ -23,6 +23,32 @@ import java.util.List;
 @WebServlet(name="adminReports", urlPatterns = "/adminReports")
 public class AdminReports extends HttpServlet {
     ReportsDAO rep = new ReportsDAO();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        Object admin = session.getAttribute("admin");
+        String type = "noot noot";
+        if (req.getParameter("type") != null) {
+            type = req.getParameter("type");
+        }
+
+        if (admin == null) {
+            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+        } else {
+            switch (type) {
+                case ("edit") -> {
+                    editReport(req, resp);
+                }
+                case ("create") -> {
+                    createReport(req,resp);
+                }
+                default -> {
+                    showReports(req, resp);
+                }
+            }
+        }
+    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -36,22 +62,13 @@ public class AdminReports extends HttpServlet {
             resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
         } else {
             switch (type) {
-                case ("showReport") -> {
-                    showReport(req, resp);
-                }
-                case ("editReport") -> {
-                    editReport(req, resp);
-                }
-                case ("createReport") -> {
-                    createReport(req,resp);
-                }
-                case ("insertReport") -> {
+                case ("insert") -> {
                     insertReport(req,resp);
                 }
-                case ("updateReport") -> {
+                case ("update") -> {
                     updateReport(req, resp);
                 }
-                case ("deleteReport") -> {
+                case ("delete") -> {
                     deleteReport(req, resp);
                 }
                 default -> {
@@ -60,13 +77,8 @@ public class AdminReports extends HttpServlet {
             }
         }
     }
-    private void showReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CompleteReport report = rep.readCompleteReport(Integer.parseInt(req.getParameter("report")));
-        HttpSession session = req.getSession();
-        session.setAttribute("report", report);
 
-        req.getRequestDispatcher("WEB-INF/admin/reportShow.jsp").forward(req, resp);
-    }
+    // Métodos de redirecionamento
     private void showReports(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<CompleteReport> reports = rep.readCompleteReport();
         HttpSession session = req.getSession();
@@ -84,8 +96,7 @@ public class AdminReports extends HttpServlet {
 
         req.getRequestDispatcher("WEB-INF/admin/reportEdit.jsp").forward(req, resp);
     }
-    private void createReport(HttpServletRequest req,
-                              HttpServletResponse resp) throws ServletException, IOException{
+    private void createReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         TeachersDAO te = new TeachersDAO();
         List<Teacher> listTeachers =  te.read();
 
@@ -99,8 +110,9 @@ public class AdminReports extends HttpServlet {
         req.getRequestDispatcher("WEB-INF/admin/reportInsert.jsp").forward(req,resp);
 
     }
-    private void insertReport(HttpServletRequest req,
-                              HttpServletResponse resp) throws ServletException, IOException{
+
+    // Métodos de acesso ao banco
+    private void insertReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         ReceiveDAO receiveDAO = new ReceiveDAO();
         try{
             Integer fk_student = Integer.parseInt(req.getParameter("student"));

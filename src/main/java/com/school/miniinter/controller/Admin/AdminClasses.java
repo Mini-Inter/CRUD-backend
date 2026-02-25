@@ -2,13 +2,11 @@ package com.school.miniinter.controller.Admin;
 
 import com.school.miniinter.dao.*;
 import com.school.miniinter.models.Class.Class;
-import com.school.miniinter.models.Students.Students;
 import com.school.miniinter.models.Subject.Subject;
 import com.school.miniinter.models.TeachingAssignment.Teaching;
 import com.school.miniinter.models.Teacher.Teacher;
 import com.school.miniinter.models.TeachingAssignment.TeachingAssignment;
 import com.school.miniinter.utils.ClassUtils;
-import com.school.miniinter.utils.EmailUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,14 +14,39 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 
 @WebServlet(name="adminClasses", urlPatterns = "/adminClasses")
 public class AdminClasses extends HttpServlet {
+
+    private final ClassDAO classDAO = new ClassDAO();
+    
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        Object admin = session.getAttribute("admin");
+        String type = "noot noot";
+        if (req.getParameter("type") != null) {
+            type = req.getParameter("type");
+        }
+
+        if (admin == null) {
+            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+        } else {
+            switch (type) {
+                case ("edit") -> {
+                    editClass(req, resp);
+                }
+                case ("create") -> {
+                    createClass(req,resp);
+                }
+                default -> {
+                    showClasses(req, resp);
+                }
+            }
+        }
+    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -37,22 +60,13 @@ public class AdminClasses extends HttpServlet {
             resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
         } else {
             switch (type) {
-                case ("showClass") -> {
-                    showClass(req, resp);
-                }
-                case ("editClass") -> {
-                    editClass(req, resp);
-                }
-                case ("createClass") -> {
-                    createClass(req,resp);
-                }
-                case ("insertClass") -> {
+                case ("insert") -> {
                     insertClass(req,resp);
                 }
-                case ("updateClass") -> {
+                case ("update") -> {
                     updateClass(req, resp);
                 }
-                case ("deleteClass") -> {
+                case ("delete") -> {
                     deleteClass(req, resp);
                 }
                 default -> {
@@ -62,31 +76,16 @@ public class AdminClasses extends HttpServlet {
         }
     }
 
-    private void showClass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ClassDAO clas = new ClassDAO();
-        Class classroom = clas.read(Integer.parseInt(req.getParameter("classroom")));
-        HttpSession session = req.getSession();
-        session.setAttribute("class", classroom);
-        TeachingDAO assign = new TeachingDAO();
-        Teaching[] aulas = assign.readByIdClas(classroom.getId());
-
-        session.setAttribute("aulas", aulas);
-
-        req.getRequestDispatcher("WEB-INF/admin/classShow.jsp").forward(req, resp);
-    }
-
+    // Métodos de redirecionamento
     private void showClasses(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ClassDAO clas = new ClassDAO();
-        List<Class> classes = clas.read();
+        List<Class> classes = classDAO.read();
         HttpSession session = req.getSession();
         session.setAttribute("classes", classes);
 
         req.getRequestDispatcher("WEB-INF/admin/classes.jsp").forward(req, resp);
     }
-
     private void editClass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ClassDAO clas = new ClassDAO();
-        Class classroom = clas.read(Integer.parseInt(req.getParameter("classroom")));
+        Class classroom = classDAO.read(Integer.parseInt(req.getParameter("classroom")));
         HttpSession session = req.getSession();
         session.setAttribute("classroom", classroom);
 
@@ -104,16 +103,14 @@ public class AdminClasses extends HttpServlet {
 
         req.getRequestDispatcher("WEB-INF/admin/classEdit.jsp").forward(req, resp);
     }
-
     private void createClass(HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException{
         req.getRequestDispatcher("WEB-INF/admin/classInsert.jsp").forward(req,
                 resp);
     }
 
-    private void insertClass(HttpServletRequest req,
-                             HttpServletResponse resp) throws ServletException, IOException{
+    // Métodos de acesso ao banco
+    private void insertClass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         try {
-            ClassDAO clas = new ClassDAO();
 
             String series = req.getParameter("series");
             String classroom = req.getParameter("classroom");
@@ -127,7 +124,7 @@ public class AdminClasses extends HttpServlet {
             Class classInsert = new Class(series.charAt(0),
                     classChar);
 
-            if (clas.insert(classInsert)) {
+            if (classDAO.insert(classInsert)) {
                 HttpSession session = req.getSession();
                 session.setAttribute("success", "Classe adicionada com " +
                         "sucesso!");
@@ -146,24 +143,22 @@ public class AdminClasses extends HttpServlet {
                     resp);
         }
     }
-
     private void updateClass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            ClassDAO clas = new ClassDAO();
             TeachingDAO assign = new TeachingDAO();
             int idClass = Integer.parseInt(req.getParameter("classroom"));
-            Class classroom = clas.read(idClass);
+            Class classroom = classDAO.read(idClass);
             TeachingAssignment[] aulas = new TeachingAssignment[6];
 
-            String series = req.getParameter("series");
-            String classR = req.getParameter("turma");
+            char series = req.getParameter("series").charAt(0);
+            char classLetter = req.getParameter("turma").charAt(0);
 
             if (!classroom.getSeries().equals(series))
-                classroom.setSeries(series.charAt(0));
-            if (!classroom.getClassroom().equals(classR))
-                classroom.setClassroom(classR.charAt(0));
+                classroom.setSeries(series);
+            if (!classroom.getClassroom().equals(classLetter))
+                classroom.setClassroom(classLetter);
 
-            clas.update(classroom);
+            classDAO.update(classroom);
 
             for (int n = 0; n < 6; n++) {
                 String result =  req.getParameter("aula"+n+"Id");
@@ -210,13 +205,11 @@ public class AdminClasses extends HttpServlet {
             req.getRequestDispatcher("adminClasses?type=editClass").forward(req, resp);
         }
     }
-
     private void deleteClass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            ClassDAO clas = new ClassDAO();
-            Class classroom = clas.read(Integer.parseInt(req.getParameter("classroom")));
+            Class classroom = classDAO.read(Integer.parseInt(req.getParameter("classroom")));
 
-            if (clas.delete(classroom.getId())) {
+            if (classDAO.delete(classroom.getId())) {
                 req.getRequestDispatcher("/adminClasses?type=noot").forward(req, resp);
 
                 HttpSession session = req.getSession();
@@ -235,9 +228,10 @@ public class AdminClasses extends HttpServlet {
         }
     }
 
+    // Métodos auxiliares
     private int isNull(String object) {
         if(object != null && !object.isBlank()){
-            return  Integer.parseInt(object);
+            return Integer.parseInt(object);
         }else{
             return -1;
         }

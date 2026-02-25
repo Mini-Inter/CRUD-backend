@@ -17,7 +17,33 @@ import java.util.List;
 @WebServlet(name="adminGuardians", urlPatterns = "/adminGuardians")
 public class AdminGuardians extends HttpServlet {
 
-    GuardiansDAO gar = new GuardiansDAO();
+    private final GuardiansDAO gar = new GuardiansDAO();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        Object admin = session.getAttribute("admin");
+        String type = "noot noot";
+        if (req.getParameter("type") != null) {
+            type = req.getParameter("type");
+        }
+
+        if (admin == null) {
+            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+        } else {
+            switch (type) {
+                case ("edit") -> {
+                    editGuardian(req, resp);
+                }
+                case ("create") -> {
+                    createGuardian(req,resp);
+                }
+                default -> {
+                    showGuardians(req, resp);
+                }
+            }
+        }
+    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -32,22 +58,13 @@ public class AdminGuardians extends HttpServlet {
             resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
         } else {
             switch (type) {
-                case ("showGuardian") -> {
-                    showGuardian(req, resp);
-                }
-                case ("editGuardian") -> {
-                    editGuardian(req, resp);
-                }
-                case ("createGuardian") -> {
-                    createGuardian(req,resp);
-                }
-                case ("insertGuardian") -> {
+                case ("insert") -> {
                     insertGuardian(req,resp);
                 }
-                case ("updateGuardian") -> {
+                case ("update") -> {
                     updateGuardian(req, resp);
                 }
-                case ("deleteGuardian") -> {
+                case ("delete") -> {
                     deleteGuardian(req, resp);
                 }
                 default -> {
@@ -56,13 +73,8 @@ public class AdminGuardians extends HttpServlet {
             }
         }
     }
-    private void showGuardian(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Guardian guardian = gar.read(Integer.parseInt(req.getParameter("guardian")));
-        HttpSession session = req.getSession();
-        session.setAttribute("guardian", guardian);
 
-        req.getRequestDispatcher("WEB-INF/admin/guardianShow.jsp").forward(req, resp);
-    }
+    // Métodos de redirecionamento
     private void showGuardians(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Guardian> guardians = gar.read();
         HttpSession session = req.getSession();
@@ -70,13 +82,20 @@ public class AdminGuardians extends HttpServlet {
 
         req.getRequestDispatcher("WEB-INF/admin/guardians.jsp").forward(req, resp);
     }
+    private void editGuardian(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        GuardiansDAO gar = new GuardiansDAO();
+        Guardian guardian = gar.read(Integer.parseInt(req.getParameter("guardian")));
+        HttpSession session = req.getSession();
+        session.setAttribute("guardian", guardian);
 
-    private void createGuardian(HttpServletRequest req,
-                                HttpServletResponse resp) throws  ServletException, IOException{
+        req.getRequestDispatcher("WEB-INF/admin/guardianEdit.jsp").forward(req, resp);
+    }
+    private void createGuardian(HttpServletRequest req, HttpServletResponse resp) throws  ServletException, IOException{
         req.getRequestDispatcher("WEB-INF/admin/guardianInsert.jsp").forward(req,resp);
     }
-    private void insertGuardian(HttpServletRequest req,
-                                HttpServletResponse resp)throws ServletException, IOException{
+
+    // Métodos de acesso ao banco
+    private void insertGuardian(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException{
         try {
             String name = req.getParameter("name");
             Date date = Date.valueOf(req.getParameter("birth"));
@@ -101,14 +120,6 @@ public class AdminGuardians extends HttpServlet {
             req.getRequestDispatcher("WEB-INF/admin/guardianInsert.jsp").forward(req, resp);
         }
 
-    }
-    private void editGuardian(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        GuardiansDAO gar = new GuardiansDAO();
-        Guardian guardian = gar.read(Integer.parseInt(req.getParameter("guardian")));
-        HttpSession session = req.getSession();
-        session.setAttribute("guardian", guardian);
-
-        req.getRequestDispatcher("WEB-INF/admin/guardianEdit.jsp").forward(req, resp);
     }
     private void updateGuardian(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {

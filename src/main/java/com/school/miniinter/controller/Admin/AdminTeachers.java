@@ -20,6 +20,32 @@ import java.util.List;
 @WebServlet(name="adminTeachers", urlPatterns = "/adminTeachers")
 public class AdminTeachers extends HttpServlet {
     TeachersDAO teach = new TeachersDAO();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        Object admin = session.getAttribute("admin");
+        String type = "noot noot";
+        if (req.getParameter("type") != null) {
+            type = req.getParameter("type");
+        }
+
+        if (admin == null) {
+            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+        } else {
+            switch (type) {
+                case ("edit") -> {
+                    editTeacher(req, resp);
+                }
+                case ("create") -> {
+                    createTeacher(req,resp);
+                }
+                default -> {
+                    showTeachers(req, resp);
+                }
+            }
+        }
+    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -33,22 +59,13 @@ public class AdminTeachers extends HttpServlet {
             resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
         } else {
             switch (type) {
-                case ("showTeacher") -> {
-                    showTeacher(req, resp);
-                }
-                case ("editTeacher") -> {
-                    editTeacher(req, resp);
-                }
-                case ("createTeacher") -> {
-                    createTeacher(req,resp);
-                }
-                case ("insertTeacher") -> {
+                case ("insert") -> {
                     insertTeacher(req,resp);
                 }
-                case ("updateTeacher") -> {
+                case ("update") -> {
                     updateTeacher(req, resp);
                 }
-                case ("deleteTeacher") -> {
+                case ("delete") -> {
                     deleteTeacher(req, resp);
                 }
                 default -> {
@@ -58,14 +75,7 @@ public class AdminTeachers extends HttpServlet {
         }
     }
 
-    private void showTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Teacher teacher = teach.read(Integer.parseInt(req.getParameter("teacher")));
-        HttpSession session = req.getSession();
-        session.setAttribute("teacher", teacher);
-
-        req.getRequestDispatcher("WEB-INF/admin/teacherShow.jsp").forward(req, resp);
-    }
-
+    // Métodos de redirecionamento
     private void showTeachers(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Teacher> teachers = teach.read();
         HttpSession session = req.getSession();
@@ -73,7 +83,6 @@ public class AdminTeachers extends HttpServlet {
 
         req.getRequestDispatcher("WEB-INF/admin/teachers.jsp").forward(req, resp);
     }
-
     private void editTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Teacher teacher = teach.read(Integer.parseInt(req.getParameter("teacher")));
         HttpSession session = req.getSession();
@@ -81,14 +90,10 @@ public class AdminTeachers extends HttpServlet {
 
         req.getRequestDispatcher("WEB-INF/admin/teacherEdit.jsp").forward(req, resp);
     }
-
-    private void createTeacher(HttpServletRequest req,
-                               HttpServletResponse resp) throws ServletException, IOException{
+    private void createTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         req.getRequestDispatcher("WEB-INF/admin/teacherInsert.jsp").forward(req,resp);
     }
-
-    private void insertTeacher(HttpServletRequest req,
-                               HttpServletResponse resp) throws ServletException, IOException {
+    private void insertTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
 
             String name = req.getParameter("name");
@@ -124,7 +129,6 @@ public class AdminTeachers extends HttpServlet {
             req.getRequestDispatcher("adminTeachers?type=createTeacher").forward(req, resp);
         }
     }
-
     private void updateTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             Teacher teacher = teach.read(Integer.parseInt(req.getParameter("teacher")));
@@ -179,7 +183,6 @@ public class AdminTeachers extends HttpServlet {
             req.getRequestDispatcher("adminTeachers?type=editTeacher").forward(req, resp);
         }
     }
-
     private void deleteTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             Teacher teacher = teach.read(Integer.parseInt(req.getParameter("teacher")));

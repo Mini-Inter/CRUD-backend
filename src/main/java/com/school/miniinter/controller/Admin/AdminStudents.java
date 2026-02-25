@@ -1,6 +1,7 @@
 package com.school.miniinter.controller.Admin;
 
 import com.school.miniinter.config.HashConfig;
+import com.school.miniinter.dao.AdministratorsDAO;
 import com.school.miniinter.dao.ClassDAO;
 import com.school.miniinter.dao.PreRegistrationDAO;
 import com.school.miniinter.models.Class.Class;
@@ -24,6 +25,32 @@ import java.util.List;
 
 @WebServlet(name="adminStudents", urlPatterns = "/adminStudents")
 public class AdminStudents extends HttpServlet {
+    StudentsDAO studDAO = new StudentsDAO();
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        Object admin = session.getAttribute("admin");
+        String type = "noot noot";
+        if (req.getParameter("type") != null) {
+            type = req.getParameter("type");
+        }
+
+        if (admin == null) {
+            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+        } else {
+            switch (type) {
+                case ("edit") -> {
+                    editStudent(req, resp);
+                }
+                case ("create") -> {
+                    createStudent(req, resp);
+                }
+                default -> {
+                    showStudents(req, resp);
+                }
+            }
+        }
+    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -37,19 +64,13 @@ public class AdminStudents extends HttpServlet {
             resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
         } else {
             switch (type) {
-                case ("editStudent") -> {
-                    editStudent(req, resp);
-                }
-                case ("updateStudent") -> {
+                case ("update") -> {
                     updateStudent(req, resp);
                 }
-                case ("deleteStudent") -> {
+                case ("delete") -> {
                     deleteStudent(req, resp);
                 }
-                case ("createStudent") -> {
-                    createStudent(req, resp);
-                }
-                case ("insertStudent") -> {
+                case ("insert") -> {
                     insertStudent(req, resp);
                 }
                 default -> {
@@ -59,6 +80,27 @@ public class AdminStudents extends HttpServlet {
         }
     }
 
+    // Métodos de redirecionamento
+    private void showStudents(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<Summary> students = studDAO.readSummary();
+        HttpSession session = req.getSession();
+        session.setAttribute("students", students);
+
+        req.getRequestDispatcher("WEB-INF/admin/students.jsp").forward(req, resp);
+    }
+    private void editStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        ClassDAO cla = new ClassDAO();
+        List<Class> classes = cla.read();
+        session.setAttribute("classes", classes);
+
+
+        int idStudent = Integer.parseInt(req.getParameter("student"));
+        Students students = studDAO.readById(idStudent);
+        session.setAttribute("student",students);
+
+        req.getRequestDispatcher("WEB-INF/admin/studentEdit.jsp").forward(req, resp);
+    }
     private void createStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         HttpSession session = req.getSession();
@@ -75,10 +117,11 @@ public class AdminStudents extends HttpServlet {
                 resp);
     }
 
+    // Métodos de acesso ao banco
     private void insertStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             PreRegistrationDAO preDAO = new PreRegistrationDAO();
-            StudentsDAO stud = new StudentsDAO();
+            
             Students student = new Students();
 
             int idCpf = Integer.parseInt(req.getParameter("cpf"));
@@ -105,10 +148,10 @@ public class AdminStudents extends HttpServlet {
                 nsae.printStackTrace();
             }
             student.setPassword(password);
-            Integer id_student = stud.readIdByName(name);
+            Integer id_student = studDAO.readIdByName(name);
             PreRegistration pre = new PreRegistration(id_student,idCpf);
 
-            if (stud.insert(student) && preDAO.updateFkStudentById(pre)) {
+            if (studDAO.insert(student) && preDAO.updateFkStudentById(pre)) {
                 HttpSession session = req.getSession();
                 session.setAttribute("success", "Dados do estudante " + student.getFull_name() + " alterados com sucesso!");
             } else {
@@ -123,34 +166,10 @@ public class AdminStudents extends HttpServlet {
             req.getRequestDispatcher("adminStudents?type=createStudent").forward(req, resp);
         }
     }
-
-    private void showStudents(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        StudentsDAO stud = new StudentsDAO();
-        List<Summary> students = stud.readSummary();
-        HttpSession session = req.getSession();
-        session.setAttribute("students", students);
-
-        req.getRequestDispatcher("WEB-INF/admin/students.jsp").forward(req, resp);
-    }
-
-    private void editStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        ClassDAO cla = new ClassDAO();
-        List<Class> classes = cla.read();
-        session.setAttribute("classes", classes);
-
-        StudentsDAO stud = new StudentsDAO();
-        int idStudent = Integer.parseInt(req.getParameter("student"));
-        Students students = stud.readById(idStudent);
-        session.setAttribute("student",students);
-
-        req.getRequestDispatcher("WEB-INF/admin/studentEdit.jsp").forward(req, resp);
-    }
-
     private void updateStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            StudentsDAO stud = new StudentsDAO();
-            Students student = stud.readById(Integer.parseInt(req.getParameter("student")));
+            
+            Students student = studDAO.readById(Integer.parseInt(req.getParameter("student")));
 
             int idClass = Integer.parseInt(req.getParameter("classroom"));
             String nome = req.getParameter("name");
@@ -188,7 +207,7 @@ public class AdminStudents extends HttpServlet {
                 student.setPassword(password);
             }
 
-            switch (stud.update(student)) {
+            switch (studDAO.update(student)) {
                 case (1) -> {
                     HttpSession session = req.getSession();
                     session.setAttribute("success", "Dados do estudante " + student.getFull_name() + " alterados com sucesso!");
@@ -210,13 +229,12 @@ public class AdminStudents extends HttpServlet {
             req.getRequestDispatcher("adminStudents?type=editStudent").forward(req, resp);
         }
     }
-
     private void deleteStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            StudentsDAO stud = new StudentsDAO();
-            Students student = stud.readById(Integer.parseInt(req.getParameter("student")));
+            
+            Students student = studDAO.readById(Integer.parseInt(req.getParameter("student")));
 
-            if (stud.delete(student.getId_student()) == 1) {
+            if (studDAO.delete(student.getId_student()) == 1) {
                 req.getRequestDispatcher("/adminStudents?type=noot").forward(req, resp);
 
                 HttpSession session = req.getSession();
