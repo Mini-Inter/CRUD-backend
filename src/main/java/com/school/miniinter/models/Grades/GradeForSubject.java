@@ -1,5 +1,7 @@
 package com.school.miniinter.models.Grades;
 
+import java.text.DecimalFormat;
+
 public class GradeForSubject {
 
     private String subject;
@@ -50,8 +52,10 @@ public class GradeForSubject {
         return average;
     }
     public void setAverage() {
+        DecimalFormat df = new DecimalFormat("#.00");
         if (this.n1 != -1 && this.n2!=-1)
-            this.average = (this.n1 + this.n2)/2;
+            this.average =
+                    Double.parseDouble(df.format((this.n1 + this.n2)/2).replace(',','.'));
         else
             this.average = -1.0;
     }

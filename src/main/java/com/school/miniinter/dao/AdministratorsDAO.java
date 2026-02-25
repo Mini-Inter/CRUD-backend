@@ -4,10 +4,15 @@ import com.school.miniinter.connection.ConnectionFactory;
 import com.school.miniinter.models.Administrator.Administrator;
 
 import java.sql.*;
+import java.text.DateFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 public class AdministratorsDAO {
+
+    DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+            new Locale("en","US"));
 
     public int insert(Administrator admin){
         ConnectionFactory connection = new ConnectionFactory();
@@ -22,7 +27,7 @@ public class AdministratorsDAO {
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1,admin.getName());
-            pstmt.setDate(2,admin.getBirthDate());
+            pstmt.setDate(2,Date.valueOf(format.format(admin.getBirthDate())));
             pstmt.setString(3,admin.getType());
             pstmt.setString(4,admin.getLogin());
             pstmt.setString(5,admin.getPassword());
@@ -36,8 +41,6 @@ public class AdministratorsDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return -1;
-        }finally {
-            connection.disconnect(conn);
         }
     }
 
@@ -68,9 +71,7 @@ public class AdministratorsDAO {
             }
         } catch(SQLException sqle){
             sqle.printStackTrace();
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
         return null;
     }
     public List<Administrator> read(String name) {
@@ -103,9 +104,7 @@ public class AdministratorsDAO {
         } catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
     public boolean isAdmin(String login, String pw) throws IllegalArgumentException {
         ConnectionFactory connection = new ConnectionFactory();
@@ -132,9 +131,7 @@ public class AdministratorsDAO {
         } catch(SQLException sqle){
             sqle.printStackTrace();
             return false;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
     public int update(Administrator admin) {
         ConnectionFactory connection = new ConnectionFactory();
@@ -147,7 +144,7 @@ public class AdministratorsDAO {
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, admin.getName());
-            pstmt.setDate(2, admin.getBirthDate());
+            pstmt.setDate(2, Date.valueOf(format.format(admin.getBirthDate())));
             pstmt.setString(3, admin.getType());
             pstmt.setString(4, admin.getLogin());
             pstmt.setString(5, admin.getPassword());
@@ -161,9 +158,7 @@ public class AdministratorsDAO {
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             return -1;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
     public int delete(int id) {
         ConnectionFactory connection = new ConnectionFactory();
@@ -185,8 +180,6 @@ public class AdministratorsDAO {
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             return -1;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
 }

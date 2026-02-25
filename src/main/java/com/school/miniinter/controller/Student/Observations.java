@@ -17,7 +17,8 @@ public class Observations extends HttpServlet {
 
     ReportsDAO reportsDAO = new ReportsDAO();
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    public void doGet(HttpServletRequest request,
+                     HttpServletResponse response) throws ServletException, IOException{
         HttpSession session = request.getSession();
         Object idStudentRaw = session.getAttribute("idStudent");
 

@@ -147,7 +147,7 @@ public class AdminTeachers extends HttpServlet {
                 teacher.setLogin(email);
             }
             if (!birth.equals(teacher.getBirthDate())) {
-                teacher.setBirthDate(birth);
+                teacher.setBirthDate(String.valueOf(birth));
             }
             if (!phone.equals(teacher.getPhone())) {
                 teacher.setPhone(phone);

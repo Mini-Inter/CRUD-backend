@@ -16,7 +16,7 @@ import java.util.List;
 public class GradeCard extends HttpServlet {
 
     GradeDAO gradeDAO = new GradeDAO();
-    public void doPost(HttpServletRequest request,
+    public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException,
             IOException{
         HttpSession session = request.getSession();
@@ -33,7 +33,7 @@ public class GradeCard extends HttpServlet {
             request.setAttribute("GradeCard", gradeCard);
 
 //        Essa caminho deve ser mudado quando chegar o frontend
-            request.getRequestDispatcher("WEB-INF/student/studentGradeCard" +
+            request.getRequestDispatcher("WEB-INF/Aluno/studentGradeCard" +
                     ".jsp").forward(request,
                     response);
         }

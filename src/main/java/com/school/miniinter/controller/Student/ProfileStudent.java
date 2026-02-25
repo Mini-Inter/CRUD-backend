@@ -15,7 +15,7 @@ import java.io.IOException;
 public class ProfileStudent extends HttpServlet {
 
     StudentsDAO studentsDAO = new StudentsDAO();
-    public void doPost(HttpServletRequest request,
+    public void doGet(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException,
             IOException{
         HttpSession session = request.getSession();

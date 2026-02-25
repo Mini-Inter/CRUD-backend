@@ -12,12 +12,12 @@ public class GradeDAO {
 
     String sql = "";
     public List<GradeForSubject> readAllGradesForStudent(int id_student) {
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
         List<GradeForSubject> grades = new ArrayList<>();
 
         try{
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "SELECT sub.name as name_subject, g.value AS value, g.grade_type AS grade_type FROM students s JOIN grades g on s.id_student = g.fk_student AND EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) JOIN subjects sub on sub.id_subject = g.fk_subject WHERE s.id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -65,17 +65,15 @@ public class GradeDAO {
         } catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        } finally {
-            connection.disconnect(conn);
-        }
+        } 
     }
 
     public int updateGradeById(int id_grade, Double value){
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
 
         try{
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "UPDATE grades SET value = ? WHERE id_grade = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -87,16 +85,14 @@ public class GradeDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return -1;
-        }finally {
-            connection.disconnect(conn);
         }
     }
 
     public boolean insertGradeByStudent(SimpleGrade simpleGrade){
-        ConnectionFactory connection = new ConnectionFactory();
+        
         Connection conn = null;
         try{
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "INSERT INTO grades(fk_student,fk_subject,grade_type,value)" +
                     " VALUES(?,?,?,?)";
@@ -111,8 +107,6 @@ public class GradeDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return false;
-        }finally {
-            connection.disconnect(conn);
         }
     }
 }

@@ -15,7 +15,7 @@ import java.io.IOException;
 public class HomeStudent extends HttpServlet {
 
     StudentsDAO studentsDAO = new StudentsDAO();
-    public void doPost(HttpServletRequest request,
+    public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException,
             IOException{
         HttpSession session =  request.getSession();
@@ -47,7 +47,7 @@ public class HomeStudent extends HttpServlet {
             request.setAttribute("amountReports", amountReports);
 
 //        Ainda tem que mudar esse caminho quando o fluxo estiver completo
-            request.getRequestDispatcher("WEB-INF/student/studentHome.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/Aluno/studentHome.jsp").forward(request, response);
         }
     }
 }

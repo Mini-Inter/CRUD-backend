@@ -99,7 +99,7 @@ public class AdminStudents extends HttpServlet {
             student.setFk_class(idClass);
             student.setFull_name(name);
             student.setLogin(email);
-            student.setBirth_date(birth);
+            student.setBirth_date(String.valueOf(birth));
             student.setPhone(phone);
             try{
                 password = HashConfig.hashSenha(password);
@@ -187,7 +187,7 @@ public class AdminStudents extends HttpServlet {
                 student.setLogin(email);
             }
             if (!birth.equals(student.getBirth_date())) {
-                student.setBirth_date(birth);
+                student.setBirth_date(String.valueOf(birth));
             }
             if (!phone.equals(student.getPhone())) {
                 student.setPhone(phone);
