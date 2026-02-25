@@ -41,8 +41,6 @@ public class ClassDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
 
@@ -91,8 +89,6 @@ public class ClassDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
 
@@ -112,8 +108,6 @@ public class ClassDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return false;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
 
@@ -142,8 +136,6 @@ public class ClassDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
 

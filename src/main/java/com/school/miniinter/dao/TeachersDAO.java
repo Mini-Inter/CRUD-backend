@@ -395,8 +395,6 @@ public class TeachersDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
 
@@ -434,8 +432,6 @@ public class TeachersDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
 

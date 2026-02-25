@@ -45,8 +45,6 @@ public class ReportsDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
     public List<CompleteInformationReport> readReportsByTeacher(int id_teacher){
@@ -81,8 +79,6 @@ public class ReportsDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
     public List<CompleteInformationReport> readCompleteInfoReportByType(int id_student, String typeChoose){
@@ -121,8 +117,6 @@ public class ReportsDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
     public boolean insert(Reports insertReport) {

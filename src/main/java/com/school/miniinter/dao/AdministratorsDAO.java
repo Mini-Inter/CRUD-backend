@@ -15,11 +15,10 @@ public class AdministratorsDAO {
             new Locale("en","US"));
 
     public int insert(Administrator admin){
-        ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             String sql = "INSERT INTO administrators" +
                     "(name, birth_date, type, login, password)" +
@@ -45,13 +44,12 @@ public class AdministratorsDAO {
     }
 
     public Administrator read(int id) {
-        ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
         ResultSet rset = null;
         Administrator admin;
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             String sql = "SELECT * FROM administrators WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -75,13 +73,12 @@ public class AdministratorsDAO {
         return null;
     }
     public List<Administrator> read(String name) {
-        ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
         ResultSet rset = null;
         List<Administrator> admins = new LinkedList<>();
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             String sql = "SELECT * FROM administrators WHERE name=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -107,11 +104,10 @@ public class AdministratorsDAO {
         } 
     }
     public boolean isAdmin(String login, String pw) throws IllegalArgumentException {
-        ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
         ResultSet rset = null;
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             String sql = "SELECT * FROM administrators WHERE login=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -134,11 +130,10 @@ public class AdministratorsDAO {
         } 
     }
     public int update(Administrator admin) {
-        ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             String sql = "UPDATE administrators SET name=?, birth_date=?, type=?, login=?, password=? WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -161,11 +156,10 @@ public class AdministratorsDAO {
         } 
     }
     public int delete(int id) {
-        ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
 
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             String sql = "DELETE FROM administrators WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);

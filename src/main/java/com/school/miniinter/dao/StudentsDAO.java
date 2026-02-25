@@ -45,9 +45,7 @@ public class StudentsDAO {
             sqle.printStackTrace();
             return -1;
         }
-        finally{
-            ConnectionFactory.disconnect();
-        }
+        
     }
 
     public boolean insert(int idStudent, int fk_class, String full_name, String first_name,
@@ -389,19 +387,16 @@ public class StudentsDAO {
         }catch (SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
 
     }
 
     public List<Summary> readSummary() {
-        ConnectionFactory connection = new ConnectionFactory();
         Connection conn = null;
         Summary sum;
         List<Summary> summaries = new LinkedList<>();
         try {
-            conn = connection.connect();
+            conn = ConnectionFactory.connect();
 
             sql = "SELECT S.created_at, S.phone, G.full_name AS \"guardian\", S.login ,S.id_student, S.full_name, C.series, C.classroom, avg(G.value) \"AVG\" FROM students S " +
                     "JOIN guardian G ON S.fk_guardian = G.id_guardian " +
@@ -435,7 +430,7 @@ public class StudentsDAO {
             sqle.printStackTrace();
             return null;
         }finally{
-            connection.disconnect(conn);
+            ConnectionFactory.disconnect();
         }
     }
     public Summary readSummary(int idStudent, int idSubject) {
@@ -478,8 +473,6 @@ public class StudentsDAO {
         }catch (SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
 
@@ -526,8 +519,6 @@ public class StudentsDAO {
         }catch (SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
 
@@ -558,8 +549,6 @@ public class StudentsDAO {
         }catch (SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
 
@@ -586,8 +575,6 @@ public class StudentsDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
 
@@ -614,8 +601,6 @@ public class StudentsDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
 
@@ -641,8 +626,6 @@ public class StudentsDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
 
