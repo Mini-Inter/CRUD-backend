@@ -241,8 +241,6 @@ public class TeachersDAO {
                 }
             } catch(SQLException sqle){
                 sqle.printStackTrace();
-            } finally {
-                ConnectionFactory.disconnect();
             }
             return null;
     }

@@ -158,8 +158,6 @@ public class StudentsDAO {
     } catch (SQLException sqle) {
         sqle.printStackTrace();
         return -1;
-    } finally {
-        ConnectionFactory.disconnect();
     }
 }
 
@@ -429,8 +427,6 @@ public class StudentsDAO {
         }catch (SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
     public Summary readSummary(int idStudent, int idSubject) {

@@ -133,7 +133,7 @@ public class AuthenticationSystem extends HttpServlet {
             if (isAdmin(login, hashedPassword)) {
                 HttpSession session = req.getSession();
                 session.setAttribute("admin", login);
-                resp.sendRedirect(req.getContextPath()+"/adminStudent");
+                resp.sendRedirect(req.getContextPath()+"/adminStudents");
             } else {
                 throw new RuntimeException("login não pertence a nenhuma conta!");
             }
@@ -143,7 +143,7 @@ public class AuthenticationSystem extends HttpServlet {
             session.setAttribute("error", error);
             session.setAttribute("login", login);
             session.setAttribute("password", password);
-            resp.sendRedirect(req.getContextPath() + "/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath() + "/Inicio/loginaa.jsp");
         }
         catch (RuntimeException exc) {
             String error = exc.getMessage();
@@ -151,7 +151,7 @@ public class AuthenticationSystem extends HttpServlet {
             session.setAttribute("error", error);
             session.setAttribute("login", login);
             session.setAttribute("password", password);
-            resp.sendRedirect(req.getContextPath() + "/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath() + "/Inicio/loginaa.jsp");
         }
     }
     private void preRegister(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
@@ -214,7 +214,7 @@ public class AuthenticationSystem extends HttpServlet {
                 Integer id_student = stud.readIdByName(name);
                 preDAO.insertIdStudentOnCpf(id_student,preModel.getId());
 
-                resp.sendRedirect(req.getContextPath()+"/authentication/login.jsp");
+                resp.sendRedirect(req.getContextPath()+"/Inicio/login.jsp");
 
             } catch (RuntimeException exc) {
                 String error = exc.getMessage();

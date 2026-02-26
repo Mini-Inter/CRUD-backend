@@ -12,6 +12,6 @@
 </head>
 <body>
     <a href="authentication/login.jsp">Login</a>
-    <a href="authentication/loginaa.jsp">Area Restrita</a>
+    <a href="../webapp/Inicio/loginaa.jsp">Area Restrita</a>
 </body>
 </html>
