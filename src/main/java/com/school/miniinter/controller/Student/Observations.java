@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name="ObservacoesEstudante",urlPatterns = {"/observations"})
+@WebServlet(name="ObservacoesEstudante",value = {"/observations"})
 public class Observations extends HttpServlet {
 
     ReportsDAO reportsDAO = new ReportsDAO();
@@ -23,7 +23,8 @@ public class Observations extends HttpServlet {
         Object idStudentRaw = session.getAttribute("idStudent");
 
         if (idStudentRaw == null) {
-            response.sendRedirect(request.getContextPath()+"/authentication/login.jsp");
+            response.sendRedirect(request.getContextPath()+"/Student/login" +
+                    ".jsp");
         } else {
             int idStudent = (Integer) idStudentRaw;
             String type = request.getParameter("filter");
@@ -43,7 +44,7 @@ public class Observations extends HttpServlet {
 
         request.setAttribute("List",list);
 
-        request.getRequestDispatcher("WEB-INF/student/studentObservations" +
+        request.getRequestDispatcher("WEB-INF/Student/studentObservations" +
                 ".jsp").forward(request,
                 response);
     }
@@ -55,7 +56,8 @@ public class Observations extends HttpServlet {
                 reportsDAO.readCompleteInfoReportByType(id_student,type);
         request.setAttribute("List",list);
 
-        request.getRequestDispatcher("WEB-INF/student/observations.jsp").forward(request,
+        request.getRequestDispatcher("WEB-INF/Student" +
+                "/studentObservations.jsp").forward(request,
                 response);
     }
 }

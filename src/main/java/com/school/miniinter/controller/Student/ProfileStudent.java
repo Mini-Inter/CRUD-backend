@@ -27,6 +27,6 @@ public class ProfileStudent extends HttpServlet {
 
         request.setAttribute("completeInfoStudent",completeInfo);
 
-        request.getRequestDispatcher("WEB-INF/Aluno/studentProfile.jsp").forward(request,response);
+        request.getRequestDispatcher("WEB-INF/Student/studentProfile.jsp").forward(request,response);
     }
 }
