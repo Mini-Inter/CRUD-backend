@@ -17,7 +17,7 @@ import java.util.List;
 @WebServlet(name = "StudentGrades", urlPatterns = "/studentGrades")
 public class StudentGrades extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         String idStudentRaw = req.getParameter("student");
 

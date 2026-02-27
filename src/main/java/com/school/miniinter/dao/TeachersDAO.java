@@ -157,7 +157,8 @@ public class TeachersDAO {
             conn = ConnectionFactory.connect();
 
 //            Read full_name
-            sql = "SELECT full_name FROM teachers WHERE id_employee = ?";
+            sql = "SELECT full_name, first_name FROM teachers WHERE " +
+                    "id_employee = ?";
             pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_teacher);
@@ -165,6 +166,7 @@ public class TeachersDAO {
             rs = pstmt.executeQuery();
             if(rs.next()){
                 homeTeacherInfo.setFull_name(rs.getString("full_name"));
+                homeTeacherInfo.setFirst_name(rs.getString("first_name"));
             }
 
 //            Amount Students
@@ -241,8 +243,6 @@ public class TeachersDAO {
                 }
             } catch(SQLException sqle){
                 sqle.printStackTrace();
-            } finally {
-                ConnectionFactory.disconnect();
             }
             return null;
     }

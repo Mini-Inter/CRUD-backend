@@ -18,7 +18,7 @@ public class HomeTeacher extends HttpServlet {
 
     SubjectsDAO subjectsDAO = new SubjectsDAO();
     TeachersDAO teachersDAO = new TeachersDAO();
-    public void doPost(HttpServletRequest request,
+    public void doGet(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException,
             IOException{
 
@@ -36,7 +36,7 @@ public class HomeTeacher extends HttpServlet {
             homeTeacherInfo.setSubject(subjectsDAO.read(idSubject).getName());
             request.setAttribute("homeTeacherInfo",homeTeacherInfo);
 
-            request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request,response);
+            request.getRequestDispatcher("/WEB-INF/Teacher/homeTeacher.jsp").forward(request,response);
         }
     }
 }

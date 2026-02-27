@@ -116,7 +116,7 @@ public class SubjectsDAO {
     }
     public List<Subject> readByStudent(int idStudent) {
         
-        Connection conn = null;
+        Connection conn;
         ResultSet rset;
         List<Subject> subjects = new LinkedList<>();
 
@@ -144,7 +144,7 @@ public class SubjectsDAO {
     }
     public List<Subject> readByTeacher(int idTeacher) {
         
-        Connection conn = null;
+        Connection conn;
         ResultSet rset;
         List<Subject> subjects = new LinkedList<>();
 
