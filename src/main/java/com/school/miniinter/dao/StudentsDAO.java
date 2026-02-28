@@ -393,7 +393,6 @@ public class StudentsDAO {
 
     public List<Summary> readSummary() {
         Connection conn = null;
-        Summary sum;
         List<Summary> summaries = new LinkedList<>();
         try {
             conn = ConnectionFactory.connect();
@@ -411,17 +410,16 @@ public class StudentsDAO {
             ResultSet rs = stmt.executeQuery(sql);
 
             if(rs.next()) {
-                sum = new Summary();
-                sum.setMatricula(rs.getInt("id_student"));
-                sum.setClassroom(rs.getString("classroom").charAt(0));
-                sum.setSeries(Integer.parseInt(rs.getString("series")));
-                sum.setName(rs.getString("full_name"));
-                sum.setAverage(rs.getDouble("AVG"));
-                sum.setSituation(rs.getDouble("AVG")>=7);
-                sum.setEmail(rs.getString("login"));
-                sum.setGuardian(rs.getString("guardian"));
-                sum.setPhone(rs.getString("phone"));
-                sum.setCreatedAt(rs.getDate("created_at"));
+                int id_student = rs.getInt("id_student");
+                char classroom = rs.getString("classroom").charAt(0);
+                char series = rs.getString("series").charAt(0);
+                String name = rs.getString("full_name");
+                Double avg = rs.getDouble("AVG");
+                String login = rs.getString("login");
+                String guardian = rs.getString("guardian");
+                String phone = rs.getString("phone");
+                Date created_at = rs.getDate("created_at");
+                Summary sum =  new Summary(id_student,classroom,series,name,avg, login,guardian,phone,created_at);
                 summaries.add(sum);
             }
 
@@ -436,19 +434,22 @@ public class StudentsDAO {
     public Summary readSummary(int idStudent, int idSubject) {
         
         Connection conn = null;
-        Summary sum = new Summary();
         try {
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT S.created_at, S.phone, G.full_name AS \"guardian\", S.login ,S.id_student, S.full_name, C.series, C.classroom, avg(G.value) \"AVG\" FROM students S " +
+            sql = "SELECT S.created_at, S.phone, G.full_name AS \"guardian\"," +
+                    " S.login ,S.id_student, S.full_name, C.series, C" +
+                    ".classroom, ROUND(avg(Gr.value),2) \"AVG\" FROM students" +
+                    " S " +
                     "JOIN guardian G ON S.fk_guardian = G.id_guardian " +
                     "JOIN class C ON S.fk_class = C.id_class " +
                     "LEFT JOIN has H ON C.id_class = H.fk_class " +
                     "LEFT JOIN teach P on H.fk_teach = P.id " +
                     "LEFT JOIN subjects D ON P.fk_subject = D.id_subject " +
-                    "LEFT JOIN grades G on S.id_student = G.fk_student AND D.id_subject = G.fk_subject " +
+                    "LEFT JOIN grades Gr on S.id_student = Gr.fk_student AND " +
+                    "D.id_subject = Gr.fk_subject " +
                     "WHERE S.id_student = ? AND D.id_subject = ? " +
-                    "GROUP BY 1, 2, 3, 4, 5, 6, D.id_subject";
+                    "GROUP BY 1, 2, 3, 4, 5, 6, 7,8";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,idStudent);
@@ -456,17 +457,17 @@ public class StudentsDAO {
 
             ResultSet rs = pstmt.executeQuery();
             if(rs.next()) {
-                sum.setMatricula(rs.getInt("id_student"));
-                sum.setClassroom(rs.getString("classroom").charAt(0));
-                sum.setSeries(Integer.parseInt(rs.getString("series")));
-                sum.setName(rs.getString("full_name"));
-                sum.setAverage(rs.getDouble("AVG"));
-                sum.setSituation(rs.getDouble("AVG")>=7);
-                sum.setEmail(rs.getString("login"));
-                sum.setGuardian(rs.getString("guardian"));
-                sum.setPhone(rs.getString("phone"));
-                sum.setCreatedAt(rs.getDate("created_at"));
-                return sum;
+                int id_student = rs.getInt("id_student");
+                char classroom = rs.getString("classroom").charAt(0);
+                char series = rs.getString("series").charAt(0);
+                String name = rs.getString("full_name");
+                Double avg = rs.getDouble("AVG");
+                String login = rs.getString("login");
+                String guardian = rs.getString("guardian");
+                String phone = rs.getString("phone");
+                Date created_at = rs.getDate("created_at");
+                return new Summary(id_student,classroom,series,name,avg,login
+                        ,guardian,phone,created_at);
             }
 
             return null;
@@ -524,8 +525,7 @@ public class StudentsDAO {
 
     public Summary readSummary(int idStudent) {
         
-        Connection conn = null;
-        Summary sum = new Summary();
+        Connection conn;
         try {
             conn = ConnectionFactory.connect();
 
@@ -538,11 +538,11 @@ public class StudentsDAO {
 
             ResultSet rs = pstmt.executeQuery();
             if(rs.next()) {
-                sum.setMatricula(rs.getInt("id_student"));
-                sum.setClassroom(rs.getString("classroom").charAt(0));
-                sum.setSeries(Integer.parseInt(rs.getString("series")));
-                sum.setName(rs.getString("full_name"));
-                return sum;
+                int id_student = rs.getInt("id_student");
+                char classroom = rs.getString("classroom").charAt(0);
+                char series = rs.getString("series").charAt(0);
+                String name = rs.getString("full_name");
+                return new Summary(id_student,classroom,series,name);
             }
 
             return null;

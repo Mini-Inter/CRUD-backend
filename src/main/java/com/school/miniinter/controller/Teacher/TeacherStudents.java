@@ -37,8 +37,9 @@ public class TeacherStudents extends HttpServlet {
                 int idStudent = Integer.parseInt(idStudentRaw);
                 students = filterById(students, idStudent);
             }
-            for (Students student : students)
+            for (Students student : students) {
                 summaries.add(stud.readSummary(student.getId_student(), idSubject));
+            }
             session.setAttribute("students", summaries);
 
             req.getRequestDispatcher("/WEB-INF/Teacher/studentsTeacher.jsp").forward(req, resp);

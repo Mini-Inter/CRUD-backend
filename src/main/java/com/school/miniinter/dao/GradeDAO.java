@@ -68,7 +68,7 @@ public class GradeDAO {
         } 
     }
 
-    public int updateGradeById(int id_grade, Double value){
+    public boolean updateGradeById(int id_grade, Double value){
         
         Connection conn = null;
 
@@ -81,10 +81,10 @@ public class GradeDAO {
             pstmt.setDouble(1,value);
             pstmt.setInt(2,id_grade);
 
-            return pstmt.executeUpdate();
+            return pstmt.executeUpdate() > 0;
         }catch(SQLException sqle){
             sqle.printStackTrace();
-            return -1;
+            return false;
         }
     }
 

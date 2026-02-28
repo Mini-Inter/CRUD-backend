@@ -23,48 +23,56 @@ public class PageUpdateGrade extends HttpServlet {
     ClassDAO classDAO = new ClassDAO();
     TeachersDAO teachersDAO = new TeachersDAO();
     GradeDAO gradeDAO = new GradeDAO();
-    public void doPost(HttpServletRequest request,
-                       HttpServletResponse response) throws ServletException,
+    public void doGet(HttpServletRequest request,
+                      HttpServletResponse response) throws ServletException,
             IOException{
-
         HttpSession session =  request.getSession();
         Integer idTeacher = (Integer)session.getAttribute("idTeacher");
-        System.out.println(idTeacher);
         int idSubject = (Integer) session.getAttribute("subject");
-        System.out.println(idSubject);
-        String url = request.getServletPath();
-        String changeClass = request.getParameter("changeClass");
 
         if(idTeacher == null){
             response.sendRedirect(request.getContextPath()+"/authentication/login.jsp");
+        }else {
+            List<Class> list = classDAO.readClassByTeacherAndSubject(idTeacher,
+                    idSubject);
+
+            if (list.isEmpty()) {
+                request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request
+                        , response);
+            }
+            request.setAttribute("listClass", list);
+
+            Integer idFirstClassShow = list.get(0).getId();
+            request.setAttribute("id_class", idFirstClassShow);
+            List<GradeForStudent> list1 =
+                    teachersDAO.readGradeStudentBySubjectAndClass(idTeacher,
+                            idSubject, idFirstClassShow);
+
+            request.setAttribute("listGradeByStudent", list1);
+
+            request.getRequestDispatcher("WEB-INF/Teacher/throwGrade.jsp").forward(request
+                    , response);
+        }
+    }
+    public void doPost(HttpServletRequest request,
+                       HttpServletResponse response) throws ServletException,
+            IOException{
+        HttpSession session =  request.getSession();
+        Integer idTeacher = (Integer)session.getAttribute("idTeacher");
+        int idSubject = (Integer) session.getAttribute("subject");
+        String url = request.getServletPath();
+        String changeClass = request.getParameter("changeClass");
+        if(idTeacher == null){
+            response.sendRedirect(request.getContextPath()+"/authentication/login.jsp");
         }else{
-            if(url.equals("/updateGrade") && changeClass == null) {
-                List<Class> list = classDAO.readClassByTeacherAndSubject(idTeacher,
-                        idSubject);
-
-                if (list.isEmpty()) {
-                    request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request
-                            , response);
-                }
-                request.setAttribute("listClass", list);
-
-                Integer idFirstClassShow = list.get(0).getId();
-                request.setAttribute("id_class",idFirstClassShow);
-                List<GradeForStudent> list1 =
-                        teachersDAO.readGradeStudentBySubjectAndClass(idTeacher,
-                                idSubject, idFirstClassShow);
-
-                request.setAttribute("listGradeByStudent", list1);
-
-                request.getRequestDispatcher("WEB-INF/teacher/updateGradeTeacher.jsp").forward(request, response);
-            }else if(url.equals("/updateGrade") && changeClass.equals("1")) {
+            if(url.equals("/updateGrade") && changeClass.equals("1")) {
 
                 List<Class> list = classDAO.readClassByTeacherAndSubject(idTeacher,
                         idSubject);
 
                 if(list.isEmpty()){
-                    request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request
-                            , response);
+                    request.getRequestDispatcher("WEB-INF/Teacher" +
+                            "/homeTeacher.jsp").forward(request, response);
                 }
 
                 request.setAttribute("listClass", list);
@@ -79,26 +87,19 @@ public class PageUpdateGrade extends HttpServlet {
 
                 request.setAttribute("listGradeByStudent", list1);
 
-                request.getRequestDispatcher("WEB-INF/teacher/updateGradeTeacher.jsp").forward(request, response);
-
+                request.getRequestDispatcher("WEB-INF/Teacher" +
+                        "/throwGrade.jsp").forward(request, response);
             }else if(url.equals("/updateData")){
 
-                System.out.println("AQUI");
                 Integer idData = Integer.parseInt(request.getParameter(
                         "idData"));
                 Double data = Double.parseDouble(request.getParameter("data"));
 
-                int retorno = gradeDAO.updateGradeById(idData,data);
+                if(!gradeDAO.updateGradeById(idData,data)){
+                    session.setAttribute("error","Não foi possível fazer a " +
+                            "alteração. Tente novamente.");
+                };
 
-                if(retorno == 0){
-//                    não sei como retornar uma mensagem para o jsp 😭 mas o
-//                    retorno deve indicar que não foi encontrada o id da nota
-                }else if(retorno > 1){
-//                     mesma coisa aqui, porém indicar a alteração foi feita
-//                     com sucesso
-                }else{
-//                    Indicar que houve um erro ao executar a query
-                }
                 Integer id_class= Integer.parseInt(request.getParameter(
                         "class"));
                 request.getRequestDispatcher("updateGrade?changeClass=1&class" +
