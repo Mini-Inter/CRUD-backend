@@ -26,7 +26,7 @@
             session.setAttribute("error", null);
         }
     %>
-    <form action="<%=request.getContextPath()%>/auth?type=signup&pre=true" method="post">
+    <form action="${pageContext.request.contextPath}/auth?type=signup&pre=true" method="post">
         <label for="cpf">CPF:</label>
         <input value="<%=cpf%>" name="cpf" id="cpf" type="text">
         <input value="Enviar" type="submit">

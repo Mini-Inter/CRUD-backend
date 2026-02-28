@@ -27,7 +27,7 @@
     <%
         } else {
     %>
-    <form action="<%=request.getContextPath()%>/teacherReports?type=createReport">
+    <form action="${pageContext.request.contextPath}/teacherReports?type=createReport">
         <label for="student">Aluno:</label>
         <select name="student" id="student">
             <%
@@ -51,14 +51,14 @@
         }
     %>
 
-    <form action="<%=request.getContextPath()%>/teacherReports?type=showReports" method="post">
+    <form action="${pageContext.request.contextPath}/teacherReports?type=showReports" method="post">
         <input value="Observações" type="submit">
     </form>
-    <form action="<%=request.getContextPath()%>/teacherReports" method="post">
+    <form action="${pageContext.request.contextPath}/teacherReports" method="post">
         <input value="Observações" type="submit">
     </form>
 
-    <form action="<%=request.getContextPath()%>/changeSubject" method="post">
+    <form action="${pageContext.request.contextPath}/changeSubject" method="post">
         <label for="subject"></label>
         <select name="subject" id="subject">
             <%

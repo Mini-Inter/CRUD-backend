@@ -84,7 +84,7 @@ public class AdminReports extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("reports", reports);
 
-        req.getRequestDispatcher("WEB-INF/admin/reports.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/report/reports.jsp").forward(req, resp);
     }
     private void editReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Reports report = rep.read(Integer.parseInt(req.getParameter("report")));
@@ -94,7 +94,7 @@ public class AdminReports extends HttpServlet {
         String[] students_report = rep.readCompleteReport(report.getId()).getStudents();
         session.setAttribute("students_report", students_report);
 
-        req.getRequestDispatcher("WEB-INF/admin/reportEdit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/report/reportEdit.jsp").forward(req, resp);
     }
     private void createReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         TeachersDAO te = new TeachersDAO();
@@ -107,7 +107,7 @@ public class AdminReports extends HttpServlet {
 
         req.setAttribute("listStudents",listStudents);
 
-        req.getRequestDispatcher("WEB-INF/admin/reportInsert.jsp").forward(req,resp);
+        req.getRequestDispatcher("WEB-INF/admin/report/reportInsert.jsp").forward(req,resp);
 
     }
 

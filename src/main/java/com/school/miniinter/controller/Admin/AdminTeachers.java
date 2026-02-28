@@ -81,17 +81,17 @@ public class AdminTeachers extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("teachers", teachers);
 
-        req.getRequestDispatcher("WEB-INF/admin/teachers.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/teacher/teachers.jsp").forward(req, resp);
     }
     private void editTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Teacher teacher = teach.read(Integer.parseInt(req.getParameter("teacher")));
         HttpSession session = req.getSession();
         session.setAttribute("teacher", teacher);
 
-        req.getRequestDispatcher("WEB-INF/admin/teacherEdit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/teacher/teacherEdit.jsp").forward(req, resp);
     }
     private void createTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-        req.getRequestDispatcher("WEB-INF/admin/teacherInsert.jsp").forward(req,resp);
+        req.getRequestDispatcher("WEB-INF/admin/teacher/teacherInsert.jsp").forward(req,resp);
     }
     private void insertTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {

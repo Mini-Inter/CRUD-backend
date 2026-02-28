@@ -30,7 +30,7 @@
             session.setAttribute("error", null);
         }
     %>
-    <form action="<%=request.getContextPath()%>/auth?type=login" method="post">
+    <form action="${pageContext.request.contextPath}/auth?type=login" method="post">
         <label for="login">Email:</label>
         <input value="<%=login%>" required name="login" id="login" type="text">
         <label for="pw">Senha:</label>

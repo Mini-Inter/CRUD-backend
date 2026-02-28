@@ -77,17 +77,17 @@ public class AdminSubjects extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("subjects", subjects);
 
-        req.getRequestDispatcher("WEB-INF/admin/subjects.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/subject/subjects.jsp").forward(req, resp);
     }
     private void editSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Subject subject = sub.read(Integer.parseInt(req.getParameter("subject")));
         HttpSession session = req.getSession();
         session.setAttribute("subject", subject);
 
-        req.getRequestDispatcher("WEB-INF/admin/subjectEdit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/subject/subjectEdit.jsp").forward(req, resp);
     }
     private void createSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-        req.getRequestDispatcher("WEB-INF/admin/subjectInsert.jsp").forward(req,resp);
+        req.getRequestDispatcher("WEB-INF/admin/subject/subjectInsert.jsp").forward(req,resp);
     }
 
     // Métodos de acesso ao banco

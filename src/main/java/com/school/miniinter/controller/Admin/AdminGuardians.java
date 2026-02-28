@@ -80,7 +80,7 @@ public class AdminGuardians extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("guardians", guardians);
 
-        req.getRequestDispatcher("WEB-INF/admin/guardians.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/guardian/guardians.jsp").forward(req, resp);
     }
     private void editGuardian(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         GuardiansDAO gar = new GuardiansDAO();
@@ -88,10 +88,10 @@ public class AdminGuardians extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("guardian", guardian);
 
-        req.getRequestDispatcher("WEB-INF/admin/guardianEdit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/guardian/guardianEdit.jsp").forward(req, resp);
     }
     private void createGuardian(HttpServletRequest req, HttpServletResponse resp) throws  ServletException, IOException{
-        req.getRequestDispatcher("WEB-INF/admin/guardianInsert.jsp").forward(req,resp);
+        req.getRequestDispatcher("WEB-INF/admin/guardian/guardianInsert.jsp").forward(req,resp);
     }
 
     // Métodos de acesso ao banco
@@ -117,7 +117,7 @@ public class AdminGuardians extends HttpServlet {
         }catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("WEB-INF/admin/guardianInsert.jsp").forward(req, resp);
+            req.getRequestDispatcher("WEB-INF/admin/guardian/guardianInsert.jsp").forward(req, resp);
         }
 
     }

@@ -17,7 +17,7 @@
     <title>Vidya - Atualizar notas por aluno</title>
 </head>
 <body>
-    <form action="<%=request.getContextPath()%>/changeSubject" method="post">
+    <form action="${pageContext.request.contextPath}/changeSubject" method="post">
         <label for="subject"></label>
         <select name="subject" id="subject">
             <%
@@ -64,7 +64,7 @@
             }
         %>
     </table>
-    <form action="<%=request.getContextPath()%>/updateGrade?changeClass=1"
+    <form action="${pageContext.request.contextPath}/updateGrade?changeClass=1"
           method="post">
         <label for="class"></label>
         <select name="class" id="class">

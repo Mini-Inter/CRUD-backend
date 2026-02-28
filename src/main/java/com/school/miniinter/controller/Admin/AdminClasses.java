@@ -82,7 +82,7 @@ public class AdminClasses extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("classes", classes);
 
-        req.getRequestDispatcher("WEB-INF/admin/classes.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/class/classes.jsp").forward(req, resp);
     }
     private void editClass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Class classroom = classDAO.read(Integer.parseInt(req.getParameter("classroom")));
@@ -101,10 +101,10 @@ public class AdminClasses extends HttpServlet {
         Teaching[] aulas = assign.readByIdClas(classroom.getId());
         session.setAttribute("aulas", aulas);
 
-        req.getRequestDispatcher("WEB-INF/admin/classEdit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/class/classEdit.jsp").forward(req, resp);
     }
     private void createClass(HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException{
-        req.getRequestDispatcher("WEB-INF/admin/classInsert.jsp").forward(req,
+        req.getRequestDispatcher("WEB-INF/admin/class/classInsert.jsp").forward(req,
                 resp);
     }
 

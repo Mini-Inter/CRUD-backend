@@ -86,7 +86,7 @@ public class AdminStudents extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("students", students);
 
-        req.getRequestDispatcher("WEB-INF/admin/students.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/student/students.jsp").forward(req, resp);
     }
     private void editStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -99,7 +99,7 @@ public class AdminStudents extends HttpServlet {
         Students students = studDAO.readById(idStudent);
         session.setAttribute("student",students);
 
-        req.getRequestDispatcher("WEB-INF/admin/studentEdit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/student/studentEdit.jsp").forward(req, resp);
     }
     private void createStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -113,7 +113,7 @@ public class AdminStudents extends HttpServlet {
         List<PreRegistration> preRegistrations = pre.readAllAvailableCpf();
         session.setAttribute("cpfs",preRegistrations);
 
-        req.getRequestDispatcher("WEB-INF/admin/studentInsert.jsp").forward(req,
+        req.getRequestDispatcher("WEB-INF/admin/student/studentInsert.jsp").forward(req,
                 resp);
     }
 

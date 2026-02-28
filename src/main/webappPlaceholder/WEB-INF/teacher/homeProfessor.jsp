@@ -15,7 +15,7 @@
 </head>
 <body>
     <p><%=homeTeacherInfo%></p>
-    <form action="<%=request.getContextPath()%>/changeSubject" method="post">
+    <form action="${pageContext.request.contextPath}/changeSubject" method="post">
         <label for="subject"></label>
         <select name="subject" id="subject">
             <%
@@ -34,10 +34,10 @@
         </select>
         <input value="Trocar matéria" type="submit">
     </form>
-    <form action="<%=request.getContextPath()%>/homeTeacher" method="post"><input type="submit" value="Home"></form>
-    <form action="<%=request.getContextPath()%>/updateGrade" method="post"><input type="submit" value="Ver notas alunos"></form>
-    <form action="<%=request.getContextPath()%>/teacherStudents" method="post"><input value="Alunos" type="submit"></form>
-    <form action="<%=request.getContextPath()%>/teacherReports" method="post"><input value="Observações" type="submit"></form>
-    <form action="<%=request.getContextPath()%>/teacherProfile" method="post"><input type="submit" value="Profile"></form>
+    <form action="${pageContext.request.contextPath}/homeTeacher" method="post"><input type="submit" value="Home"></form>
+    <form action="${pageContext.request.contextPath}/updateGrade" method="post"><input type="submit" value="Ver notas alunos"></form>
+    <form action="${pageContext.request.contextPath}/teacherStudents" method="post"><input value="Alunos" type="submit"></form>
+    <form action="${pageContext.request.contextPath}/teacherReports" method="post"><input value="Observações" type="submit"></form>
+    <form action="${pageContext.request.contextPath}/teacherProfile" method="post"><input type="submit" value="Profile"></form>
 </body>
 </html>
