@@ -4,14 +4,14 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class CompleteInformationReport {
-
+public class CompleteInformationReportStudent {
     private String teacher_name;
     private String description;
     private String type;
     private String send_at;
 
-    public CompleteInformationReport(String teacher_name, String description, String type, Date send_at) {
+    public CompleteInformationReportStudent(String teacher_name,
+                                            String description, String type, Date send_at) {
         this.teacher_name = teacher_name;
         this.description = description;
         this.type = type;

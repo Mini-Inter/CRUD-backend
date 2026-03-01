@@ -2,7 +2,7 @@ package com.school.miniinter.controller.Teacher;
 
 import com.school.miniinter.dao.ReportsDAO;
 import com.school.miniinter.dao.StudentsDAO;
-import com.school.miniinter.models.Reports.CompleteInformationReport;
+import com.school.miniinter.models.Reports.CompleteInformationReportStudent;
 import com.school.miniinter.models.Students.Summary;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -27,7 +27,8 @@ public class StudentReports extends HttpServlet {
             ReportsDAO rep = new ReportsDAO();
 
             int idStudent = Integer.parseInt(idStudentRaw);
-            List<CompleteInformationReport> reports = rep.readAllCompleteInfoReport(idStudent);
+            List<CompleteInformationReportStudent> reports =
+                    rep.readAllCompleteInfoReport(idStudent);
             session.setAttribute("reports", reports);
 
             StudentsDAO stud = new StudentsDAO();

@@ -13,10 +13,10 @@ public class ReportsDAO {
 
     String sql = "";
 
-    public List<CompleteInformationReport> readAllCompleteInfoReport(int id_student){
+    public List<CompleteInformationReportStudent> readAllCompleteInfoReport(int id_student){
         
         Connection conn = null;
-        List<CompleteInformationReport> list= new ArrayList<>();
+        List<CompleteInformationReportStudent> list= new ArrayList<>();
         try{
             conn = ConnectionFactory.connect();
 
@@ -38,7 +38,7 @@ public class ReportsDAO {
                 type = rs.getString("type");
                 send_at = rs.getDate("send_at");
 
-                list.add(new CompleteInformationReport(teacher_name,
+                list.add(new CompleteInformationReportStudent(teacher_name,
                         description,type,send_at));
             }
             return list;
@@ -47,14 +47,14 @@ public class ReportsDAO {
             return null;
         }
     }
-    public List<CompleteInformationReport> readReportsByTeacher(int id_teacher){
+    public List<CompleteInformationReportTeacher> readReportsByTeacher(int id_teacher){
         
         Connection conn = null;
-        List<CompleteInformationReport> list= new ArrayList<>();
+        List<CompleteInformationReportTeacher> list= new ArrayList<>();
         try{
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT DISTINCT teachers.full_name AS teacher_name, repo" +
+            sql = "SELECT DISTINCT s.full_name AS student_name, repo" +
                     ".description, repo.type AS type, CAST(repo.send_at AS DATE) FROM students s JOIN receive r on r.fk_student = s.id_student JOIN reports repo on repo.id = r.fk_report JOIN teachers ON teachers.id_employee = repo.fk_teacher WHERE id_employee = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -62,18 +62,20 @@ public class ReportsDAO {
 
             ResultSet rs = pstmt.executeQuery();
 
-            String teacher_name;
+            String student_name;
             String description;
             String type;
             Date send_at;
             while(rs.next()){
 
-                teacher_name = rs.getString("teacher_name");
+                student_name = rs.getString("student_name");
                 description = rs.getString("description");
                 type = rs.getString("type");
                 send_at = rs.getDate("send_at");
 
-                list.add(new CompleteInformationReport(teacher_name,description,type,send_at));
+                list.add(new CompleteInformationReportTeacher(student_name,
+                        description,type,
+                        send_at));
             }
             return list;
         }catch(SQLException sqle){
@@ -81,10 +83,10 @@ public class ReportsDAO {
             return null;
         }
     }
-    public List<CompleteInformationReport> readCompleteInfoReportByType(int id_student, String typeChoose){
+    public List<CompleteInformationReportStudent> readCompleteInfoReportByType(int id_student, String typeChoose){
         
         Connection conn = null;
-        List<CompleteInformationReport> list= new ArrayList<>();
+        List<CompleteInformationReportStudent> list= new ArrayList<>();
         try{
             conn = ConnectionFactory.connect();
 
@@ -110,7 +112,7 @@ public class ReportsDAO {
                 type = rs.getString("type");
                 send_at = rs.getDate("date_report");
 
-                list.add(new CompleteInformationReport(teacher_name,
+                list.add(new CompleteInformationReportStudent(teacher_name,
                         description,type,send_at));
             }
             return list;
@@ -120,7 +122,7 @@ public class ReportsDAO {
         }
     }
     public boolean insert(Reports insertReport) {
-        
+
         Connection conn = null;
 
         try {
@@ -128,17 +130,18 @@ public class ReportsDAO {
             sql = "INSERT INTO reports (type, fk_teacher, description) VALUES " +
                     "(?, ?, ?)";
 
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            PreparedStatement pstmt1 = conn.prepareStatement(sql);
 
-            pstmt.setString(1, insertReport.getType());
-            pstmt.setInt(2, insertReport.getFk_teachers());
-            pstmt.setString(3, insertReport.getDescription());
+            pstmt1.setString(1, insertReport.getType());
+            pstmt1.setInt(2, insertReport.getFk_teachers());
+            pstmt1.setString(3, insertReport.getDescription());
 
-            return pstmt.execute();
+            return pstmt1.execute();
+
         } catch (SQLException exc) {
             exc.printStackTrace();
             return false;
-        } 
+        }
     }
 
     public Integer readIdByDescription(String description){

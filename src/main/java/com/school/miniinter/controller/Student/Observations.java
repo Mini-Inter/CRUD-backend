@@ -1,7 +1,7 @@
 package com.school.miniinter.controller.Student;
 
 import com.school.miniinter.dao.ReportsDAO;
-import com.school.miniinter.models.Reports.CompleteInformationReport;
+import com.school.miniinter.models.Reports.CompleteInformationReportStudent;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -39,7 +39,7 @@ public class Observations extends HttpServlet {
 
     public void readAllReports(int id_student, HttpServletRequest request,
                                HttpServletResponse response) throws ServletException, IOException{
-        List<CompleteInformationReport> list =
+        List<CompleteInformationReportStudent> list =
                 reportsDAO.readAllCompleteInfoReport(id_student);
 
         request.setAttribute("List",list);
@@ -52,7 +52,7 @@ public class Observations extends HttpServlet {
     public void readReportsByType(int id_student,
                                   String type, HttpServletRequest request,
                            HttpServletResponse response) throws ServletException, IOException{
-        List<CompleteInformationReport> list =
+        List<CompleteInformationReportStudent> list =
                 reportsDAO.readCompleteInfoReportByType(id_student,type);
         request.setAttribute("List",list);
 
