@@ -17,12 +17,12 @@ import java.util.List;
 @WebServlet(name = "studentReports",  urlPatterns = "/studentReports")
 public class StudentReports extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         String idStudentRaw = req.getParameter("student");
 
         if (idStudentRaw == null || idStudentRaw.isBlank() || idStudentRaw.equals("null")) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/login.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/login.jsp");
         } else {
             ReportsDAO rep = new ReportsDAO();
 
@@ -35,7 +35,7 @@ public class StudentReports extends HttpServlet {
             Summary student = stud.readSummary(idStudent);
             session.setAttribute("student", student);
 
-            req.getRequestDispatcher("/WEB-INF/Teacher/studentReports.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/Teacher/reportsStudent.jsp").forward(req, resp);
         }
     }
 }
