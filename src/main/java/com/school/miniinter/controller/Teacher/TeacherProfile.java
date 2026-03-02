@@ -20,6 +20,30 @@ public class TeacherProfile extends HttpServlet {
     TeachersDAO teachersDAO = new TeachersDAO();
     SubjectsDAO subjectsDAO = new SubjectsDAO();
     public void doPost(HttpServletRequest request,
+                      HttpServletResponse response) throws ServletException,
+            IOException{
+        HttpSession session = request.getSession();
+        Integer id_teacher = (Integer) session.getAttribute("idTeacher");
+        Integer subject = (Integer)  session.getAttribute("subject");
+
+        String name_subject = subjectsDAO.read(subject).getName();
+
+        CompleteInfo completeInfo =
+                teachersDAO.readCompleteInfoTeacher(id_teacher);
+
+        completeInfo.setSubject(name_subject);
+
+        request.setAttribute("completeInfoTeacher",completeInfo);
+
+        List<AmountStudentByTeacher> amountStudentByTeacher =
+                teachersDAO.amountStudentByTeacherAndClass(id_teacher,subject);
+
+        request.setAttribute("amountStudentByTeacher",amountStudentByTeacher);
+
+        request.getRequestDispatcher("WEB-INF/Teacher/profileTeacher.jsp").forward(request,response);
+
+    }
+    public void doGet(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException,
             IOException{
         HttpSession session = request.getSession();
@@ -40,7 +64,7 @@ public class TeacherProfile extends HttpServlet {
 
         request.setAttribute("amountStudentByTeacher",amountStudentByTeacher);
 
-        request.getRequestDispatcher("WEB-INF/teacher/profileTeacher.jsp").forward(request,response);
+        request.getRequestDispatcher("WEB-INF/Teacher/profileTeacher.jsp").forward(request,response);
 
     }
 }

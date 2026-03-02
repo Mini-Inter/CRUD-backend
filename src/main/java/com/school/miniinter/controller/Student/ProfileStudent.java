@@ -15,6 +15,20 @@ import java.io.IOException;
 public class ProfileStudent extends HttpServlet {
 
     StudentsDAO studentsDAO = new StudentsDAO();
+    public void doPost(HttpServletRequest request,
+                       HttpServletResponse response) throws ServletException,
+            IOException{
+        HttpSession session = request.getSession();
+        Integer id_student = (Integer) session.getAttribute("idStudent");
+        System.out.println(id_student);
+
+        CompleteInfo completeInfo =
+                studentsDAO.readCompleteInfoStudent(id_student);
+
+        request.setAttribute("completeInfoStudent",completeInfo);
+
+        request.getRequestDispatcher("WEB-INF/Student/studentProfile.jsp").forward(request,response);
+    }
     public void doGet(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException,
             IOException{

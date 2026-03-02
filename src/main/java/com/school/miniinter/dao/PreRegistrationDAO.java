@@ -87,7 +87,7 @@ public class PreRegistrationDAO {
         try {
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT * FROM preRegistration WHERE cpf Like ? AND " +
+            sql = "SELECT * FROM preRegistration WHERE cpf = ? AND " +
                     "fk_student is null ";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 

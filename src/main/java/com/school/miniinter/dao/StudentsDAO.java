@@ -13,6 +13,8 @@ import com.school.miniinter.models.Teacher.Teacher;
 
 import java.sql.*;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class StudentsDAO {
 
     String sql = "";
     DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
-            new Locale("en","US"));
+            new Locale("pt","BR"));
 
     public int delete(int id){
         
@@ -90,13 +92,14 @@ public class StudentsDAO {
             pstmt.setString(1,student.getFull_name());
             pstmt.setString(2,student.getFirst_name());
             pstmt.setString(3,student.getLast_name());
-            pstmt.setDate(4, Date.valueOf(format.format(student.getBirth_date())));
+            java.util.Date utilDate = format.parse(student.getBirth_date());
+            pstmt.setDate(4, new Date(utilDate.getDate()));
             pstmt.setString(5,student.getLogin());
             pstmt.setString(6, student.getPassword());
 
             return pstmt.executeUpdate()>0;
 
-        }catch(SQLException sqle){
+        }catch(SQLException |ParseException sqle ){
             sqle.printStackTrace();
             return false;
         }
@@ -120,6 +123,25 @@ public class StudentsDAO {
             pstmt.setString(6,student.getLogin());
             pstmt.setString(7, student.getPassword());
             pstmt.setString(8, student.getPhone());
+
+            return pstmt.executeUpdate()>0;
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateImage(String url, int id_student){
+        Connection conn = null;
+        try{
+            conn = ConnectionFactory.connect();
+            sql = "UPDATE students SET profile_image_url = ? WHERE id_student" +
+                    " = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,url);
+            pstmt.setInt(2,id_student);
 
             return pstmt.executeUpdate()>0;
 
@@ -488,9 +510,11 @@ public class StudentsDAO {
                     "CURRENT_DATE) as school_year, CAST(s" +
                     ".created_at AS DATE) AS date_registration,CAST(s" +
                     ".birth_date AS DATE) AS birth_dateStudent,s.login AS " +
-                    "login, s.phone AS phone FROM" +
+                    "login, s.phone AS phone,a.formated_address,s" +
+                    ".profile_image_url FROM" +
                     " students s JOIN guardian g ON g.id_guardian = s" +
                     ".fk_guardian JOIN class c ON c.id_class = s.fk_class " +
+                    "JOIN address a ON a.id_address = s.fk_address" +
                     " WHERE s" +
                     ".id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -511,10 +535,12 @@ public class StudentsDAO {
                 Date birth_dateStudent = rs.getDate("birth_dateStudent");
                 String login = rs.getString("login");
                 String phone = rs.getString("phone");
+                String formated_address = rs.getString("formated_address");
+                String image = rs.getString("profile_image_url");
 
                 completeInfo = new CompleteInfo(full_name,id_student,
                         nameGuardian,studentClass,created_at,school_year,
-                        birth_dateStudent,login,phone);
+                        birth_dateStudent,login,phone,formated_address,image);
             }
             return completeInfo;
         }catch (SQLException sqle){
@@ -558,11 +584,10 @@ public class StudentsDAO {
         try{
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT count(h.*) AS amount_of_subjects FROM students s " +
-                    "JOIN class" +
-                    " c ON s" +
-                    ".fk_class = c.id_class JOIN has h ON c.id_class = h" +
-                    ".fk_class WHERE s.id_student = ?";
+            sql = "SELECT count(t.*) AS amount_of_subjects FROM students s " +
+                    "JOIN class c ON s.fk_class = c.id_class JOIN teachingAssignment t ON t" +
+                    ".fk_class = c.id_class WHERE s" +
+                    ".id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_student);

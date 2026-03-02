@@ -373,7 +373,13 @@ public class TeachersDAO {
         try{
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT te.full_name,te.created_at AS date_admission, EXTRACT(YEAR FROM CURRENT_DATE) as school_year,te.birth_date,te.login,te.phone FROM teachers te WHERE te.id_employee = ?";
+            sql = "SELECT te.full_name,te.created_at AS date_admission, " +
+                    "EXTRACT(YEAR FROM CURRENT_DATE) as school_year,te" +
+                    ".birth_date,te.login,te.phone,a.formated_address, te" +
+                    ".profile_image_url FROM " +
+                    "teachers te JOIN " +
+                    "address a ON te.fk_address = a.id_address WHERE te" +
+                    ".id_employee = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_teacher);
@@ -387,9 +393,12 @@ public class TeachersDAO {
                 Date birth_date = rs.getDate("birth_date");
                 String login = rs.getString("login");
                 String phone = rs.getString("phone");
+                String formated_address = rs.getString("formated_address");
+                String imgUrl =rs.getString("profile_image_url");
 
                 completeInfo = new CompleteInfo(date_admission,full_name,
-                        school_year,"Ativo",birth_date,login,phone);
+                        school_year,"Ativo",birth_date,login,phone,
+                        formated_address,imgUrl);
             }
             return completeInfo;
         }catch(SQLException sqle){
@@ -489,6 +498,25 @@ public class TeachersDAO {
             sqle.printStackTrace();
             return false;
         } 
+    }
+
+    public boolean updateImage(String url, int id_teacher){
+        Connection conn = null;
+        try{
+            conn = ConnectionFactory.connect();
+            sql = "UPDATE teachers SET profile_image_url = ? WHERE " +
+                    "id_employee = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,url);
+            pstmt.setInt(2,id_teacher);
+
+            return pstmt.executeUpdate()>0;
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return false;
+        }
     }
 
     public int delete(int id) {
