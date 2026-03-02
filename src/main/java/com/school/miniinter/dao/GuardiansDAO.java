@@ -5,13 +5,14 @@ import com.school.miniinter.models.Guardian.Guardian;
 
 import java.sql.*;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
 public class GuardiansDAO {
     DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
-            new Locale("en","US"));
+            new Locale("pt","BR"));
 
     public List<Guardian> read() {
         
@@ -55,10 +56,11 @@ public class GuardiansDAO {
             pstmt.setString(1,g.getName());
             pstmt.setString(2,g.getFirstName());
             pstmt.setString(3,g.getLastName());
-            pstmt.setDate(4,Date.valueOf(format.format(g.getBirthDate())));
+            java.util.Date utilDate = format.parse(g.getBirthDate());
+            pstmt.setDate(4,new Date(utilDate.getTime()));
 
             return pstmt.execute();
-        } catch (SQLException exc) {
+        } catch (SQLException | ParseException exc) {
             exc.printStackTrace();
             return false;
         } 

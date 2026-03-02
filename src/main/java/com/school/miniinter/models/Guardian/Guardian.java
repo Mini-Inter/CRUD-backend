@@ -56,7 +56,9 @@ public class Guardian {
     public String getBirthDate() {
         return birthDate;
     }
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
+    public void setBirthDate(Date birthDate) {
+        DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+                new Locale("pt","BR"));
+        this.birthDate = format.format(birthDate);
     }
 }

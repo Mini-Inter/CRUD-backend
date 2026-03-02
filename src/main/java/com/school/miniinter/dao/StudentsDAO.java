@@ -93,7 +93,7 @@ public class StudentsDAO {
             pstmt.setString(2,student.getFirst_name());
             pstmt.setString(3,student.getLast_name());
             java.util.Date utilDate = format.parse(student.getBirth_date());
-            pstmt.setDate(4, new Date(utilDate.getDate()));
+            pstmt.setDate(4, new Date(utilDate.getTime()));
             pstmt.setString(5,student.getLogin());
             pstmt.setString(6, student.getPassword());
 
@@ -417,7 +417,8 @@ public class StudentsDAO {
         try {
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT S.created_at, S.phone, G.full_name AS \"guardian\", S.login, S.birth_date ,S.id_student, S.full_name, C.series, C.classroom, avg(Gr.value) \"AVG\" FROM students S " +
+            sql = "SELECT S.birth_date, S.created_at, S.phone, G.full_name AS" +
+                    " \"guardian\", S.login ,S.id_student, S.full_name, C.series, C.classroom, avg(Gr.value) \"AVG\" FROM students S " +
                     "JOIN guardian G ON S.fk_guardian = G.id_guardian " +
                     "JOIN class C ON S.fk_class = C.id_class " +
                     "LEFT JOIN has H ON C.id_class = H.fk_class " +
@@ -429,7 +430,7 @@ public class StudentsDAO {
 
             ResultSet rs = stmt.executeQuery(sql);
 
-            while (rs.next()) {
+            while(rs.next()) {
                 int id_student = rs.getInt("id_student");
                 char classroom = rs.getString("classroom").charAt(0);
                 char series = rs.getString("series").charAt(0);

@@ -11,15 +11,16 @@ import com.school.miniinter.models.Teacher.Teacher;
 
 import javax.swing.plaf.nimbus.State;
 import java.sql.*;
+import java.sql.Date;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.*;
-import java.util.Date;
 
 public class TeachersDAO {
 
     String sql;
     DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
-            new Locale("en","US"));
+            new Locale("pt","BR"));
 
     public boolean insert(Teacher teacher){
         
@@ -36,13 +37,14 @@ public class TeachersDAO {
             pstmt.setString(1,teacher.getLastName());
             pstmt.setString(2,teacher.getFirstName());
             pstmt.setString(3,teacher.getName());
-            pstmt.setDate(4, java.sql.Date.valueOf((format.format(teacher.getBirthDate()))));
+            java.util.Date utilDate = format.parse(teacher.getBirthDate());
+            pstmt.setDate(4, new Date(utilDate.getTime()));
             pstmt.setString(5,teacher.getLogin());
             pstmt.setString(6,teacher.getPhone());
             pstmt.setString(7,teacher.getPassword());
 
             return pstmt.execute();
-        }catch(SQLException sqle){
+        }catch(SQLException | ParseException sqle){
             sqle.printStackTrace();
             return false;
         }

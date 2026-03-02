@@ -99,8 +99,10 @@ public class Students {
         return birth_date;
     }
 
-    public void setBirth_date(String birth_date) {
-        this.birth_date = birth_date;
+    public void setBirth_date(Date birth_date) {
+        DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+                new Locale("pt","BR"));
+        this.birth_date = format.format(birth_date);
     }
 
     public String getLogin() {

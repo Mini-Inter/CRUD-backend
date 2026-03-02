@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @WebServlet(name="adminGuardians", urlPatterns = "/adminGuardians")
@@ -98,7 +99,7 @@ public class AdminGuardians extends HttpServlet {
     private void insertGuardian(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException{
         try {
             String name = req.getParameter("name");
-            Date date = Date.valueOf(req.getParameter("birth"));
+            Date date = Date.valueOf(LocalDate.parse(req.getParameter("birth")));
 
             Guardian guardianInsert = new Guardian(name, date);
 
@@ -133,7 +134,7 @@ public class AdminGuardians extends HttpServlet {
                 guardian.setName(nome);
             }
             if (!birth.equals(guardian.getBirthDate())) {
-                guardian.setBirthDate(String.valueOf(birth));
+                guardian.setBirthDate(birth);
             }
 
             if (gar.update(guardian)) {
