@@ -32,7 +32,7 @@ public class AuthenticationSystem extends HttpServlet {
         auth(req, resp);
     }
 
-    // Métodos principais
+    // Método de redirecionamento
     private void auth(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         String type = req.getParameter("type");
         switch (type) {
@@ -53,6 +53,8 @@ public class AuthenticationSystem extends HttpServlet {
             }
         }
     }
+
+    // Métodos principais
     private void login(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         String login = req.getParameter("login").toLowerCase().strip();
         String password = req.getParameter("pw");
@@ -125,7 +127,8 @@ public class AuthenticationSystem extends HttpServlet {
 
         try {
             if (!EmailUtils.verifyEmail(login)){
-                login = login.substring(0, login.indexOf("@"));
+                if (login.contains("@"))
+                    login = login.substring(0, login.indexOf("@"));
                 throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
             }
             login = login.substring(0, login.indexOf("@"));
@@ -141,7 +144,7 @@ public class AuthenticationSystem extends HttpServlet {
             String error = "Alguns dados não foram preenchidos!";
             HttpSession session = req.getSession();
             session.setAttribute("error", error);
-            session.setAttribute("login", login);
+            session.setAttribute("login", login+"@vidya.org.br");
             session.setAttribute("password", password);
             resp.sendRedirect(req.getContextPath() + "/Inicio/loginaa.jsp");
         }
@@ -149,7 +152,7 @@ public class AuthenticationSystem extends HttpServlet {
             String error = exc.getMessage();
             HttpSession session = req.getSession();
             session.setAttribute("error", error);
-            session.setAttribute("login", login);
+            session.setAttribute("login", login+"@vidya.org.br");
             session.setAttribute("password", password);
             resp.sendRedirect(req.getContextPath() + "/Inicio/loginaa.jsp");
         }
@@ -171,7 +174,7 @@ public class AuthenticationSystem extends HttpServlet {
             HttpSession session = req.getSession();
             session.setAttribute("error", error);
             session.setAttribute("cpf", cpf);
-            resp.sendRedirect(req.getContextPath() + "/inicio/login.jsp");
+            resp.sendRedirect(req.getContextPath() + "/Inicio/login.jsp");
         }
     }
     private void signUp(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
@@ -234,7 +237,6 @@ public class AuthenticationSystem extends HttpServlet {
                     ".jsp");
         }
     }
-
 
     // Métodos auxiliares
     private int verifyLogin(String login, String pw) throws NullPointerException {

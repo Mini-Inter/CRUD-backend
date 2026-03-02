@@ -27,13 +27,13 @@ public class AdminSubjects extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
-                case ("editSubject") -> {
+                case ("edit") -> {
                     editSubject(req, resp);
                 }
-                case ("createSubject") -> {
+                case ("create") -> {
                     createSubject(req,resp);
                 }
                 default -> {
@@ -52,7 +52,7 @@ public class AdminSubjects extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("insert") -> {
@@ -113,7 +113,7 @@ public class AdminSubjects extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminSubjects?type=createSubject").forward(req, resp);
+            req.getRequestDispatcher("adminSubjects?type=create").forward(req, resp);
         }
     }
     private void updateSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -142,7 +142,7 @@ public class AdminSubjects extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminSubjects?type=editSubject").forward(req, resp);
+            req.getRequestDispatcher("adminSubjects?type=edit").forward(req, resp);
         }
     }
     private void deleteSubject(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -160,11 +160,11 @@ public class AdminSubjects extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminSubjects?type=editSubject").forward(req, resp);
+            req.getRequestDispatcher("adminSubjects?type=edit").forward(req, resp);
         } catch (UnavailableException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", exc.getMessage());
-            req.getRequestDispatcher("adminSubjects?type=editSubject").forward(req, resp);
+            req.getRequestDispatcher("adminSubjects?type=edit").forward(req, resp);
         }
     }
 }

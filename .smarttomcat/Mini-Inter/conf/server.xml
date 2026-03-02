@@ -135,7 +135,7 @@
       <Host name="localhost"  appBase="webapps"
             unpackWARs="true" autoDeploy="true">
 
-        <!-- SingleSignOn valve, share authentication between web applications
+        <!-- SingleSignOn valve, share Inicio between web applications
              Documentation at: /docs/config/valve.html -->
         <!--
         <Valve className="org.apache.catalina.authenticator.SingleSignOn" />

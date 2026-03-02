@@ -29,7 +29,7 @@ public class AdminGuardians extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("edit") -> {
@@ -55,7 +55,7 @@ public class AdminGuardians extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("insert") -> {
@@ -148,7 +148,7 @@ public class AdminGuardians extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminGuardians?type=editGuardian").forward(req, resp);
+            req.getRequestDispatcher("adminGuardians?type=edit").forward(req, resp);
         }
     }
     private void deleteGuardian(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -167,11 +167,11 @@ public class AdminGuardians extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminGuardians?type=editGuardian").forward(req, resp);
+            req.getRequestDispatcher("adminGuardians?type=edit").forward(req, resp);
         } catch (UnavailableException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", exc.getMessage());
-            req.getRequestDispatcher("adminGuardians?type=editGuardian").forward(req, resp);
+            req.getRequestDispatcher("adminGuardians?type=edit").forward(req, resp);
         }
     }
 }

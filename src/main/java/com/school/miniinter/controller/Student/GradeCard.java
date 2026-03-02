@@ -23,7 +23,7 @@ public class GradeCard extends HttpServlet {
         Object idStudentRaw = session.getAttribute("idStudent");
 
         if (idStudentRaw == null) {
-            response.sendRedirect(request.getContextPath()+"/authentication/login.jsp");
+            response.sendRedirect(request.getContextPath()+"/Inicio/login.jsp");
         } else {
             int idStudent = (Integer) idStudentRaw;
 

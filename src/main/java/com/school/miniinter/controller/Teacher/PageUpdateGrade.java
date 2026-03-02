@@ -36,7 +36,7 @@ public class PageUpdateGrade extends HttpServlet {
         String changeClass = request.getParameter("changeClass");
 
         if(idTeacher == null){
-            response.sendRedirect(request.getContextPath()+"/authentication/login.jsp");
+            response.sendRedirect(request.getContextPath()+"/Inicio/login.jsp");
         }else{
             if(url.equals("/updateGrade") && changeClass == null) {
                 List<Class> list = classDAO.readClassByTeacherAndSubject(idTeacher,

@@ -22,7 +22,7 @@ public class StudentGrades extends HttpServlet {
         String idStudentRaw = req.getParameter("student");
 
         if (idStudentRaw == null || idStudentRaw.isBlank() || idStudentRaw.equals("null")) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/login.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/login.jsp");
         } else {
             int idStudent = Integer.parseInt(idStudentRaw);
             StudentsDAO stud = new StudentsDAO();

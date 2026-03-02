@@ -34,7 +34,7 @@ public class AdminReports extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("edit") -> {
@@ -59,7 +59,7 @@ public class AdminReports extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("insert") -> {
@@ -138,7 +138,7 @@ public class AdminReports extends HttpServlet {
         }catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminReports?type=createReport").forward(req, resp);
+            req.getRequestDispatcher("adminReports?type=create").forward(req, resp);
         }
     }
     private void updateReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -171,7 +171,7 @@ public class AdminReports extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminReports?type=editReports").forward(req, resp);
+            req.getRequestDispatcher("adminReports?type=edit").forward(req, resp);
         }
     }
     private void deleteReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -190,11 +190,11 @@ public class AdminReports extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminReports?type=editReports").forward(req, resp);
+            req.getRequestDispatcher("adminReports?type=edit").forward(req, resp);
         } catch (UnavailableException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", exc.getMessage());
-            req.getRequestDispatcher("adminReports?type=editReports").forward(req, resp);
+            req.getRequestDispatcher("adminReports?type=edit").forward(req, resp);
         }
     }
 }

@@ -27,7 +27,7 @@ public class TeacherReports extends HttpServlet {
         Object subject = session.getAttribute("subject");
 
         if (idTeacherRaw == null || subject == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/login.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/login.jsp");
         } else {
             int idTeacher = (Integer) idTeacherRaw;
             int idSubject = (Integer) subject;

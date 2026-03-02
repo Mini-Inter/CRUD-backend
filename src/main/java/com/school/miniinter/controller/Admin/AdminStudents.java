@@ -36,7 +36,7 @@ public class AdminStudents extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("edit") -> {
@@ -61,7 +61,7 @@ public class AdminStudents extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("update") -> {
@@ -163,7 +163,7 @@ public class AdminStudents extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminStudents?type=createStudent").forward(req, resp);
+            req.getRequestDispatcher("adminStudents?type=create").forward(req, resp);
         }
     }
     private void updateStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -226,7 +226,7 @@ public class AdminStudents extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminStudents?type=editStudent").forward(req, resp);
+            req.getRequestDispatcher("adminStudents?type=edit").forward(req, resp);
         }
     }
     private void deleteStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -245,7 +245,7 @@ public class AdminStudents extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminStudents?type=editStudent").forward(req, resp);
+            req.getRequestDispatcher("adminStudents?type=edit").forward(req, resp);
         } catch (UnavailableException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", exc.getMessage());

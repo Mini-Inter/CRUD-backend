@@ -11,7 +11,7 @@
     <title>Vidya</title>
 </head>
 <body>
-    <a href="authentication/login.jsp">Login</a>
-    <a href="${pageContext.request.contextPath}webapp/Inicio/loginaa.jsp">Area Restrita</a>
+    <a href="Inicio/login.jsp">Login</a>
+    <a href="${pageContext.request.contextPath}/webapp/Inicio/loginaa.jsp">Area Restrita</a>
 </body>
 </html>

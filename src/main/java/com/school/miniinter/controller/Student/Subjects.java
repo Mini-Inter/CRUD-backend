@@ -20,7 +20,7 @@ public class Subjects extends HttpServlet {
         Object idStudentRaw = session.getAttribute("idStudent");
 
         if (idStudentRaw == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/login.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/login.jsp");
         } else {
             int idStudent = (Integer) idStudentRaw;
 
