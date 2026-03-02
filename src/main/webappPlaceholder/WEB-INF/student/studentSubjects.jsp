@@ -24,9 +24,9 @@
         %>
     </table>
 
-    <form action="<%=request.getContextPath()%>/homeStudent" method="post"><input value="Home" type="submit"></form>
-    <form action="<%=request.getContextPath()%>/gradeCard" method="post"><input value="Boletim" type="submit"></form>
-    <form action="<%=request.getContextPath()%>/studentSubjects" method="post"><input value="Matérias" type="submit"></form>
-    <form action="<%=request.getContextPath()%>/observations" method="post"><input value="Observações" type="submit"></form>
+    <form action="${pageContext.request.contextPath}/homeStudent" method="post"><input value="Home" type="submit"></form>
+    <form action="${pageContext.request.contextPath}/gradeCard" method="post"><input value="Boletim" type="submit"></form>
+    <form action="${pageContext.request.contextPath}/studentSubjects" method="post"><input value="Matérias" type="submit"></form>
+    <form action="${pageContext.request.contextPath}/observations" method="post"><input value="Observações" type="submit"></form>
 </body>
 </html>

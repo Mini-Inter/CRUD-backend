@@ -27,7 +27,7 @@ public class HomeTeacher extends HttpServlet {
         Integer idSubject = (Integer) session.getAttribute("subject");
 
         if(idTeacherRaw == null || idSubject == null){
-            response.sendRedirect( request.getContextPath()+"/authentication/login.jsp");
+            response.sendRedirect( request.getContextPath()+"/Inicio/login.jsp");
         }else{
             int id_teacher = Integer.parseInt(String.valueOf(idTeacherRaw));
             HomeTeacherInfo homeTeacherInfo =

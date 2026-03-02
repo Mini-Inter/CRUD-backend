@@ -32,7 +32,7 @@ public class AdminClasses extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("edit") -> {
@@ -57,7 +57,7 @@ public class AdminClasses extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("insert") -> {
@@ -82,7 +82,7 @@ public class AdminClasses extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("classes", classes);
 
-        req.getRequestDispatcher("WEB-INF/admin/classes.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/class/classes.jsp").forward(req, resp);
     }
     private void editClass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Class classroom = classDAO.read(Integer.parseInt(req.getParameter("classroom")));
@@ -101,10 +101,10 @@ public class AdminClasses extends HttpServlet {
         Teaching[] aulas = assign.readByIdClas(classroom.getId());
         session.setAttribute("aulas", aulas);
 
-        req.getRequestDispatcher("WEB-INF/admin/classEdit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/class/classEdit.jsp").forward(req, resp);
     }
     private void createClass(HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException{
-        req.getRequestDispatcher("WEB-INF/admin/classInsert.jsp").forward(req,
+        req.getRequestDispatcher("WEB-INF/admin/class/classInsert.jsp").forward(req,
                 resp);
     }
 
@@ -139,7 +139,7 @@ public class AdminClasses extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("/adminClasses?type=createClass").forward(req,
+            req.getRequestDispatcher("/adminClasses?type=create").forward(req,
                     resp);
         }
     }
@@ -202,7 +202,7 @@ public class AdminClasses extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminClasses?type=editClass").forward(req, resp);
+            req.getRequestDispatcher("adminClasses?type=edit").forward(req, resp);
         }
     }
     private void deleteClass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -220,11 +220,11 @@ public class AdminClasses extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminClasses?type=editClass").forward(req, resp);
+            req.getRequestDispatcher("adminClasses?type=edit").forward(req, resp);
         } catch (UnavailableException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", exc.getMessage());
-            req.getRequestDispatcher("adminClasses?type=editClass").forward(req, resp);
+            req.getRequestDispatcher("adminClasses?type=edit").forward(req, resp);
         }
     }
 

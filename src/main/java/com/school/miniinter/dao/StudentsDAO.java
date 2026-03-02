@@ -180,8 +180,6 @@ public class StudentsDAO {
     } catch (SQLException sqle) {
         sqle.printStackTrace();
         return -1;
-    } finally {
-        ConnectionFactory.disconnect();
     }
 }
 
@@ -419,14 +417,14 @@ public class StudentsDAO {
         try {
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT S.created_at, S.phone, G.full_name AS \"guardian\", S.login ,S.id_student, S.full_name, C.series, C.classroom, avg(G.value) \"AVG\" FROM students S " +
+            sql = "SELECT S.created_at, S.phone, G.full_name AS \"guardian\", S.login ,S.id_student, S.full_name, C.series, C.classroom, avg(Gr.value) \"AVG\" FROM students S " +
                     "JOIN guardian G ON S.fk_guardian = G.id_guardian " +
                     "JOIN class C ON S.fk_class = C.id_class " +
                     "LEFT JOIN has H ON C.id_class = H.fk_class " +
                     "LEFT JOIN teach P on H.fk_teach = P.id " +
                     "LEFT JOIN subjects D ON P.fk_subject = D.id_subject " +
-                    "LEFT JOIN grades G on S.id_student = G.fk_student AND D.id_subject = G.fk_subject " +
-                    "GROUP BY 1, 2, 3, 4, 5, 6, D.id_subject";
+                    "LEFT JOIN grades Gr on S.id_student = Gr.fk_student AND D.id_subject = Gr.fk_subject " +
+                    "GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, D.id_subject";
             Statement stmt = conn.createStatement();
 
             ResultSet rs = stmt.executeQuery(sql);
@@ -449,8 +447,6 @@ public class StudentsDAO {
         }catch (SQLException sqle){
             sqle.printStackTrace();
             return null;
-        }finally{
-            ConnectionFactory.disconnect();
         }
     }
     public Summary readSummary(int idStudent, int idSubject) {

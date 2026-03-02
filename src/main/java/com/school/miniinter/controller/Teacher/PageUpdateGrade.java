@@ -31,10 +31,10 @@ public class PageUpdateGrade extends HttpServlet {
         int idSubject = (Integer) session.getAttribute("subject");
 
         if(idTeacher == null){
-            response.sendRedirect(request.getContextPath()+"/authentication/login.jsp");
+            response.sendRedirect(request.getContextPath()+"/Inicio/login.jsp");
         }else {
-            List<Class> list = classDAO.readClassByTeacherAndSubject(idTeacher,
-                    idSubject);
+                List<Class> list = classDAO.readClassByTeacherAndSubject(idTeacher,
+                        idSubject);
 
             if (list.isEmpty()) {
                 request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request

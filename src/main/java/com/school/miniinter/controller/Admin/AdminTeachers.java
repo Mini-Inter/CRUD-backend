@@ -31,7 +31,7 @@ public class AdminTeachers extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("edit") -> {
@@ -56,7 +56,7 @@ public class AdminTeachers extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("insert") -> {
@@ -81,17 +81,17 @@ public class AdminTeachers extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("teachers", teachers);
 
-        req.getRequestDispatcher("WEB-INF/admin/teachers.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/teacher/teachers.jsp").forward(req, resp);
     }
     private void editTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Teacher teacher = teach.read(Integer.parseInt(req.getParameter("teacher")));
         HttpSession session = req.getSession();
         session.setAttribute("teacher", teacher);
 
-        req.getRequestDispatcher("WEB-INF/admin/teacherEdit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/teacher/teacherEdit.jsp").forward(req, resp);
     }
     private void createTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-        req.getRequestDispatcher("WEB-INF/admin/teacherInsert.jsp").forward(req,resp);
+        req.getRequestDispatcher("WEB-INF/admin/teacher/teacherInsert.jsp").forward(req,resp);
     }
     private void insertTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
@@ -126,7 +126,7 @@ public class AdminTeachers extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminTeachers?type=createTeacher").forward(req, resp);
+            req.getRequestDispatcher("adminTeachers?type=create").forward(req, resp);
         }
     }
     private void updateTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -176,11 +176,11 @@ public class AdminTeachers extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminTeachers?type=editTeacher").forward(req, resp);
+            req.getRequestDispatcher("adminTeachers?type=edit").forward(req, resp);
         } catch (RuntimeException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", exc.getMessage());
-            req.getRequestDispatcher("adminTeachers?type=editTeacher").forward(req, resp);
+            req.getRequestDispatcher("adminTeachers?type=edit").forward(req, resp);
         }
     }
     private void deleteTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -198,11 +198,11 @@ public class AdminTeachers extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminTeachers?type=editTeacher").forward(req, resp);
+            req.getRequestDispatcher("adminTeachers?type=edit").forward(req, resp);
         } catch (UnavailableException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", exc.getMessage());
-            req.getRequestDispatcher("adminTeachers?type=editTeacher").forward(req, resp);
+            req.getRequestDispatcher("adminTeachers?type=edit").forward(req, resp);
         }
     }
 }

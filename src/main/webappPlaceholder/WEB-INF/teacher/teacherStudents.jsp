@@ -18,7 +18,7 @@
 </head>
 <body>
     <h1>Meus Alunos</h1>
-    <form action="<%=request.getContextPath()%>/teacherStudents>" method="post">
+    <form action="${pageContext.request.contextPath}/teacherStudents>" method="post">
         <input value="" name="matricula" id="matricula" placeholder="Buscar por matrícula" type="number">
         <input value="Buscar" type="submit">
     </form>
@@ -43,7 +43,7 @@
     <%
         for (Summary student : students) {
     %>
-            <form action="<%=request.getContextPath()%>/studentGrades?student=<%=student.getMatricula()%>" method="post">
+            <form action="${pageContext.request.contextPath}/studentGrades?student=<%=student.getMatricula()%>" method="post">
                     <tr>
                         <td><%=student.getName()%></td>
                         <td><%=student.getMatricula()%></td>
@@ -70,7 +70,7 @@
     <%
         }
     %>
-    <form action="<%=request.getContextPath()%>/changeSubject" method="post">
+    <form action="${pageContext.request.contextPath}/changeSubject" method="post">
         <label for="subject"></label>
         <select name="subject" id="subject">
             <%

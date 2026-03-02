@@ -24,7 +24,7 @@ public class TeacherStudents extends HttpServlet {
         Object idTeacherRaw = session.getAttribute("idTeacher");
 
         if (idTeacherRaw == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/login.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/login.jsp");
         } else {
             int idTeacher = (Integer) idTeacherRaw;
             List<Summary> summaries = new LinkedList<>();

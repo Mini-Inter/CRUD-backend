@@ -36,7 +36,7 @@ public class AdminStudents extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("edit") -> {
@@ -61,7 +61,7 @@ public class AdminStudents extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("update") -> {
@@ -86,7 +86,7 @@ public class AdminStudents extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("students", students);
 
-        req.getRequestDispatcher("WEB-INF/admin/students.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/student/students.jsp").forward(req, resp);
     }
     private void editStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -99,7 +99,7 @@ public class AdminStudents extends HttpServlet {
         Students students = studDAO.readById(idStudent);
         session.setAttribute("student",students);
 
-        req.getRequestDispatcher("WEB-INF/admin/studentEdit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/student/studentEdit.jsp").forward(req, resp);
     }
     private void createStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -113,7 +113,7 @@ public class AdminStudents extends HttpServlet {
         List<PreRegistration> preRegistrations = pre.readAllAvailableCpf();
         session.setAttribute("cpfs",preRegistrations);
 
-        req.getRequestDispatcher("WEB-INF/admin/studentInsert.jsp").forward(req,
+        req.getRequestDispatcher("WEB-INF/admin/student/studentInsert.jsp").forward(req,
                 resp);
     }
 
@@ -163,7 +163,7 @@ public class AdminStudents extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminStudents?type=createStudent").forward(req, resp);
+            req.getRequestDispatcher("adminStudents?type=create").forward(req, resp);
         }
     }
     private void updateStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -226,7 +226,7 @@ public class AdminStudents extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminStudents?type=editStudent").forward(req, resp);
+            req.getRequestDispatcher("adminStudents?type=edit").forward(req, resp);
         }
     }
     private void deleteStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -245,7 +245,7 @@ public class AdminStudents extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminStudents?type=editStudent").forward(req, resp);
+            req.getRequestDispatcher("adminStudents?type=edit").forward(req, resp);
         } catch (UnavailableException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", exc.getMessage());

@@ -34,7 +34,7 @@ public class AdminReports extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("edit") -> {
@@ -59,7 +59,7 @@ public class AdminReports extends HttpServlet {
         }
 
         if (admin == null) {
-            resp.sendRedirect(req.getContextPath()+"/authentication/loginaa.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/loginaa.jsp");
         } else {
             switch (type) {
                 case ("insert") -> {
@@ -84,7 +84,7 @@ public class AdminReports extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("reports", reports);
 
-        req.getRequestDispatcher("WEB-INF/admin/reports.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/report/reports.jsp").forward(req, resp);
     }
     private void editReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Reports report = rep.read(Integer.parseInt(req.getParameter("report")));
@@ -94,7 +94,7 @@ public class AdminReports extends HttpServlet {
         String[] students_report = rep.readCompleteReport(report.getId()).getStudents();
         session.setAttribute("students_report", students_report);
 
-        req.getRequestDispatcher("WEB-INF/admin/reportEdit.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/report/reportEdit.jsp").forward(req, resp);
     }
     private void createReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         TeachersDAO te = new TeachersDAO();
@@ -107,7 +107,7 @@ public class AdminReports extends HttpServlet {
 
         req.setAttribute("listStudents",listStudents);
 
-        req.getRequestDispatcher("WEB-INF/admin/reportInsert.jsp").forward(req,resp);
+        req.getRequestDispatcher("WEB-INF/admin/report/reportInsert.jsp").forward(req,resp);
 
     }
 
@@ -138,7 +138,7 @@ public class AdminReports extends HttpServlet {
         }catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminReports?type=createReport").forward(req, resp);
+            req.getRequestDispatcher("adminReports?type=create").forward(req, resp);
         }
     }
     private void updateReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -171,7 +171,7 @@ public class AdminReports extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminReports?type=editReports").forward(req, resp);
+            req.getRequestDispatcher("adminReports?type=edit").forward(req, resp);
         }
     }
     private void deleteReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -190,11 +190,11 @@ public class AdminReports extends HttpServlet {
         } catch (NullPointerException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminReports?type=editReports").forward(req, resp);
+            req.getRequestDispatcher("adminReports?type=edit").forward(req, resp);
         } catch (UnavailableException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", exc.getMessage());
-            req.getRequestDispatcher("adminReports?type=editReports").forward(req, resp);
+            req.getRequestDispatcher("adminReports?type=edit").forward(req, resp);
         }
     }
 }

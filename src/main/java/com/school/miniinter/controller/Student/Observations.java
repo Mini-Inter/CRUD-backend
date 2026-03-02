@@ -23,8 +23,7 @@ public class Observations extends HttpServlet {
         Object idStudentRaw = session.getAttribute("idStudent");
 
         if (idStudentRaw == null) {
-            response.sendRedirect(request.getContextPath()+"/Student/login" +
-                    ".jsp");
+            response.sendRedirect(request.getContextPath()+"/Inicio/login.jsp");
         } else {
             int idStudent = (Integer) idStudentRaw;
             String type = request.getParameter("filter");
@@ -44,7 +43,7 @@ public class Observations extends HttpServlet {
 
         request.setAttribute("List",list);
 
-        request.getRequestDispatcher("WEB-INF/Student/studentObservations" +
+        request.getRequestDispatcher("WEB-INF/student/studentObservations" +
                 ".jsp").forward(request,
                 response);
     }

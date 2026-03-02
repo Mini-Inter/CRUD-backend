@@ -28,8 +28,8 @@
     <p>Matrícula: <%=student.getMatricula()%></p>
     <p>Ano Letivo: <%=LocalDate.now().getYear()%></p>
 
-    <form action="<%=request.getContextPath()%>/studentReports?student=<%=student.getMatricula()%>" method="post"><input value="Observações" type="submit"></form>
-    <form action="<%=request.getContextPath()%>/studentGrades?student=<%=student.getMatricula()%>" method="post"><input value="Notas" type="submit"></form>
+    <form action="${pageContext.request.contextPath}/studentReports?student=<%=student.getMatricula()%>" method="post"><input value="Observações" type="submit"></form>
+    <form action="${pageContext.request.contextPath}/studentGrades?student=<%=student.getMatricula()%>" method="post"><input value="Notas" type="submit"></form>
 
     <table>
         <tr>
@@ -80,7 +80,7 @@
         %>
     </table>
 
-    <form action="<%=request.getContextPath()%>/changeSubject" method="post">
+    <form action="${pageContext.request.contextPath}/changeSubject" method="post">
         <label for="subject"></label>
         <select name="subject" id="subject">
             <%

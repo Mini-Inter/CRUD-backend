@@ -50,7 +50,7 @@
         }
     %>
 
-    <form action="<%=request.getContextPath()%>/changeSubject" method="post">
+    <form action="${pageContext.request.contextPath}/changeSubject" method="post">
         <label for="subject"></label>
         <select name="subject" id="subject">
             <%

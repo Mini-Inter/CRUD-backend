@@ -37,7 +37,7 @@
             session.setAttribute("error", null);
         }
     %>
-    <form action="<%=request.getContextPath()%>/auth?type=signup&pre=false" method="post">
+    <form action="${pageContext.request.contextPath}/auth?type=signup&pre=false" method="post">
         <label for="name">Nome Completo:</label>
         <input value="<%=name%>" id="name" name="name" type="text">
         <label for="birth">Data de Nascimento:</label>
