@@ -13,6 +13,8 @@ import com.school.miniinter.models.Teacher.Teacher;
 
 import java.sql.*;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class StudentsDAO {
 
     String sql = "";
     DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
-            new Locale("en","US"));
+            new Locale("pt","BR"));
 
     public int delete(int id){
         
@@ -90,13 +92,14 @@ public class StudentsDAO {
             pstmt.setString(1,student.getFull_name());
             pstmt.setString(2,student.getFirst_name());
             pstmt.setString(3,student.getLast_name());
-            pstmt.setDate(4, Date.valueOf(format.format(student.getBirth_date())));
+            java.util.Date utilDate = format.parse(student.getBirth_date());
+            pstmt.setDate(4, new Date(utilDate.getDate()));
             pstmt.setString(5,student.getLogin());
             pstmt.setString(6, student.getPassword());
 
             return pstmt.executeUpdate()>0;
 
-        }catch(SQLException sqle){
+        }catch(SQLException |ParseException sqle ){
             sqle.printStackTrace();
             return false;
         }
@@ -120,6 +123,25 @@ public class StudentsDAO {
             pstmt.setString(6,student.getLogin());
             pstmt.setString(7, student.getPassword());
             pstmt.setString(8, student.getPhone());
+
+            return pstmt.executeUpdate()>0;
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateImage(String url, int id_student){
+        Connection conn = null;
+        try{
+            conn = ConnectionFactory.connect();
+            sql = "UPDATE students SET profile_image_url = ? WHERE id_student" +
+                    " = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,url);
+            pstmt.setInt(2,id_student);
 
             return pstmt.executeUpdate()>0;
 
@@ -391,7 +413,6 @@ public class StudentsDAO {
 
     public List<Summary> readSummary() {
         Connection conn = null;
-        Summary sum;
         List<Summary> summaries = new LinkedList<>();
         try {
             conn = ConnectionFactory.connect();
@@ -409,17 +430,16 @@ public class StudentsDAO {
             ResultSet rs = stmt.executeQuery(sql);
 
             if(rs.next()) {
-                sum = new Summary();
-                sum.setMatricula(rs.getInt("id_student"));
-                sum.setClassroom(rs.getString("classroom").charAt(0));
-                sum.setSeries(Integer.parseInt(rs.getString("series")));
-                sum.setName(rs.getString("full_name"));
-                sum.setAverage(rs.getDouble("AVG"));
-                sum.setSituation(rs.getDouble("AVG")>=7);
-                sum.setEmail(rs.getString("login"));
-                sum.setGuardian(rs.getString("guardian"));
-                sum.setPhone(rs.getString("phone"));
-                sum.setCreatedAt(rs.getDate("created_at"));
+                int id_student = rs.getInt("id_student");
+                char classroom = rs.getString("classroom").charAt(0);
+                char series = rs.getString("series").charAt(0);
+                String name = rs.getString("full_name");
+                Double avg = rs.getDouble("AVG");
+                String login = rs.getString("login");
+                String guardian = rs.getString("guardian");
+                String phone = rs.getString("phone");
+                Date created_at = rs.getDate("created_at");
+                Summary sum =  new Summary(id_student,classroom,series,name,avg, login,guardian,phone,created_at);
                 summaries.add(sum);
             }
 
@@ -432,19 +452,22 @@ public class StudentsDAO {
     public Summary readSummary(int idStudent, int idSubject) {
         
         Connection conn = null;
-        Summary sum = new Summary();
         try {
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT S.created_at, S.phone, G.full_name AS \"guardian\", S.login ,S.id_student, S.full_name, C.series, C.classroom, avg(G.value) \"AVG\" FROM students S " +
+            sql = "SELECT S.created_at, S.phone, G.full_name AS \"guardian\"," +
+                    " S.login ,S.id_student, S.full_name, C.series, C" +
+                    ".classroom, ROUND(avg(Gr.value),2) \"AVG\" FROM students" +
+                    " S " +
                     "JOIN guardian G ON S.fk_guardian = G.id_guardian " +
                     "JOIN class C ON S.fk_class = C.id_class " +
                     "LEFT JOIN has H ON C.id_class = H.fk_class " +
                     "LEFT JOIN teach P on H.fk_teach = P.id " +
                     "LEFT JOIN subjects D ON P.fk_subject = D.id_subject " +
-                    "LEFT JOIN grades G on S.id_student = G.fk_student AND D.id_subject = G.fk_subject " +
+                    "LEFT JOIN grades Gr on S.id_student = Gr.fk_student AND " +
+                    "D.id_subject = Gr.fk_subject " +
                     "WHERE S.id_student = ? AND D.id_subject = ? " +
-                    "GROUP BY 1, 2, 3, 4, 5, 6, D.id_subject";
+                    "GROUP BY 1, 2, 3, 4, 5, 6, 7,8";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,idStudent);
@@ -452,17 +475,17 @@ public class StudentsDAO {
 
             ResultSet rs = pstmt.executeQuery();
             if(rs.next()) {
-                sum.setMatricula(rs.getInt("id_student"));
-                sum.setClassroom(rs.getString("classroom").charAt(0));
-                sum.setSeries(Integer.parseInt(rs.getString("series")));
-                sum.setName(rs.getString("full_name"));
-                sum.setAverage(rs.getDouble("AVG"));
-                sum.setSituation(rs.getDouble("AVG")>=7);
-                sum.setEmail(rs.getString("login"));
-                sum.setGuardian(rs.getString("guardian"));
-                sum.setPhone(rs.getString("phone"));
-                sum.setCreatedAt(rs.getDate("created_at"));
-                return sum;
+                int id_student = rs.getInt("id_student");
+                char classroom = rs.getString("classroom").charAt(0);
+                char series = rs.getString("series").charAt(0);
+                String name = rs.getString("full_name");
+                Double avg = rs.getDouble("AVG");
+                String login = rs.getString("login");
+                String guardian = rs.getString("guardian");
+                String phone = rs.getString("phone");
+                Date created_at = rs.getDate("created_at");
+                return new Summary(id_student,classroom,series,name,avg,login
+                        ,guardian,phone,created_at);
             }
 
             return null;
@@ -483,9 +506,11 @@ public class StudentsDAO {
                     "CURRENT_DATE) as school_year, CAST(s" +
                     ".created_at AS DATE) AS date_registration,CAST(s" +
                     ".birth_date AS DATE) AS birth_dateStudent,s.login AS " +
-                    "login, s.phone AS phone FROM" +
+                    "login, s.phone AS phone,a.formated_address,s" +
+                    ".profile_image_url FROM" +
                     " students s JOIN guardian g ON g.id_guardian = s" +
                     ".fk_guardian JOIN class c ON c.id_class = s.fk_class " +
+                    "JOIN address a ON a.id_address = s.fk_address" +
                     " WHERE s" +
                     ".id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -506,10 +531,12 @@ public class StudentsDAO {
                 Date birth_dateStudent = rs.getDate("birth_dateStudent");
                 String login = rs.getString("login");
                 String phone = rs.getString("phone");
+                String formated_address = rs.getString("formated_address");
+                String image = rs.getString("profile_image_url");
 
                 completeInfo = new CompleteInfo(full_name,id_student,
                         nameGuardian,studentClass,created_at,school_year,
-                        birth_dateStudent,login,phone);
+                        birth_dateStudent,login,phone,formated_address,image);
             }
             return completeInfo;
         }catch (SQLException sqle){
@@ -520,8 +547,7 @@ public class StudentsDAO {
 
     public Summary readSummary(int idStudent) {
         
-        Connection conn = null;
-        Summary sum = new Summary();
+        Connection conn;
         try {
             conn = ConnectionFactory.connect();
 
@@ -534,11 +560,11 @@ public class StudentsDAO {
 
             ResultSet rs = pstmt.executeQuery();
             if(rs.next()) {
-                sum.setMatricula(rs.getInt("id_student"));
-                sum.setClassroom(rs.getString("classroom").charAt(0));
-                sum.setSeries(Integer.parseInt(rs.getString("series")));
-                sum.setName(rs.getString("full_name"));
-                return sum;
+                int id_student = rs.getInt("id_student");
+                char classroom = rs.getString("classroom").charAt(0);
+                char series = rs.getString("series").charAt(0);
+                String name = rs.getString("full_name");
+                return new Summary(id_student,classroom,series,name);
             }
 
             return null;
@@ -554,11 +580,10 @@ public class StudentsDAO {
         try{
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT count(h.*) AS amount_of_subjects FROM students s " +
-                    "JOIN class" +
-                    " c ON s" +
-                    ".fk_class = c.id_class JOIN has h ON c.id_class = h" +
-                    ".fk_class WHERE s.id_student = ?";
+            sql = "SELECT count(t.*) AS amount_of_subjects FROM students s " +
+                    "JOIN class c ON s.fk_class = c.id_class JOIN teachingAssignment t ON t" +
+                    ".fk_class = c.id_class WHERE s" +
+                    ".id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_student);

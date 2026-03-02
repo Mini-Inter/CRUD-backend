@@ -17,7 +17,7 @@ import java.util.List;
 @WebServlet(name = "StudentGrades", urlPatterns = "/studentGrades")
 public class StudentGrades extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         String idStudentRaw = req.getParameter("student");
 
@@ -33,7 +33,7 @@ public class StudentGrades extends HttpServlet {
             List<GradeForSubject> grades = teach.readGradesByStudent(idStudent);
             session.setAttribute("grades", grades);
 
-            req.getRequestDispatcher("/WEB-INF/teacher/studentGrades.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/Teacher/gradesStudent.jsp").forward(req, resp);
         }
     }
 }

@@ -8,13 +8,13 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebServlet(name = "changeSubject", urlPatterns = "/changeSubject")
+@WebServlet(name = "changeSubject", value = {"/changeSubject"})
 public class SubjectUtils extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         int idSubject = Integer.parseInt(req.getParameter("subject"));
         session.setAttribute("subject", idSubject);
-        req.getRequestDispatcher("/homeTeacher").forward(req, resp);
+        req.getRequestDispatcher("homeTeacher").forward(req, resp);
     }
 }

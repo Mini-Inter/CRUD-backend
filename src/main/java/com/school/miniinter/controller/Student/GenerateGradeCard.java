@@ -28,7 +28,6 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 @WebServlet(name="GerarBoletim", value={"/generateGradeCard"})
@@ -71,7 +70,8 @@ public class GenerateGradeCard extends HttpServlet {
                 new Paragraph("Boletim Escolar").setBold().setFontSize(18);
 
         ImageData imageData = ImageDataFactory.create(
-                getServletContext().getRealPath("/img/logo.png")
+                getServletContext().getRealPath("/assets/assetsStudent/Vydia" +
+                        "-logo.jpg")
         );
 
         Image logo = new Image(imageData);
@@ -195,7 +195,8 @@ public class GenerateGradeCard extends HttpServlet {
         document.add(new Paragraph("\nMF - Média Final"));
 
         ImageData regraMedia = ImageDataFactory.create(
-                getServletContext().getRealPath("/img/regraMedia.png")
+                getServletContext().getRealPath("/assets/assetsStudent" +
+                        "/regra-media.png")
         );
 
         Image img = new Image(regraMedia);

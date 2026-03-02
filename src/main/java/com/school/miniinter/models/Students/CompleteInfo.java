@@ -17,12 +17,14 @@ public class CompleteInfo {
     private String birth_date;
     private String login;
     private String phone;
+    private String formated_address;
+    private String urlImage;
 
     public CompleteInfo(String full_name, Integer id_student,
                         String firstName_guardian, Class studentClass,
                         Date created_at,Integer school_year, Date birth_date,
                         String login,
-                        String phone) {
+                        String phone, String formated_address,String urlImage) {
         DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
                 new Locale("pt","BR"));
         this.full_name = full_name;
@@ -35,6 +37,8 @@ public class CompleteInfo {
         this.phone = phone;
         this.school_year = school_year;
         this.status = "Ativo";
+        this.formated_address = formated_address;
+        this.urlImage = urlImage;
     }
 
     public String getFull_name() {
@@ -117,6 +121,21 @@ public class CompleteInfo {
         this.phone = phone;
     }
 
+    public String getFormated_address() {
+        return formated_address;
+    }
+
+    public void setFormated_address(String formated_address) {
+        this.formated_address = formated_address;
+    }
+
+    public String getUrlImage() {
+        return urlImage;
+    }
+
+    public void setUrlImage(String urlImage) {
+        this.urlImage = urlImage;
+    }
 
     @Override
     public String toString() {

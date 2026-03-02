@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 @WebServlet(name = "Students", urlPatterns = "/teacherStudents")
 public class TeacherStudents extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         Object idTeacherRaw = session.getAttribute("idTeacher");
 
@@ -37,11 +37,12 @@ public class TeacherStudents extends HttpServlet {
                 int idStudent = Integer.parseInt(idStudentRaw);
                 students = filterById(students, idStudent);
             }
-            for (Students student : students)
+            for (Students student : students) {
                 summaries.add(stud.readSummary(student.getId_student(), idSubject));
+            }
             session.setAttribute("students", summaries);
 
-            req.getRequestDispatcher("/WEB-INF/teacher/teacherStudents.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/Teacher/studentsTeacher.jsp").forward(req, resp);
         }
     }
 

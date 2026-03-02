@@ -103,7 +103,7 @@ public class AuthenticationSystem extends HttpServlet {
             session.setAttribute("error", error);
             session.setAttribute("login", login+"@vidya.org.br");
             session.setAttribute("password", password);
-            resp.sendRedirect(req.getContextPath() + "/Inicio/login.jsp");
+            resp.sendRedirect("/Inicio/login.jsp");
         }
         catch (RuntimeException exc) {
             String error = exc.getMessage();
@@ -165,7 +165,8 @@ public class AuthenticationSystem extends HttpServlet {
                 HttpSession session = req.getSession();
                 session.setAttribute("cpf", cpf);
                 session.setAttribute("preRegistered", true);
-                req.getRequestDispatcher("/inicio/cadastro.jsp").forward(req,
+                req.getRequestDispatcher( "/Inicio" +
+                        "/cadastro.jsp").forward(req,
                         resp);
             } else
                 throw new RuntimeException("CPF não cadastrado para registro!");
@@ -194,23 +195,28 @@ public class AuthenticationSystem extends HttpServlet {
                 if ( name.isEmpty() || birthDateString.isEmpty() || login.isEmpty() || password.isEmpty() || passConf.isEmpty())
                     throw new NullPointerException("Alguns dados não foram preenchidos!");
 
-                Date birthDate = Date.valueOf(birthDateString);
-                int idade =LocalDate.now().getYear()-birthDate.toLocalDate().getYear();
+                Date birthDate = Date.valueOf(LocalDate.parse(birthDateString));
+                int idade = LocalDate.now().getYear()-birthDate.toLocalDate().getYear();
 
                 Pattern fullName = Pattern.compile("^[A-Za-z]+ [A-Za-z]+ ?[A-Za-z ]*?");
                 Matcher match = fullName.matcher(name);
-                if (!match.find())
+                if (!match.find()) {
                     throw new RuntimeException("Nome digitado incorretamente");
-                if (5>idade || idade>20)
+                }
+                if (5>idade || idade>20) {
                     throw new RuntimeException("Data de nascimento preenchida incorretamente");
-                if (!EmailUtils.verifyEmail(login))
+                }
+                if (!EmailUtils.verifyEmail(login)){
                     throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
-                if (!password.equals(passConf))
+                }
+                if (!password.equals(passConf)) {
                     throw new RuntimeException("Senhas não são iguais");
+                }
 
                 PreRegistration preModel =
                         preDAO.read((String)session.getAttribute(
                         "cpf"));
+                login = login.substring(0,login.indexOf('@'));
                 String hasedPassword = HashConfig.hashSenha(password);
                 Students student = new Students(name,birthDate,login,hasedPassword);
                 stud.insertInitial(student);
@@ -224,7 +230,7 @@ public class AuthenticationSystem extends HttpServlet {
                 session.setAttribute("error", error);
                 session.setAttribute("name", name);
                 session.setAttribute("birth", birthDateString);
-                session.setAttribute("email", login+"@vidya.org.br");
+                session.setAttribute("email", login);
                 session.setAttribute("pw", password);
                 session.setAttribute("pc", passConf);
                 resp.sendRedirect(req.getContextPath()+"/Inicio/cadastro.jsp");

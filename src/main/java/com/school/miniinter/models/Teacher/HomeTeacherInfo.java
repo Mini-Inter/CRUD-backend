@@ -5,6 +5,7 @@ import java.util.List;
 public class HomeTeacherInfo {
 
     private String full_name;
+    private String first_name;
     private String subject;
     private Integer amountStudents;
     private Integer amountClass;
@@ -50,11 +51,20 @@ public class HomeTeacherInfo {
         this.amountObservations = amountObservations;
     }
 
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
     @Override
     public String toString() {
         return "HomeTeacherInfo{" +
                 "full_name='" + full_name + '\'' +
-                ", subjects=" + subject +
+                ", first_name='" + first_name + '\'' +
+                ", subject='" + subject + '\'' +
                 ", amountStudents=" + amountStudents +
                 ", amountClass=" + amountClass +
                 ", amountObservations=" + amountObservations +
