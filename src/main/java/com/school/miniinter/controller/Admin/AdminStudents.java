@@ -128,7 +128,7 @@ public class AdminStudents extends HttpServlet {
             int idClass = Integer.parseInt(req.getParameter("classroom"));
             String name = req.getParameter("name");
             String email = req.getParameter("email");
-            Date birth =  Date.valueOf(req.getParameter("birth"));
+            Date birth = Date.valueOf(LocalDate.parse(req.getParameter("birth")));
             String password = req.getParameter("pass");
             String phone = req.getParameter("phone");
 
@@ -140,7 +140,7 @@ public class AdminStudents extends HttpServlet {
             student.setFk_class(idClass);
             student.setFull_name(name);
             student.setLogin(email);
-            student.setBirth_date(String.valueOf(birth));
+            student.setBirth_date(birth);
             student.setPhone(phone);
             try{
                 password = HashConfig.hashSenha(password);
@@ -174,7 +174,8 @@ public class AdminStudents extends HttpServlet {
             int idClass = Integer.parseInt(req.getParameter("classroom"));
             String nome = req.getParameter("name");
             String email = req.getParameter("email");
-            Date birth =  Date.valueOf(req.getParameter("birth"));
+            Date birth =  Date.valueOf(LocalDate.parse(req.getParameter(
+                    "birth")));
             String password = req.getParameter("pass");
             String phone = req.getParameter("phone");
 
@@ -193,7 +194,7 @@ public class AdminStudents extends HttpServlet {
                 student.setLogin(email);
             }
             if (!birth.equals(student.getBirth_date())) {
-                student.setBirth_date(String.valueOf(birth));
+                student.setBirth_date(birth);
             }
             if (!phone.equals(student.getPhone())) {
                 student.setPhone(phone);

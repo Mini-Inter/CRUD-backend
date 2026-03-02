@@ -5,6 +5,7 @@ import com.school.miniinter.models.Administrator.Administrator;
 
 import java.sql.*;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -12,7 +13,7 @@ import java.util.Locale;
 public class AdministratorsDAO {
 
     DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
-            new Locale("en","US"));
+            new Locale("pt","BR"));
 
     public int insert(Administrator admin){
         Connection conn = null;
@@ -26,7 +27,8 @@ public class AdministratorsDAO {
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1,admin.getName());
-            pstmt.setDate(2,Date.valueOf(format.format(admin.getBirthDate())));
+            java.util.Date utilDate = format.parse(admin.getBirthDate());
+            pstmt.setDate(2,new Date(utilDate.getTime()));
             pstmt.setString(3,admin.getType());
             pstmt.setString(4,admin.getLogin());
             pstmt.setString(5,admin.getPassword());
@@ -37,7 +39,7 @@ public class AdministratorsDAO {
             } else {
                 return 0;
             }
-        }catch(SQLException sqle){
+        }catch(SQLException | ParseException sqle){
             sqle.printStackTrace();
             return -1;
         }

@@ -43,12 +43,12 @@ public class CompleteReport {
     public void setType(String type) {
         this.type = type;
     }
+    DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+            new Locale("pt","BR"));
     public String getSend_at() {
-        DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
-                new Locale("pt","BR"));
-        return format.format(this.send_at);
+        return this.send_at;
     }
     public void setSend_at(Date send_at) {
-        this.send_at = String.valueOf(send_at);
+        this.send_at = format.format(send_at);
     }
 }

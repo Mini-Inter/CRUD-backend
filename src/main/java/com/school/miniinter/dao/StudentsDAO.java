@@ -93,7 +93,7 @@ public class StudentsDAO {
             pstmt.setString(2,student.getFirst_name());
             pstmt.setString(3,student.getLast_name());
             java.util.Date utilDate = format.parse(student.getBirth_date());
-            pstmt.setDate(4, new Date(utilDate.getDate()));
+            pstmt.setDate(4, new Date(utilDate.getTime()));
             pstmt.setString(5,student.getLogin());
             pstmt.setString(6, student.getPassword());
 
@@ -417,19 +417,20 @@ public class StudentsDAO {
         try {
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT S.created_at, S.phone, G.full_name AS \"guardian\", S.login ,S.id_student, S.full_name, C.series, C.classroom, avg(Gr.value) \"AVG\" FROM students S " +
+            sql = "SELECT S.birth_date, S.created_at, S.phone, G.full_name AS" +
+                    " \"guardian\", S.login ,S.id_student, S.full_name, C.series, C.classroom, avg(Gr.value) \"AVG\" FROM students S " +
                     "JOIN guardian G ON S.fk_guardian = G.id_guardian " +
                     "JOIN class C ON S.fk_class = C.id_class " +
                     "LEFT JOIN has H ON C.id_class = H.fk_class " +
                     "LEFT JOIN teach P on H.fk_teach = P.id " +
                     "LEFT JOIN subjects D ON P.fk_subject = D.id_subject " +
                     "LEFT JOIN grades Gr on S.id_student = Gr.fk_student AND D.id_subject = Gr.fk_subject " +
-                    "GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, D.id_subject";
+                    "GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, D.id_subject";
             Statement stmt = conn.createStatement();
 
             ResultSet rs = stmt.executeQuery(sql);
 
-            if(rs.next()) {
+            while(rs.next()) {
                 int id_student = rs.getInt("id_student");
                 char classroom = rs.getString("classroom").charAt(0);
                 char series = rs.getString("series").charAt(0);
@@ -439,7 +440,9 @@ public class StudentsDAO {
                 String guardian = rs.getString("guardian");
                 String phone = rs.getString("phone");
                 Date created_at = rs.getDate("created_at");
-                Summary sum =  new Summary(id_student,classroom,series,name,avg, login,guardian,phone,created_at);
+                Date birth_date = rs.getDate("birth_date");
+                Summary sum =  new Summary(id_student,classroom,series,name,
+                        avg, login,guardian,phone,created_at, birth_date);
                 summaries.add(sum);
             }
 
@@ -455,7 +458,8 @@ public class StudentsDAO {
         try {
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT S.created_at, S.phone, G.full_name AS \"guardian\"," +
+            sql = "SELECT S.birth_date, S.created_at, S.phone, G.full_name AS" +
+                    " \"guardian\"," +
                     " S.login ,S.id_student, S.full_name, C.series, C" +
                     ".classroom, ROUND(avg(Gr.value),2) \"AVG\" FROM students" +
                     " S " +
@@ -467,7 +471,7 @@ public class StudentsDAO {
                     "LEFT JOIN grades Gr on S.id_student = Gr.fk_student AND " +
                     "D.id_subject = Gr.fk_subject " +
                     "WHERE S.id_student = ? AND D.id_subject = ? " +
-                    "GROUP BY 1, 2, 3, 4, 5, 6, 7,8";
+                    "GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,idStudent);
@@ -484,8 +488,9 @@ public class StudentsDAO {
                 String guardian = rs.getString("guardian");
                 String phone = rs.getString("phone");
                 Date created_at = rs.getDate("created_at");
+                Date birth_date = rs.getDate("birth_date");
                 return new Summary(id_student,classroom,series,name,avg,login
-                        ,guardian,phone,created_at);
+                        ,guardian,phone,created_at, birth_date);
             }
 
             return null;

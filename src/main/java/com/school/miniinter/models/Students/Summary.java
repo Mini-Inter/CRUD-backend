@@ -31,12 +31,13 @@ public class Summary {
 
     public Summary(Integer matricula, char classroom
             , char series, String name, double average,String email,
-                   String guardian, String phone, Date createdAt) {
+                   String guardian, String phone, Date createdAt, Date birthDate) {
         this.matricula = matricula;
-        this.name = name;
-        this.guardian = guardian;
+        setName(name);
         DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
                 new Locale("pt","BR"));
+        this.birthDate = format.format(birthDate);
+        this.guardian = guardian;
         this.createdAt = format.format(createdAt);
         this.phone = phone;
         this.email = email;
@@ -50,6 +51,8 @@ public class Summary {
             this.situation = "Reprovado";
         }
     }
+
+
 
     // Métodos getters e setters
 

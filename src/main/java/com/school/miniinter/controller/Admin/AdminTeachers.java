@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @WebServlet(name="adminTeachers", urlPatterns = "/adminTeachers")
@@ -98,7 +99,8 @@ public class AdminTeachers extends HttpServlet {
 
             String name = req.getParameter("name");
             String email = req.getParameter("email");
-            Date birth =  Date.valueOf(req.getParameter("birth"));
+            Date birth =  Date.valueOf(LocalDate.parse(req.getParameter(
+                    "birth")));
             String password = req.getParameter("pass");
             String phone = req.getParameter("phone");
 
