@@ -9,6 +9,7 @@
 <html>
 <head>
     <title>Vidya</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/geral/link.css">
 </head>
 <body>
     <a href="Inicio/login.jsp">Login</a>

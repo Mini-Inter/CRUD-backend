@@ -6,6 +6,7 @@
 <html>
 <head>
     <title>Home Aluno</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/geral/link.css">
 </head>
 <body>
     <h1>Informações básicas</h1>

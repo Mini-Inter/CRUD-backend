@@ -166,7 +166,8 @@ public class StudentsDAO {
         pstmt.setString(2, student.getFull_name());
         pstmt.setString(3, student.getFirst_name());
         pstmt.setString(4, student.getLast_name());
-        pstmt.setDate(5, Date.valueOf(format.format(student.getBirth_date())));
+        java.util.Date utilDate = format.parse(student.getBirth_date());
+        pstmt.setDate(5, new Date(utilDate.getTime()));
         pstmt.setString(6, student.getLogin());
         pstmt.setString(7, student.getPassword());
         pstmt.setString(8, student.getPhone());
@@ -177,7 +178,7 @@ public class StudentsDAO {
         } else {
             return 1;
         }
-    } catch (SQLException sqle) {
+    } catch (SQLException | ParseException sqle) {
         sqle.printStackTrace();
         return -1;
     }

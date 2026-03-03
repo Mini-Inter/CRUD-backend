@@ -37,7 +37,7 @@ public class PageUpdateGrade extends HttpServlet {
                         idSubject);
 
             if (list.isEmpty()) {
-                request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request
+                request.getRequestDispatcher("WEB-INF/Teacher/homeProfessor.jsp").forward(request
                         , response);
             }
             request.setAttribute("listClass", list);

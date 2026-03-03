@@ -28,7 +28,7 @@ public class Subjects extends HttpServlet {
             List<Subject> subjects = subDAO.readByStudent(idStudent);
 
             req.setAttribute("subjects", subjects);
-            req.getRequestDispatcher("/WEB-INF/student/studentSubjects.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/Student/studentSubjects.jsp").forward(req, resp);
         }
     }
 }

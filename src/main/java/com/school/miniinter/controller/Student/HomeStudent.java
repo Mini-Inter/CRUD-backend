@@ -47,7 +47,8 @@ public class HomeStudent extends HttpServlet {
             request.setAttribute("amountReports", amountReports);
 
 //        Ainda tem que mudar esse caminho quando o fluxo estiver completo
-            request.getRequestDispatcher("WEB-INF/student/studentHome.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF" +
+                    "/Student/studentHome.jsp").forward(request, response);
         }
     }
 }

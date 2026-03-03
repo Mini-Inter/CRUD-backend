@@ -8,6 +8,7 @@
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/Teacher/profileTeacher.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/Teacher" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/Teacher/studentsTeacher.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/Teacher" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/admin/classEdit.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/admin" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/admin/student/studentEdit.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/admin/student" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/authentication/login.jsp" value="file://$PROJECT_DIR$/src/main/webapp/authentication" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/common/sidebarTeacherChangeSubject.jsp" value="file://$PROJECT_DIR$/src/main/webapp/common" />
       </map>

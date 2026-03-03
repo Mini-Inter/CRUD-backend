@@ -43,7 +43,7 @@ public class Observations extends HttpServlet {
 
         request.setAttribute("List",list);
 
-        request.getRequestDispatcher("WEB-INF/student/studentObservations" +
+        request.getRequestDispatcher("WEB-INF/Student/studentObservations" +
                 ".jsp").forward(request,
                 response);
     }

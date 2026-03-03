@@ -27,6 +27,7 @@
 <html>
 <head>
     <title>Vidya - Cadastro</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/geral/link.css">
 </head>
 <body>
     <%

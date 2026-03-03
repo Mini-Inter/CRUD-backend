@@ -12,6 +12,7 @@
 <html>
 <head>
     <title>Vidya - Professor</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/geral/link.css">
 </head>
 <body>
     <p><%=homeTeacherInfo%></p>

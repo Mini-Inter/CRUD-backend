@@ -18,6 +18,7 @@
 <html>
 <head>
     <title>Vidya - Report</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/geral/link.css">
 </head>
 <body>
     <%

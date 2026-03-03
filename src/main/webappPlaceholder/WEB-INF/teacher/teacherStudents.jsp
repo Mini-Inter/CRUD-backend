@@ -15,6 +15,7 @@
 <html>
 <head>
     <title>Vidya - Students</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/geral/link.css">
 </head>
 <body>
     <h1>Meus Alunos</h1>
