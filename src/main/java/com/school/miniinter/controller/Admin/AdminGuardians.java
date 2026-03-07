@@ -12,8 +12,10 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.text.DateFormat;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 
 @WebServlet(name="adminGuardians", urlPatterns = "/adminGuardians")
 public class AdminGuardians extends HttpServlet {
@@ -127,13 +129,17 @@ public class AdminGuardians extends HttpServlet {
             GuardiansDAO gar = new GuardiansDAO();
             Guardian guardian = gar.read(Integer.parseInt(req.getParameter("guardian")));
 
-            String nome = req.getParameter("name");
-            Date birth =  Date.valueOf(req.getParameter("birth"));
+            String name = req.getParameter("name");
+            Date birth =  Date.valueOf(LocalDate.parse(req.getParameter(
+                    "birth")));
+            DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT,
+                    new Locale("pt","BR"));
+            String birthString = format.format(birth);
 
-            if (!nome.equals(guardian.getName())) {
-                guardian.setName(nome);
+            if (!name.equals(guardian.getName())) {
+                guardian.setName(name);
             }
-            if (!birth.equals(guardian.getBirthDate())) {
+            if (!birthString.equals(guardian.getBirthDate())) {
                 guardian.setBirthDate(birth);
             }
 

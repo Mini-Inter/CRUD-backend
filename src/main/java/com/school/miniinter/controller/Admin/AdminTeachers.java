@@ -153,7 +153,7 @@ public class AdminTeachers extends HttpServlet {
                 teacher.setLogin(email);
             }
             if (!birth.equals(teacher.getBirthDate())) {
-                teacher.setBirthDate(String.valueOf(birth));
+                teacher.setBirthDate(birth);
             }
             if (!phone.equals(teacher.getPhone())) {
                 teacher.setPhone(phone);

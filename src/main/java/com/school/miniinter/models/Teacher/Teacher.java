@@ -86,8 +86,8 @@ public class Teacher {
     public String getBirthDate() {
         return birthDate;
     }
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
+    public void setBirthDate(Date birthDate) {this.birthDate =
+            format.format(birthDate);
     }
     public String getCreatedAt() {
         return createdAt;

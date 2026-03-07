@@ -119,14 +119,15 @@ public class StudentsDAO {
             pstmt.setString(2,student.getFull_name());
             pstmt.setString(3,student.getFirst_name());
             pstmt.setString(4,student.getLast_name());
-            pstmt.setDate(5, Date.valueOf(format.format(student.getBirth_date())));
+            java.util.Date utilDate = format.parse(student.getBirth_date());
+            pstmt.setDate(5, new Date(utilDate.getTime()));
             pstmt.setString(6,student.getLogin());
             pstmt.setString(7, student.getPassword());
             pstmt.setString(8, student.getPhone());
 
             return pstmt.executeUpdate()>0;
 
-        }catch(SQLException sqle){
+        }catch(SQLException | ParseException sqle){
             sqle.printStackTrace();
             return false;
         }
@@ -529,7 +530,8 @@ public class StudentsDAO {
                 Class studentClass =
                         new Class(rs.getInt("id_class"),
                         rs.getString("series").charAt(0),rs.getString(
-                                "classroom").charAt(0));
+                                "classroom").charAt(0), rs.getInt(
+                                        "school_year"));
                 Date created_at = rs.getDate("date_registration");
                 Integer school_year = rs.getInt("school_year");
                 Date birth_dateStudent = rs.getDate("birth_dateStudent");
@@ -647,6 +649,34 @@ public class StudentsDAO {
                 return rs.getInt("amount_reports");
             }
             return null;
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Students> readStudentsByReport(int id_report){
+
+        Connection conn = null;
+        List<Students> students = new ArrayList<>();
+        try{
+            conn = ConnectionFactory.connect();
+
+            sql = "SELECT s.full_name, s.id_student FROM students s JOIN receive r ON s.id_student = r.fk_student JOIN reports re ON re.id = r.fk_report WHERE re.id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,id_report);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()) {
+                Students student = new Students();
+                student.setId_student(rs.getInt("id_student"));
+                student.setFull_name(rs.getString("full_name"));
+                students.add(student);
+            }
+            return students;
 
         }catch(SQLException sqle){
             sqle.printStackTrace();

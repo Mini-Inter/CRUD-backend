@@ -34,8 +34,9 @@ public class ClassDAO {
                 int id_class = rs.getInt("id_class");
                 char series = rs.getString("series").charAt(0);
                 char classroom = rs.getString("classroom").charAt(0);
+                Integer academic_year = rs.getInt("academic_year");
                 list.add(new Class(id_class
-                        ,series,classroom));
+                        ,series,classroom,academic_year));
             }
             return list;
         }catch(SQLException sqle){
@@ -56,7 +57,7 @@ public class ClassDAO {
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1,String.valueOf(classInsert.getSeries()));
-            pstmt.setString(2,String.valueOf(classInsert.getSeries()));
+            pstmt.setString(2,String.valueOf(classInsert.getClassroom()));
 
             return pstmt.execute();
         }catch(SQLException sqle){
@@ -82,8 +83,9 @@ public class ClassDAO {
             if(rs.next()){
                 Character series = rs.getString("series").charAt(0);
                 Character classroom = rs.getString("classroom").charAt(0);
+                Integer academic_year = rs.getInt("academic_year");
 
-                classChoose = new Class(id_class,series,classroom);
+                classChoose = new Class(id_class,series,classroom,academic_year);
             }
             return classChoose;
         }catch(SQLException sqle){
@@ -128,8 +130,9 @@ public class ClassDAO {
                 int id_class = Integer.parseInt(rs.getString("id_class"));
                 char series = rs.getString("series").charAt(0);
                 char classroom = rs.getString("classroom").charAt(0);
+                Integer academic_year = rs.getInt("academic_year");
 
-                classes.add(new Class(id_class,series,classroom));
+                classes.add(new Class(id_class,series,classroom,academic_year));
             }
 
             return classes;

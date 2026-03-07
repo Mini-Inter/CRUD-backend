@@ -144,17 +144,20 @@ public class ReportsDAO {
         }
     }
 
-    public Integer readIdByDescription(String description){
+    public Integer readIdByDescriptionAndTeacher(String description,
+                                                 int fk_teacher){
         
         Connection conn = null;
 
         try{
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT id FROM reports WHERE description LIKE ?";
+            sql = "SELECT id FROM reports WHERE description LIKE ? AND " +
+                    "fk_teacher = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1,description);
+            pstmt.setInt(2,fk_teacher);
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -310,7 +313,7 @@ public class ReportsDAO {
             conn.setAutoCommit(false);
             try {
                 String sql = "UPDATE reports " +
-                        "SET type = ?, description = ? " +
+                        "SET type = ?, description = ?, fk_teacher = ? " +
                         "WHERE id = ?; " +
                         "DELETE FROM receive WHERE fk_report = ?; ";
 
@@ -323,6 +326,7 @@ public class ReportsDAO {
 
                 pstmt.setString(n++, report.getType());
                 pstmt.setString(n++, report.getDescription());
+                pstmt.setInt(n++, report.getFk_teachers());
                 pstmt.setInt(n++, report.getId());
                 pstmt.setInt(n++, report.getId());
 
