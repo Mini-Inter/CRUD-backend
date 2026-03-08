@@ -152,6 +152,24 @@ public class StudentsDAO {
         }
     }
 
+    public boolean updatePassword(String password, int idStudent) {
+        Connection conn = null;
+        try{
+            conn = ConnectionFactory.connect();
+            sql = "UPDATE students SET password = ? WHERE id_student = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, password);
+            pstmt.setInt(2, idStudent);
+
+            return pstmt.executeUpdate()>0;
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return false;
+        }
+    }
+
     public int update(Students student) {
     
     Connection conn = null;
@@ -201,6 +219,30 @@ public class StudentsDAO {
 
             if(rs.next()) {
                return rs.getInt("id_student");
+            }
+            return 0;
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return 0;
+        }
+    }
+
+    public Integer readIdByLogin(String login){
+
+        Connection conn = null;
+        try {
+            conn = ConnectionFactory.connect();
+
+            sql = "SELECT id_student FROM students WHERE login LIKE ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, login);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if(rs.next()) {
+                return rs.getInt("id_student");
             }
             return 0;
 
