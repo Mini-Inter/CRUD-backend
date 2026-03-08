@@ -306,12 +306,11 @@ public class StudentsDAO {
         try{
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT DISTINCT S.* FROM Has H\n" +
+            sql = "SELECT DISTINCT S.* FROM teachingAssignment H\n" +
                     "JOIN Class C on H.fk_class = C.id_class\n" +
-                    "JOIN teach P on H.fk_teach = P.id\n" +
                     "JOIN students S on C.id_class = S.fk_class\n" +
-                    "JOIN teachers T on P.fk_teacher = T.id_employee\n" +
-                    "JOIN subjects D ON P.fk_subject = D.id_subject\n" +
+                    "JOIN teachers T on H.fk_teacher = T.id_employee\n" +
+                    "JOIN subjects D ON H.fk_subject = D.id_subject\n" +
                     "WHERE T.id_employee = ? AND D.id_subject = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -422,7 +421,7 @@ public class StudentsDAO {
             sql = "SELECT S.birth_date, S.created_at, S.phone, G.full_name AS" +
                     " \"guardian\", S.login ,S.id_student, S.full_name, C.series, C.classroom, avg(Gr.value) \"AVG\" FROM students S " +
                     "JOIN guardian G ON S.fk_guardian = G.id_guardian " +
-                    "JOIN class C ON S.fk_class = C.id_class " +
+                    "LEFT JOIN class C ON S.fk_class = C.id_class " +
                     "LEFT JOIN has H ON C.id_class = H.fk_class " +
                     "LEFT JOIN teach P on H.fk_teach = P.id " +
                     "LEFT JOIN subjects D ON P.fk_subject = D.id_subject " +
@@ -434,8 +433,16 @@ public class StudentsDAO {
 
             while(rs.next()) {
                 int id_student = rs.getInt("id_student");
-                char classroom = rs.getString("classroom").charAt(0);
-                char series = rs.getString("series").charAt(0);
+                String classroom = rs.getString("classroom");
+                char classroomChar = ' ';
+                if(!rs.wasNull()){
+                    classroomChar = classroom.charAt(0);
+                }
+                String series = rs.getString("series");
+                char seriesChar = ' ';
+                if(!rs.wasNull()){
+                    seriesChar = series.charAt(0);
+                }
                 String name = rs.getString("full_name");
                 Double avg = rs.getDouble("AVG");
                 String login = rs.getString("login");
@@ -443,7 +450,8 @@ public class StudentsDAO {
                 String phone = rs.getString("phone");
                 Date created_at = rs.getDate("created_at");
                 Date birth_date = rs.getDate("birth_date");
-                Summary sum =  new Summary(id_student,classroom,series,name,avg, login,guardian,phone,created_at, birth_date);
+                Summary sum =  new Summary(id_student,classroomChar,seriesChar,
+                        name,avg, login,guardian,phone,created_at, birth_date);
                 summaries.add(sum);
             }
 

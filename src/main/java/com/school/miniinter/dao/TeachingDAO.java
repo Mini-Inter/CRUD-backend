@@ -20,8 +20,7 @@ public class TeachingDAO {
         try {
             aula = new Teaching();
             conn = ConnectionFactory.connect();
-            String sql = "SELECT A.id, S.name, T.full_name, A.class_num, A" +
-                    ".class_hour FROM teachingAssignment A " +
+            String sql = "SELECT A.id, S.name, T.full_name, A.class_num FROM teachingAssignment A " +
                     "JOIN subjects S ON A.fk_subject = S.id_subject " +
                     "JOIN teachers T ON A.fk_teacher = T.id_employee";
 
@@ -33,7 +32,6 @@ public class TeachingDAO {
                 aula.setIdTeaching(rset.getInt("id"));
                 aula.setTeacher(rset.getString("full_name"));
                 aula.setClassNum(rset.getInt("class_num"));
-                aula.setClass_hour(rset.getString("class_hour"));
 
                 aulas[aula.getClassNum()-1] = aula;
             }
@@ -55,8 +53,8 @@ public class TeachingDAO {
 
         try {
             conn = ConnectionFactory.connect();
-            String sql = "SELECT A.id, S.name, T.full_name, A.class_num, A" +
-                    ".class_hour FROM teachingAssignment A JOIN subjects S ON" +
+            String sql = "SELECT A.id, S.name, T.full_name, A.class_num FROM " +
+                    "teachingAssignment A JOIN subjects S ON" +
                     " A.fk_subject = S.id_subject JOIN teachers T ON A.fk_teacher = T.id_employee JOIN class C ON c.id_class = A.fk_class WHERE id_class = ?";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -69,7 +67,26 @@ public class TeachingDAO {
                 aula.setIdTeaching(rset.getInt("id"));
                 aula.setTeacher(rset.getString("full_name"));
                 aula.setClassNum(rset.getInt("class_num"));
-                aula.setClass_hour(rset.getString("class_hour"));
+                switch (aula.getClassNum()) {
+                    case (1) -> {
+                        aula.setClass_hour("07:00 - 07:55");
+                    }
+                    case (2) -> {
+                        aula.setClass_hour("08:00 - 08:55");
+                    }
+                    case (3) -> {
+                        aula.setClass_hour("09:00 - 09:55");
+                    }
+                    case (4) -> {
+                        aula.setClass_hour("10:30 - 11:25");
+                    }
+                    case (5) -> {
+                        aula.setClass_hour("11:30 - 12:25");
+                    }
+                    case (6) -> {
+                        aula.setClass_hour("12:30 - 13:25");
+                    }
+                }
 
                 aulas[aula.getClassNum()-1] = aula;
             }
@@ -113,7 +130,7 @@ public class TeachingDAO {
 
         try {
             conn = ConnectionFactory.connect();
-            String sql = "INSERT INTO teachingassignment (fk_class, fk_subject, fk_teacher, class_num, class_hour) VALUES " +
+            String sql = "INSERT INTO teachingassignment (fk_class, fk_subject, fk_teacher, class_num) VALUES " +
                     "(?, ?, ?, ?, ?)";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -122,7 +139,6 @@ public class TeachingDAO {
             pstmt.setInt(2, aula.getIdSubject());
             pstmt.setInt(3, aula.getIdTeacher());
             pstmt.setInt(4, aula.getClassNumber());
-            pstmt.setString(5, aula.getClass_hour());
 
             return pstmt.executeUpdate() > 0;
 
@@ -139,14 +155,14 @@ public class TeachingDAO {
         try {
             conn = ConnectionFactory.connect();
             String sql = "UPDATE teachingassignment " +
-                    "SET fk_subject = ?, fk_teacher = ?, class_hour = ? " +
+                    "SET fk_subject = ?, fk_teacher = ?, class_num = ? " +
                     "WHERE id = ?";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1, aula.getIdSubject());
             pstmt.setInt(2, aula.getIdTeacher());
-            pstmt.setString(3, aula.getClass_hour());
+            pstmt.setInt(3, aula.getClassNumber());
             pstmt.setObject(4, aula.getId());
 
             return pstmt.executeUpdate() > 0;

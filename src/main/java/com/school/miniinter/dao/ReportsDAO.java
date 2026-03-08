@@ -181,7 +181,7 @@ public class ReportsDAO {
             String sql = "SELECT R.id, R.send_at, R.type, R.description, T.full_name \"teacher\", STRING_AGG(S.full_name, '|') \"students\" FROM reports R " +
                     "JOIN receive H ON R.id = H.fk_report " +
                     "JOIN students S ON H.fk_student = S.id_student " +
-                    "JOIN teachers T ON R.fk_teacher = T.id_employee " +
+                    "LEFT JOIN teachers T ON R.fk_teacher = T.id_employee " +
                     "GROUP BY 1, 2, 3, 4, 5";
             Statement stmt = conn.createStatement();
 
@@ -194,7 +194,10 @@ public class ReportsDAO {
                 rep.setDescription(rset.getString("description"));
                 rep.setSend_at(rset.getDate("send_at"));
                 rep.setStudents(rset.getString("students").split("\\|"));
-                rep.setTeacher(rset.getString("teacher"));
+                String nameTeacher = rset.getString("teacher");
+                if(!rset.wasNull()){
+                    rep.setTeacher(nameTeacher);
+                }
                 reports.add(rep);
             }
 
@@ -216,7 +219,7 @@ public class ReportsDAO {
                     " T.full_name \"teacher\", STRING_AGG(S.full_name, '|') \"students\" FROM reports R " +
                     "JOIN receive H ON R.id = H.fk_report " +
                     "JOIN students S ON H.fk_student = S.id_student " +
-                    "JOIN teachers T ON R.fk_teacher = T.id_employee " +
+                    "LEFT JOIN teachers T ON R.fk_teacher = T.id_employee " +
                     "WHERE R.id = ? " +
                     "GROUP BY 1, 2, 3, 4,5";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -232,7 +235,10 @@ public class ReportsDAO {
                 rep.setDescription(rset.getString("description"));
                 rep.setSend_at(rset.getDate("send_at"));
                 rep.setStudents(rset.getString("students").split("\\|"));
-                rep.setTeacher(rset.getString("teacher"));
+                String nameTeacher = rset.getString("teacher");
+                if(!rset.wasNull()){
+                    rep.setTeacher(nameTeacher);
+                }
                 return rep;
             }
             return null;

@@ -161,7 +161,8 @@ public class AdminGuardians extends HttpServlet {
     private void deleteGuardian(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             GuardiansDAO gar = new GuardiansDAO();
-            Guardian guardian = gar.read(Integer.parseInt(req.getParameter("guardian")));
+            Guardian guardian =gar.read(Integer.parseInt(req.getParameter(
+                    "guardian")));
 
             if (gar.delete(guardian.getId())) {
                 req.getRequestDispatcher("/adminGuardians?type=noot").forward(req, resp);

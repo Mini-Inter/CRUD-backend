@@ -102,6 +102,7 @@ public class AdminClasses extends HttpServlet {
         TeachingDAO assign = new TeachingDAO();
         Teaching[] aulas = assign.readByIdClas(classroom.getId());
         session.setAttribute("aulas", aulas);
+        System.out.println(aulas[0].getClass_hour());
 
         req.getRequestDispatcher("WEB-INF/admin/class/classEdit.jsp").forward(req, resp);
     }
