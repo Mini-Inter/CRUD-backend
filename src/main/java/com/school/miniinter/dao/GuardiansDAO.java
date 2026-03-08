@@ -107,12 +107,12 @@ public class GuardiansDAO {
             pstmt.setString(1, guardian.getName());
             pstmt.setString(2, guardian.getFirstName());
             pstmt.setString(3, guardian.getLastName());
-            pstmt.setDate(4,
-                    Date.valueOf(format.format(guardian.getBirthDate())));
+            java.util.Date utilDate = format.parse(guardian.getBirthDate());
+            pstmt.setDate(4, new Date(utilDate.getTime()));
             pstmt.setInt(5, guardian.getId());
 
             return pstmt.executeUpdate() > 0;
-        } catch (SQLException exc) {
+        } catch (SQLException | ParseException exc) {
             exc.printStackTrace();
             return false;
         } 

@@ -114,7 +114,7 @@ public class TeacherReports extends HttpServlet {
         ReportsDAO rep = new ReportsDAO();
         ReceiveDAO rec = new ReceiveDAO();
         rep.insert(report);
-        rec.insert(new Receive(id_student, rep.readIdByDescription(description)));
+        rec.insert(new Receive(id_student, rep.readIdByDescriptionAndTeacher(description,idTeacher)));
         req.getRequestDispatcher("teacherReports?tab=showReports").forward(req,
                 resp);
     }

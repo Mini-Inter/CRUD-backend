@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @WebServlet(name="adminClasses", urlPatterns = "/adminClasses")
@@ -114,6 +116,7 @@ public class AdminClasses extends HttpServlet {
 
             String series = req.getParameter("series");
             String classroom = req.getParameter("classroom");
+            Integer academic_school = LocalDate.now().getYear();
 
             if (!ClassUtils.verifySeries(series) || !ClassUtils.verifyClassroom(classroom)) {
                 throw new RuntimeException("Digite uma série compatível (1,2," +
@@ -122,7 +125,7 @@ public class AdminClasses extends HttpServlet {
             Character classChar = Character.toUpperCase(classroom.charAt(0));
 
             Class classInsert = new Class(series.charAt(0),
-                    classChar);
+                    classChar,academic_school);
 
             if (classDAO.insert(classInsert)) {
                 HttpSession session = req.getSession();

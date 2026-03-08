@@ -14,6 +14,7 @@ import java.sql.*;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.*;
 
 public class TeachersDAO {
@@ -431,9 +432,10 @@ public class TeachersDAO {
             rs = pstmt.executeQuery();
             AmountStudentByTeacher amountStuentByTeacher = null;
             if(rs.next()){
+                Integer academic_year = LocalDate.now().getYear();
                 Class teacherClass = new Class(rs.getInt("id_class"),
                         rs.getString("series").charAt(0), rs.getString(
-                                "classroom").charAt(0));
+                                "classroom").charAt(0),academic_year);
                 Integer qtd_students = rs.getInt("qtd_students");
                 amountStuentByTeacher =
                         new AmountStudentByTeacher(teacherClass,qtd_students);
@@ -487,16 +489,17 @@ public class TeachersDAO {
             pstmt.setString(1, teacher.getFirstName());
             pstmt.setString(2, teacher.getLastName());
             pstmt.setString(3, teacher.getFirstName() + " " + teacher.getLastName());
-            pstmt.setDate(4,
-                    java.sql.Date.valueOf(format.format(teacher.getBirthDate())));
+            java.util.Date utilDate = format.parse(teacher.getBirthDate());
+            pstmt.setDate(4, new Date(utilDate.getTime()));
             pstmt.setString(5, teacher.getLogin());
             pstmt.setString(6, teacher.getPassword());
-            pstmt.setDate(7, java.sql.Date.valueOf(format.format(teacher.getCreatedAt())));
+            utilDate = format.parse(teacher.getCreatedAt());
+            pstmt.setDate(7, new Date(utilDate.getTime()));
             pstmt.setString(8, teacher.getPhone());
             pstmt.setInt(9, teacher.getId());
 
             return  pstmt.executeUpdate() > 0;
-        } catch (SQLException sqle) {
+        } catch (SQLException | ParseException sqle) {
             sqle.printStackTrace();
             return false;
         } 
@@ -527,7 +530,7 @@ public class TeachersDAO {
 
         try {
             conn = ConnectionFactory.connect();
-            sql = "DELETE FROM teachers WHERE id=?";
+            sql = "DELETE FROM teachers WHERE id_employee=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id);

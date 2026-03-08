@@ -18,7 +18,7 @@ public class Reports {
     public Reports(Integer fk_teacher, String description, String type) {
         this.fk_teachers = fk_teacher;
         this.description = description;
-        this.type = type;
+        this.type = type.substring(0,1).toUpperCase() + type.substring(1);
     }
     public Reports(int fk_teachers, String type, String description, Date send_at) {
         this.type = type;

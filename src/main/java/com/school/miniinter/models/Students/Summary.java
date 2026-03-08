@@ -4,6 +4,7 @@ import com.school.miniinter.models.Class.Class;
 
 import java.sql.Date;
 import java.text.DateFormat;
+import java.time.LocalDate;
 import java.util.Locale;
 
 public class Summary {
@@ -21,11 +22,13 @@ public class Summary {
     private Class classStudent;
     private double average;
     private String situation;
+    private Integer school_year;
 
     public Summary(int id_student, char classroom, char series,
                    String full_name){
         this.matricula = id_student;
-        this.classStudent = new Class(series,classroom);
+        school_year = LocalDate.now().getYear();
+        this.classStudent = new Class(series,classroom,school_year);
         this.name = full_name;
     }
 
@@ -43,7 +46,8 @@ public class Summary {
         this.email = email;
         this.classroom = classroom;
         this.series = series;
-        this.classStudent = new Class(series,classroom);
+        school_year = LocalDate.now().getYear();
+        this.classStudent = new Class(series,classroom,school_year);
         this.average = average;
         if(this.average >=7){
             this.situation = "Aprovado";

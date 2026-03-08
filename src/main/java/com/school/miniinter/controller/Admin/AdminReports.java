@@ -87,9 +87,18 @@ public class AdminReports extends HttpServlet {
         req.getRequestDispatcher("WEB-INF/admin/report/reports.jsp").forward(req, resp);
     }
     private void editReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Reports report = rep.read(Integer.parseInt(req.getParameter("report")));
+        Integer id_report = Integer.parseInt(req.getParameter("report"));
+        Reports report = rep.read(id_report);
         HttpSession session = req.getSession();
         session.setAttribute("report", report);
+
+        StudentsDAO studentsDAO = new StudentsDAO();
+        List<Students> students = studentsDAO.readAll();
+        session.setAttribute("students",students);
+
+        TeachersDAO teachersDAO = new TeachersDAO();
+        List<Teacher> teachers = teachersDAO.read();
+        session.setAttribute("teachers",teachers);
 
         String[] students_report = rep.readCompleteReport(report.getId()).getStudents();
         session.setAttribute("students_report", students_report);
@@ -115,18 +124,33 @@ public class AdminReports extends HttpServlet {
     private void insertReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         ReceiveDAO receiveDAO = new ReceiveDAO();
         try{
-            Integer fk_student = Integer.parseInt(req.getParameter("student"));
+            String[] fk_students = req.getParameterValues("students");
+            int[] fk_students_int = new int[fk_students.length];
+            if(fk_students != null){
+                for(int i = 0; i<fk_students.length; i++){
+                    fk_students_int[i] = Integer.parseInt(fk_students[i]);
+                }
+            }
             Integer fk_teacher = Integer.parseInt(req.getParameter("teacher"));
             String description = req.getParameter("description");
-            String type = req.getParameter("type");
+            String type = req.getParameter("classification");
             Reports insertReport = new Reports(fk_teacher,
                     description,type);
-            Integer id_report = rep.readIdByDescription(description);
-            Receive receive = new Receive(fk_student,id_report);
-            if (rep.insert(insertReport) && receiveDAO.insert(receive)) {
-                HttpSession session = req.getSession();
-                session.setAttribute("success", "Dados de observação criados " +
-                        "com sucesso!");
+            if (!rep.insert(insertReport)) {
+                Integer id_report = rep.readIdByDescriptionAndTeacher(description, fk_teacher);
+                Receive receive = new Receive();
+                receive.setFk_report(id_report);
+                receive.setFk_students(fk_students_int);
+                if(!receiveDAO.insert(receive)) {
+                    HttpSession session = req.getSession();
+                    session.setAttribute("success", "Dados de observação criados " +
+                            "com sucesso!");
+                }
+                else {
+                    HttpSession session = req.getSession();
+                    session.setAttribute("error", "Ocorreu um erro criar a " +
+                            "observação, tente novamente!");
+                }
             } else {
                 HttpSession session = req.getSession();
                 session.setAttribute("error", "Ocorreu um erro criar a " +
@@ -143,11 +167,19 @@ public class AdminReports extends HttpServlet {
     }
     private void updateReport(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            Reports report = rep.read(Integer.parseInt(req.getParameter("report")));
+            Integer id_report = Integer.parseInt(req.getParameter("report"));
+            Reports report = rep.read(id_report);
+            String[] students_before = rep.readCompleteReport(id_report).getStudents();
+            String[] students_before_id = new String[students_before.length];
+            StudentsDAO stud = new StudentsDAO();
+            for(int i = 0; i<students_before.length; i++) {
+                students_before_id[i] = String.valueOf(stud.readIdByName(students_before[i]));
+            }
 
             String type = req.getParameter("typeReport");
             String desc =  req.getParameter("description");
             String[] students = req.getParameterValues("students");
+            Integer teacher = Integer.parseInt(req.getParameter("teacher"));
 
             if (!desc.equals(report.getDescription())) {
                 report.setDescription(desc);
@@ -155,8 +187,11 @@ public class AdminReports extends HttpServlet {
             if (!type.equals(report.getType())) {
                 report.setType(type);
             }
-            if (!students.equals(report.getFk_students())) {
+            if (!students.equals(students_before_id)) {
                 report.setFk_students(students);
+            }
+            if(teacher != report.getFk_teachers()){
+                report.setFk_teachers(teacher);
             }
 
             if (rep.update(report)) {
