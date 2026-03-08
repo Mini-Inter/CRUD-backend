@@ -1,4 +1,4 @@
-package com.school.miniinter.controller.AuthenticationSystem;
+package com.school.miniinter.controller.authenticationSystem;
 
 import com.school.miniinter.dao.StudentsDAO;
 import com.school.miniinter.dao.TeachersDAO;
@@ -70,8 +70,7 @@ public class PasswordReset extends HttpServlet {
             String error = "As duas senhas são diferentes!";
             HttpSession session = req.getSession();
             session.setAttribute("error", error);
-            req.getRequestDispatcher("WEB-INF/resetPassword.jsp");
-        }
+            req.getRequestDispatcher("WEB-INF/resetPassword.jsp").forward(req, resp);        }
     }
 
     private void sendCode(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, MessagingException {
@@ -82,7 +81,7 @@ public class PasswordReset extends HttpServlet {
         String email = envVars.get("EMAIL");
         String password = envVars.get("EMAIL_PASSWORD");
 
-        if (login.equals("lorenzo.limao@gmail.com") || EmailUtils.verifyEmail(login)) {
+        if (login.equals("vinicius.vboas1@gmail.com") || EmailUtils.verifyEmail(login)) {
             siteSession.setAttribute("login", login.substring(login.indexOf("@")));
 
             Properties props = new Properties();
@@ -107,13 +106,13 @@ public class PasswordReset extends HttpServlet {
             message.setText("Olá! Alguém fez uma solicitação para mudar sua senha da Vidya." +
                     "\nCaso não seja você, apenas ignore este email com segurança.\nO código pedido é: '" + number + "'.");
             Transport.send(message);
-            req.getRequestDispatcher("/Inicio/code.jsp");
+            resp.sendRedirect(req.getContextPath()+"/Inicio/code.jsp");
         } else throw new IllegalArgumentException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
     }
     private void verifyCode(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, MessagingException {
         String code = req.getParameter("code");
         if (code.equals(number)) {
-            req.getRequestDispatcher("WEB-INF/resetPassword.jsp");
+            req.getRequestDispatcher("WEB-INF/resetPassword.jsp").forward(req, resp);
         } else {
             String error = "Desculpe! Este não é o código solicitado. Tente novamente com outro código.";
             HttpSession session = req.getSession();
