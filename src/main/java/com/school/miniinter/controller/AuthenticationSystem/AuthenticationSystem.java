@@ -249,9 +249,9 @@ public class AuthenticationSystem extends HttpServlet {
         if (login == null || pw == null) {
             throw new NullPointerException();
         }
-        if (stud.isStudent(login, pw)) {
+        if (stud.isStudent(login, pw))
             return 1;
-        } else if (teach.isTeacher(login, pw))
+        else if (teach.isTeacher(login, pw))
             return 2;
         else
             return 0;

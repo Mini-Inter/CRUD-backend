@@ -40,7 +40,7 @@ public class TeacherProfile extends HttpServlet {
 
         request.setAttribute("amountStudentByTeacher",amountStudentByTeacher);
 
-        request.getRequestDispatcher("WEB-INF/Teacher/profileTeacher.jsp").forward(request,response);
+        request.getRequestDispatcher("WEB-INF/teacher/profileTeacher.jsp").forward(request,response);
 
     }
     public void doGet(HttpServletRequest request,
@@ -64,7 +64,7 @@ public class TeacherProfile extends HttpServlet {
 
         request.setAttribute("amountStudentByTeacher",amountStudentByTeacher);
 
-        request.getRequestDispatcher("WEB-INF/Teacher/profileTeacher.jsp").forward(request,response);
+        request.getRequestDispatcher("WEB-INF/teacher/profileTeacher.jsp").forward(request,response);
 
     }
 }

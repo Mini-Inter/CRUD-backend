@@ -37,7 +37,7 @@ public class PageUpdateGrade extends HttpServlet {
                         idSubject);
 
             if (list.isEmpty()) {
-                request.getRequestDispatcher("WEB-INF/Teacher/homeProfessor.jsp").forward(request
+                request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request
                         , response);
             }
             request.setAttribute("listClass", list);
@@ -50,7 +50,7 @@ public class PageUpdateGrade extends HttpServlet {
 
             request.setAttribute("listGradeByStudent", list1);
 
-            request.getRequestDispatcher("WEB-INF/Teacher/throwGrade.jsp").forward(request
+            request.getRequestDispatcher("WEB-INF/teacher/throwGrade.jsp").forward(request
                     , response);
         }
     }
@@ -71,7 +71,7 @@ public class PageUpdateGrade extends HttpServlet {
                         idSubject);
 
                 if(list.isEmpty()){
-                    request.getRequestDispatcher("WEB-INF/Teacher" +
+                    request.getRequestDispatcher("WEB-INF/teacher" +
                             "/homeTeacher.jsp").forward(request, response);
                 }
 
@@ -87,7 +87,7 @@ public class PageUpdateGrade extends HttpServlet {
 
                 request.setAttribute("listGradeByStudent", list1);
 
-                request.getRequestDispatcher("WEB-INF/Teacher" +
+                request.getRequestDispatcher("WEB-INF/teacher" +
                         "/throwGrade.jsp").forward(request, response);
             }else if(url.equals("/updateData")){
 

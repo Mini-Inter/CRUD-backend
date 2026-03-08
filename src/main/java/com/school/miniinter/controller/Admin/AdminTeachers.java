@@ -16,7 +16,10 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name="adminTeachers", urlPatterns = "/adminTeachers")
 public class AdminTeachers extends HttpServlet {
@@ -79,6 +82,10 @@ public class AdminTeachers extends HttpServlet {
     // Métodos de redirecionamento
     private void showTeachers(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Teacher> teachers = teach.read();
+        String search = req.getParameter("search");
+        if (search != null && !search.isBlank()) {
+            teachers = filter(teachers, search);
+        }
         HttpSession session = req.getSession();
         session.setAttribute("teachers", teachers);
 
@@ -174,15 +181,15 @@ public class AdminTeachers extends HttpServlet {
                 HttpSession session = req.getSession();
                 session.setAttribute("error", "Dados do professor " + teacher.getName() + " não foram alterados!");
             }
-            req.getRequestDispatcher("/adminTeachers?type=noot").forward(req, resp);
-        } catch (NullPointerException exc) {
+            showTeachers(req, resp);
+        } catch (NullPointerException | NumberFormatException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", "Alguns dados não foram preenchidos!");
-            req.getRequestDispatcher("adminTeachers?type=edit").forward(req, resp);
+            editTeacher(req, resp);
         } catch (RuntimeException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", exc.getMessage());
-            req.getRequestDispatcher("adminTeachers?type=edit").forward(req, resp);
+            editTeacher(req, resp);
         }
     }
     private void deleteTeacher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -206,5 +213,19 @@ public class AdminTeachers extends HttpServlet {
             session.setAttribute("error", exc.getMessage());
             req.getRequestDispatcher("adminTeachers?type=edit").forward(req, resp);
         }
+    }
+
+    // Métodos auxiliares
+    private List<Teacher> filter(List<Teacher> teachers, String name) {
+        List<Teacher> newTeachers = new LinkedList<>();
+        Pattern mat = Pattern.compile(name, Pattern.CASE_INSENSITIVE);
+        Matcher match;
+        for (Teacher teacher : teachers) {
+            match = mat.matcher(teacher.getName());
+            if (match.find()) {
+                newTeachers.add(teacher);
+            }
+        }
+        return newTeachers;
     }
 }

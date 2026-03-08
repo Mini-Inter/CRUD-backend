@@ -27,7 +27,7 @@ public class ProfileStudent extends HttpServlet {
 
         request.setAttribute("completeInfoStudent",completeInfo);
 
-        request.getRequestDispatcher("WEB-INF/Student/studentProfile.jsp").forward(request,response);
+        request.getRequestDispatcher("WEB-INF/student/studentProfile.jsp").forward(request,response);
     }
     public void doGet(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException,
@@ -41,6 +41,6 @@ public class ProfileStudent extends HttpServlet {
 
         request.setAttribute("completeInfoStudent",completeInfo);
 
-        request.getRequestDispatcher("WEB-INF/Student/studentProfile.jsp").forward(request,response);
+        request.getRequestDispatcher("WEB-INF/student/studentProfile.jsp").forward(request,response);
     }
 }

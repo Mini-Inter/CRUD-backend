@@ -33,7 +33,7 @@ public class StudentGrades extends HttpServlet {
             List<GradeForSubject> grades = teach.readGradesByStudent(idStudent);
             session.setAttribute("grades", grades);
 
-            req.getRequestDispatcher("/WEB-INF/Teacher/gradesStudent.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/teacher/gradesStudent.jsp").forward(req, resp);
         }
     }
 }

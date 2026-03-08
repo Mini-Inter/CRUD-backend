@@ -2,6 +2,7 @@ package com.school.miniinter.controller.Admin;
 
 import com.school.miniinter.dao.GuardiansDAO;
 import com.school.miniinter.models.Guardian.Guardian;
+import com.school.miniinter.models.Students.Students;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,8 +15,11 @@ import java.io.IOException;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name="adminGuardians", urlPatterns = "/adminGuardians")
 public class AdminGuardians extends HttpServlet {
@@ -80,6 +84,10 @@ public class AdminGuardians extends HttpServlet {
     // Métodos de redirecionamento
     private void showGuardians(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Guardian> guardians = gar.read();
+        String search = req.getParameter("search");
+        if (search != null && !search.isBlank()) {
+            guardians = filter(guardians, search);
+        }
         HttpSession session = req.getSession();
         session.setAttribute("guardians", guardians);
 
@@ -181,5 +189,19 @@ public class AdminGuardians extends HttpServlet {
             session.setAttribute("error", exc.getMessage());
             req.getRequestDispatcher("adminGuardians?type=edit").forward(req, resp);
         }
+    }
+
+    // Métodos auxiliares
+    private List<Guardian> filter(List<Guardian> guardians, String name) {
+        List<Guardian> newGuardians = new LinkedList<>();
+        Pattern mat = Pattern.compile(name, Pattern.CASE_INSENSITIVE);
+        Matcher match;
+        for (Guardian guardian : guardians) {
+            match = mat.matcher(guardian.getName());
+            if (match.find()) {
+                newGuardians.add(guardian);
+            }
+        }
+        return newGuardians;
     }
 }

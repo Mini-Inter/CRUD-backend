@@ -2,6 +2,7 @@ package com.school.miniinter.controller.Admin;
 
 import com.school.miniinter.dao.SubjectsDAO;
 import com.school.miniinter.models.Subject.Subject;
+import com.school.miniinter.models.Teacher.Teacher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,7 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name="adminSubjects", urlPatterns = "/adminSubjects")
 public class AdminSubjects extends HttpServlet {
@@ -74,6 +78,10 @@ public class AdminSubjects extends HttpServlet {
     // Métodos de redirecionamento
     private void showSubjects(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Subject> subjects = sub.read();
+        String search = req.getParameter("search");
+        if (search != null && !search.isBlank()) {
+            subjects = filter(subjects, search);
+        }
         HttpSession session = req.getSession();
         session.setAttribute("subjects", subjects);
 
@@ -166,5 +174,19 @@ public class AdminSubjects extends HttpServlet {
             session.setAttribute("error", exc.getMessage());
             req.getRequestDispatcher("adminSubjects?type=edit").forward(req, resp);
         }
+    }
+
+    // Métodos auxiliares
+    private List<Subject> filter(List<Subject> subjects, String name) {
+        List<Subject> newSubjects = new LinkedList<>();
+        Pattern mat = Pattern.compile(name, Pattern.CASE_INSENSITIVE);
+        Matcher match;
+        for (Subject subject : subjects) {
+            match = mat.matcher(subject.getName());
+            if (match.find()) {
+                newSubjects.add(subject);
+            }
+        }
+        return newSubjects;
     }
 }

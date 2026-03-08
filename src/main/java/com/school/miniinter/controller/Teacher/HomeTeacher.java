@@ -36,8 +36,7 @@ public class HomeTeacher extends HttpServlet {
             homeTeacherInfo.setSubject(subjectsDAO.read(idSubject).getName());
             request.setAttribute("homeTeacherInfo",homeTeacherInfo);
 
-            request.getRequestDispatcher("/WEB-INF" +
-                    "/Teacher/homeTeacher.jsp").forward(request,response);
+            request.getRequestDispatcher("WEB-INF/teacher/homeTeacher.jsp").forward(request,response);
         }
     }
 }

@@ -42,7 +42,7 @@ public class TeacherStudents extends HttpServlet {
             }
             session.setAttribute("students", summaries);
 
-            req.getRequestDispatcher("/WEB-INF/Teacher/studentsTeacher.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/teacher/studentsTeacher.jsp").forward(req, resp);
         }
     }
 
