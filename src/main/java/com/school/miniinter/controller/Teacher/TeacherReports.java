@@ -84,7 +84,7 @@ public class TeacherReports extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("reports", reports);
 
-        req.getRequestDispatcher("WEB-INF/Teacher/reportsTeacher.jsp").forward(req,
+        req.getRequestDispatcher("WEB-INF/teacher/reportsTeacher.jsp").forward(req,
                 resp);
     }
 
@@ -95,7 +95,7 @@ public class TeacherReports extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("students", students);
 
-        req.getRequestDispatcher("WEB-INF/Teacher/createReport.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/teacher/createReport.jsp").forward(req, resp);
     }
 
     protected void createReport(HttpServletRequest req, HttpServletResponse resp, int idTeacher) throws ServletException, IOException {

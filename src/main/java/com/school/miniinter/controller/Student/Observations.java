@@ -43,7 +43,7 @@ public class Observations extends HttpServlet {
 
         request.setAttribute("List",list);
 
-        request.getRequestDispatcher("WEB-INF/Student/studentObservations" +
+        request.getRequestDispatcher("WEB-INF/student/studentObservations" +
                 ".jsp").forward(request,
                 response);
     }
@@ -55,7 +55,7 @@ public class Observations extends HttpServlet {
                 reportsDAO.readCompleteInfoReportByType(id_student,type);
         request.setAttribute("List",list);
 
-        request.getRequestDispatcher("WEB-INF/Student" +
+        request.getRequestDispatcher("WEB-INF/student" +
                 "/studentObservations.jsp").forward(request,
                 response);
     }

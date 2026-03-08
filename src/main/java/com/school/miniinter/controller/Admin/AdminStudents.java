@@ -6,6 +6,7 @@ import com.school.miniinter.dao.ClassDAO;
 import com.school.miniinter.dao.PreRegistrationDAO;
 import com.school.miniinter.models.Class.Class;
 import com.school.miniinter.dao.StudentsDAO;
+import com.school.miniinter.models.Guardian.Guardian;
 import com.school.miniinter.models.PreRegistration.PreRegistration;
 import com.school.miniinter.models.Students.Students;
 import com.school.miniinter.models.Students.Summary;
@@ -21,7 +22,10 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name="adminStudents", urlPatterns = "/adminStudents")
 public class AdminStudents extends HttpServlet {
@@ -83,6 +87,10 @@ public class AdminStudents extends HttpServlet {
     // Métodos de redirecionamento
     private void showStudents(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Summary> students = studDAO.readSummary();
+        String search = req.getParameter("search");
+        if (search != null && !search.isBlank()) {
+            students = filter(students, search);
+        }
         HttpSession session = req.getSession();
         session.setAttribute("students", students);
 
@@ -168,7 +176,7 @@ public class AdminStudents extends HttpServlet {
     }
     private void updateStudent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            
+
             Students student = studDAO.readById(Integer.parseInt(req.getParameter("student")));
 
             int idClass = Integer.parseInt(req.getParameter("classroom"));
@@ -252,5 +260,20 @@ public class AdminStudents extends HttpServlet {
             session.setAttribute("error", exc.getMessage());
             req.getRequestDispatcher("adminStudents?type=show").forward(req, resp);
         }
+    }
+
+    // Métodos auxiliares
+
+    private List<Summary> filter(List<Summary> students, String name) {
+        List<Summary> newStudents = new LinkedList<>();
+        Pattern mat = Pattern.compile(name, Pattern.CASE_INSENSITIVE);
+        Matcher match;
+        for (Summary student : students) {
+            match = mat.matcher(student.getName());
+            if (match.find()) {
+                newStudents.add(student);
+            }
+        }
+        return newStudents;
     }
 }
