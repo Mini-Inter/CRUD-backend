@@ -19,7 +19,7 @@ public class PreRegistrationDAO {
         try {
             conn = ConnectionFactory.connect();
 
-            sql = "INSERT INTO pre_registration" +
+            sql = "INSERT INTO preRegistration" +
                     "(cpf)" +
                     "VALUES(?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -193,7 +193,7 @@ public class PreRegistrationDAO {
 
         try {
             conn = ConnectionFactory.connect();
-            sql = "UPDATE pre_registration SET cpf=? WHERE id=?";
+            sql = "UPDATE preRegistration SET cpf=? WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, preReg.getCpf());
