@@ -1,9 +1,11 @@
 package com.school.miniinter.controller.authenticationSystem;
 
+import com.school.miniinter.config.HashConfig;
 import com.school.miniinter.dao.StudentsDAO;
 import com.school.miniinter.dao.TeachersDAO;
 import com.school.miniinter.models.Teacher.Teacher;
 import com.school.miniinter.utils.EmailUtils;
+import com.school.miniinter.utils.PasswordUtils;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.*;
 import jakarta.mail.internet.AddressException;
@@ -18,6 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
 @WebServlet(name = "PasswordReset", urlPatterns = "/passwordReset")
@@ -54,23 +57,32 @@ public class PasswordReset extends HttpServlet {
         String pw = req.getParameter("pw1");
         String pw2 = req.getParameter("pw2");
         if (pw2.equals(pw)) {
-            StudentsDAO stud = new StudentsDAO();
-            TeachersDAO teach = new TeachersDAO();
-            int idStudent = stud.readIdByLogin(login);
-            Teacher teacher = teach.readByLogin(login);
+            try {
+                String hashedPassword = HashConfig.hashSenha(pw);
+                StudentsDAO stud = new StudentsDAO();
+                TeachersDAO teach = new TeachersDAO();
+                int idStudent = stud.readIdByLogin(login);
+                Teacher teacher = teach.readByLogin(login);
 
-            if (idStudent == 0) {
-                teacher.setPassword(pw);
-                teach.update(teacher);
-            } else {
-                stud.updatePassword(pw, idStudent);
+                if (idStudent == 0) {
+                    teacher.setPassword(hashedPassword);
+                    teach.update(teacher);
+                } else {
+                    stud.updatePassword(hashedPassword, idStudent);
+                }
+                resp.sendRedirect(req.getContextPath() + "/Inicio/login.jsp");
+            } catch (NoSuchAlgorithmException e) {
+                String error = "Ocorreu um erro!";
+                HttpSession session = req.getSession();
+                session.setAttribute("error", error);
+                req.getRequestDispatcher("WEB-INF/resetPassword.jsp").forward(req, resp);
             }
-            resp.sendRedirect(req.getContextPath()+"/Inicio/login.jsp");
         } else {
             String error = "As duas senhas são diferentes!";
             HttpSession session = req.getSession();
             session.setAttribute("error", error);
-            req.getRequestDispatcher("WEB-INF/resetPassword.jsp").forward(req, resp);        }
+            req.getRequestDispatcher("WEB-INF/resetPassword.jsp").forward(req, resp);
+        }
     }
 
     private void sendCode(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, MessagingException {
@@ -81,8 +93,8 @@ public class PasswordReset extends HttpServlet {
         String email = envVars.get("EMAIL");
         String password = envVars.get("EMAIL_PASSWORD");
 
-        if (login.equals("lorenzolimadeoliveira2010@gmail.com") || EmailUtils.verifyEmail(login)) {
-            siteSession.setAttribute("login", login.substring(login.indexOf("@")));
+        if (login.equals("vinicius.vboas1@gmail.com") || EmailUtils.verifyEmail(login)) {
+            siteSession.setAttribute("login", login.substring(0, login.indexOf("@")));
 
             Properties props = new Properties();
             props.put("mail.smtp.auth", "true");
