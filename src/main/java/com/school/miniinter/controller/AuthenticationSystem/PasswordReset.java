@@ -1,5 +1,6 @@
 package com.school.miniinter.controller.authenticationSystem;
 
+import com.school.miniinter.config.HashConfig;
 import com.school.miniinter.dao.StudentsDAO;
 import com.school.miniinter.dao.TeachersDAO;
 import com.school.miniinter.models.Teacher.Teacher;
@@ -18,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
 @WebServlet(name = "PasswordReset", urlPatterns = "/passwordReset")
@@ -58,7 +60,11 @@ public class PasswordReset extends HttpServlet {
             TeachersDAO teach = new TeachersDAO();
             int idStudent = stud.readIdByLogin(login);
             Teacher teacher = teach.readByLogin(login);
-
+            try {
+                pw = HashConfig.hashSenha(pw);
+            }catch (NoSuchAlgorithmException nsae){
+                nsae.printStackTrace();
+            }
             if (idStudent == 0) {
                 teacher.setPassword(pw);
                 teach.update(teacher);
