@@ -81,7 +81,7 @@ public class PasswordReset extends HttpServlet {
         String email = envVars.get("EMAIL");
         String password = envVars.get("EMAIL_PASSWORD");
 
-        if (login.equals("vinicius.vboas1@gmail.com") || EmailUtils.verifyEmail(login)) {
+        if (login.equals("lorenzolimadeoliveira2010@gmail.com") || EmailUtils.verifyEmail(login)) {
             siteSession.setAttribute("login", login.substring(login.indexOf("@")));
 
             Properties props = new Properties();
@@ -106,8 +106,12 @@ public class PasswordReset extends HttpServlet {
             message.setText("Olá! Alguém fez uma solicitação para mudar sua senha da Vidya." +
                     "\nCaso não seja você, apenas ignore este email com segurança.\nO código pedido é: '" + number + "'.");
             Transport.send(message);
-            resp.sendRedirect(req.getContextPath()+"/Inicio/code.jsp");
-        } else throw new IllegalArgumentException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
+            req.getRequestDispatcher(req.getContextPath()+"/Inicio/code.jsp").forward(req,
+                    resp);
+        } else{
+            throw new IllegalArgumentException("Email não foi digitado " +
+                "corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
+        };
     }
     private void verifyCode(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, MessagingException {
         String code = req.getParameter("code");
