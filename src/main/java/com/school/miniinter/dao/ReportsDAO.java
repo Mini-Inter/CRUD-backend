@@ -144,8 +144,7 @@ public class ReportsDAO {
         }
     }
 
-    public Integer readIdByDescriptionAndTeacher(String description,
-                                                 int fk_teacher){
+    public Integer readIdByDescriptionAndTeacher(String description, int fk_teacher){
         
         Connection conn = null;
 

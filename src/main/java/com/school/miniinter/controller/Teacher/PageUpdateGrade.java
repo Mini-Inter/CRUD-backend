@@ -87,8 +87,7 @@ public class PageUpdateGrade extends HttpServlet {
 
                 request.setAttribute("listGradeByStudent", list1);
 
-                request.getRequestDispatcher("WEB-INF/teacher" +
-                        "/throwGrade.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/teacher/throwGrade.jsp").forward(request, response);
             }else if(url.equals("/updateData")){
 
                 Integer idData = Integer.parseInt(request.getParameter(

@@ -109,12 +109,15 @@ public class TeacherReports extends HttpServlet {
         }
         String description = req.getParameter("description");
         Date sendAt = Date.valueOf(LocalDate.now());
-        int id_student = Integer.parseInt(req.getParameter("student"));
+        int id_student = Integer.parseInt(req.getParameter("student")); //null
         Reports report = new Reports(idTeacher, type, description, sendAt);
         ReportsDAO rep = new ReportsDAO();
         ReceiveDAO rec = new ReceiveDAO();
         rep.insert(report);
-        rec.insert(new Receive(id_student, rep.readIdByDescriptionAndTeacher(description,idTeacher)));
+        int[] fk_students = {id_student};
+        Receive receive = new Receive(id_student, rep.readIdByDescriptionAndTeacher(description,idTeacher));
+        receive.setFk_students(fk_students);
+        rec.insert(receive);
         req.getRequestDispatcher("teacherReports?tab=showReports").forward(req,
                 resp);
     }

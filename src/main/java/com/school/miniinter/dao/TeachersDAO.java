@@ -257,7 +257,7 @@ public class TeachersDAO {
         try {
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT DISTINCT S.full_name, S.id_student, D.name, g.grade_type, G.value, G.id_grade FROM students S JOIN class C ON S.fk_class = C.id_class JOIN teachingAssignment P ON C.id_class = P.fk_class JOIN teachers T ON P.fk_teacher = T.id_employee JOIN grades G ON S.id_student = G.fk_student JOIN subjects D ON P.fk_subject = D.id_subject AND G.fk_subject = D.id_subject WHERE EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) AND T.id_employee=? AND D.id_subject = ? AND C.id_class = ?";
+            sql = "SELECT DISTINCT S.full_name, S.id_student, D.name, g.grade_type, G.value, G.id_grade FROM students S JOIN class C ON S.fk_class = C.id_class JOIN teachingAssignment P ON C.id_class = P.fk_class JOIN teachers T ON P.fk_teacher = T.id_employee JOIN grades G ON S.id_student = G.fk_student JOIN subjects D ON P.fk_subject = D.id_subject AND G.fk_subject = D.id_subject WHERE EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) AND T.id_employee = ? AND D.id_subject = ? AND C.id_class = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_teacher);
@@ -319,7 +319,25 @@ public class TeachersDAO {
         try {
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT S.full_name ,D.name, G.grade_type, G.value FROM students S JOIN class C ON S.fk_class = C.id_class JOIN teachingAssignment P ON c.id_class = P.fk_class JOIN teachers T ON P.fk_teacher = T.id_employee JOIN grades G ON S.id_student = G.fk_student RIGHT JOIN subjects D ON P.fk_subject = D.id_subject AND G.fk_subject = D.id_subject WHERE EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) AND S.id_student = ?";
+            sql = "SELECT\n" +
+                    "    S.full_name,\n" +
+                    "    D.name AS subject,\n" +
+                    "    G.grade_type,\n" +
+                    "    G.value\n" +
+                    "FROM students S\n" +
+                    "         JOIN class C\n" +
+                    "              ON S.fk_class = C.id_class\n" +
+                    "         JOIN teachingAssignment P\n" +
+                    "              ON C.id_class = P.fk_class\n" +
+                    "         JOIN teachers T\n" +
+                    "              ON P.fk_teacher = T.id_employee\n" +
+                    "         JOIN subjects D\n" +
+                    "              ON P.fk_subject = D.id_subject\n" +
+                    "         LEFT JOIN grades G\n" +
+                    "                   ON S.id_student = G.fk_student\n" +
+                    "                       AND G.fk_subject = D.id_subject\n" +
+                    "                       AND EXTRACT(YEAR FROM G.send_at) = EXTRACT(YEAR FROM CURRENT_DATE)\n" +
+                    "WHERE S.id_student = ?;";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_student);
@@ -332,7 +350,7 @@ public class TeachersDAO {
 
                 if (!grades.isEmpty()) {
                     for (GradeForSubject grade1 : grades) {
-                        if (rs.getString("name").equals(grade1.getSubject())) {
+                        if (rs.getString("subject").equals(grade1.getSubject())) {
                             existe = true;
 
                             if (grade1.getN1() == -1.0) {
@@ -348,13 +366,16 @@ public class TeachersDAO {
 
                 if (!existe) {
                     int type = rs.getInt("grade_type");
-                    grade.setSubject(rs.getString("name"));
+                    grade.setSubject(rs.getString("subject"));
                     if (type == 1) {
                         grade.setN1(rs.getDouble("value"));
                         grade.setN2();
                     } else if (type == 2) {
                         grade.setN1();
                         grade.setN2(rs.getDouble("value"));
+                    } else {
+                        grade.setN1();
+                        grade.setN2();
                     }
                     grade.setAverage();
                     grade.setSituation();
@@ -379,10 +400,9 @@ public class TeachersDAO {
             sql = "SELECT te.full_name,te.created_at AS date_admission, " +
                     "EXTRACT(YEAR FROM CURRENT_DATE) as school_year,te" +
                     ".birth_date,te.login,te.phone,a.formated_address, te" +
-                    ".profile_image_url FROM " +
-                    "teachers te JOIN " +
-                    "address a ON te.fk_address = a.id_address WHERE te" +
-                    ".id_employee = ?";
+                    ".profile_image_url FROM teachers te " +
+                    "JOIN address a ON te.id_address_teacher = a.id_address " +
+                    "WHERE te.id_employee = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_teacher);

@@ -17,7 +17,7 @@ public class ReceiveDAO {
         try{
             conn = ConnectionFactory.connect();
 
-            for(int i = 0; i<receive.getFk_students().length;i++){
+            for(int i = 0; i < receive.getFk_students().length;i++){
                 sql = "INSERT INTO receive(fk_student,fk_report) VALUES(?,?)";
                 PreparedStatement pstmt = conn.prepareStatement(sql);
 

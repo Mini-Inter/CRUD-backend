@@ -19,7 +19,11 @@ public class GradeDAO {
         try{
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT sub.name as name_subject, g.value AS value, g.grade_type AS grade_type FROM students s JOIN grades g on s.id_student = g.fk_student AND EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) JOIN subjects sub on sub.id_subject = g.fk_subject WHERE s.id_student = ?";
+            sql = "SELECT sub.name as name_subject, g.value AS value, g.grade_type AS grade_type FROM students s " +
+                    "JOIN grades g on s.id_student = g.fk_student " +
+                    "AND EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) " +
+                    "RIGHT JOIN subjects sub on sub.id_subject = g.fk_subject " +
+                    "AND s.id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1, id_student);
@@ -55,6 +59,9 @@ public class GradeDAO {
                     } else if (type == 2) {
                         grade.setN1();
                         grade.setN2(rs.getDouble("value"));
+                    } else {
+                        grade.setN1();
+                        grade.setN2();
                     }
                     grade.setAverage();
                     grade.setSituation();

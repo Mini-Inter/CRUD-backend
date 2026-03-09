@@ -385,7 +385,7 @@ public class StudentsDAO {
     }
 
     public Students readByLogin(String login) {
-        
+
         Connection conn;
         try {
             conn = ConnectionFactory.connect();
@@ -420,7 +420,7 @@ public class StudentsDAO {
     }
 
     public BasicInfo readBasicInfoStudent(String email){
-        
+
         Connection conn = null;
         try{
             conn = ConnectionFactory.connect();
@@ -464,9 +464,8 @@ public class StudentsDAO {
                     " \"guardian\", S.login ,S.id_student, S.full_name, C.series, C.classroom, avg(Gr.value) \"AVG\" FROM students S " +
                     "JOIN guardian G ON S.fk_guardian = G.id_guardian " +
                     "LEFT JOIN class C ON S.fk_class = C.id_class " +
-                    "LEFT JOIN has H ON C.id_class = H.fk_class " +
-                    "LEFT JOIN teach P on H.fk_teach = P.id " +
-                    "LEFT JOIN subjects D ON P.fk_subject = D.id_subject " +
+                    "LEFT JOIN teachingassignment H ON C.id_class = H.fk_class " +
+                    "LEFT JOIN subjects D ON H.fk_subject = D.id_subject " +
                     "LEFT JOIN grades Gr on S.id_student = Gr.fk_student AND D.id_subject = Gr.fk_subject " +
                     "GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, D.id_subject";
             Statement stmt = conn.createStatement();
@@ -515,13 +514,12 @@ public class StudentsDAO {
                     " S " +
                     "JOIN guardian G ON S.fk_guardian = G.id_guardian " +
                     "JOIN class C ON S.fk_class = C.id_class " +
-                    "LEFT JOIN has H ON C.id_class = H.fk_class " +
-                    "LEFT JOIN teach P on H.fk_teach = P.id " +
-                    "LEFT JOIN subjects D ON P.fk_subject = D.id_subject " +
+                    "LEFT JOIN teachingassignment H ON C.id_class = H.fk_class " +
+                    "LEFT JOIN subjects D ON H.fk_subject = D.id_subject " +
                     "LEFT JOIN grades Gr on S.id_student = Gr.fk_student AND " +
                     "D.id_subject = Gr.fk_subject " +
                     "WHERE S.id_student = ? AND D.id_subject = ? " +
-                    "GROUP BY 1, 2, 3, 4, 5, 6, 7,8,9";
+                    "GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,idStudent);
@@ -541,9 +539,9 @@ public class StudentsDAO {
                 Date  birth_date = rs.getDate("birth_date");
                 return new Summary(id_student,classroom,series,name,avg,login
                         ,guardian,phone,created_at, birth_date);
+            } else {
+                return null;
             }
-
-            return null;
         }catch (SQLException sqle){
             sqle.printStackTrace();
             return null;
@@ -565,7 +563,7 @@ public class StudentsDAO {
                     ".profile_image_url FROM" +
                     " students s JOIN guardian g ON g.id_guardian = s" +
                     ".fk_guardian JOIN class c ON c.id_class = s.fk_class " +
-                    "JOIN address a ON a.id_address = s.fk_address" +
+                    "JOIN address a ON a.id_address = s.id_address_student" +
                     " WHERE s" +
                     ".id_student = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
