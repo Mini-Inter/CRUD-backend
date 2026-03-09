@@ -49,8 +49,7 @@ public class GuardiansDAO {
 
         try {
             conn = ConnectionFactory.connect();
-            String sql = "INSERT INTO guardian(full_name,first_name," +
-                    "last_name,birth_date) VALUES(?,?,?,?)";
+            String sql = "INSERT INTO guardian(full_name, first_name, last_name,birth_date) VALUES( ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1,g.getName());

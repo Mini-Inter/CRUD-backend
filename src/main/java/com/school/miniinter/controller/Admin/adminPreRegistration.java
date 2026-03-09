@@ -1,6 +1,7 @@
 package com.school.miniinter.controller.Admin;
 
 import com.school.miniinter.dao.PreRegistrationDAO;
+import com.school.miniinter.models.Guardian.Guardian;
 import com.school.miniinter.models.PreRegistration.PreRegistration;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
@@ -11,7 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name="PreRegistro", value={"/adminPreRegistration"})
 public class adminPreRegistration extends HttpServlet {
@@ -76,6 +80,10 @@ public class adminPreRegistration extends HttpServlet {
     public void showRegistrations(HttpServletRequest req,
                                   HttpServletResponse resp) throws ServletException, IOException{
         List<PreRegistration> list = preDAO.read();
+        String search = req.getParameter("search");
+        if (search != null && !search.isBlank()) {
+            list = filter(list, search);
+        }
         HttpSession session = req.getSession();
         session.setAttribute("preRegistrations",list);
 
@@ -180,5 +188,20 @@ public class adminPreRegistration extends HttpServlet {
             session.setAttribute("error", exc.getMessage());
             req.getRequestDispatcher("adminPreRegistration?type=edit").forward(req, resp);
         }
+    }
+
+    // Métodos auxiliares
+    private List<PreRegistration> filter(List<PreRegistration> preRegs,
+                                         String search) {
+        List<PreRegistration> newPreRegs = new LinkedList<>();
+        Pattern mat = Pattern.compile(search, Pattern.CASE_INSENSITIVE);
+        Matcher match;
+        for (PreRegistration preReg : preRegs) {
+            match = mat.matcher(preReg.getCpf());
+            if (match.find()) {
+                newPreRegs.add(preReg);
+            }
+        }
+        return newPreRegs;
     }
 }
