@@ -88,7 +88,7 @@ public class adminPreRegistration extends HttpServlet {
         HttpSession session = req.getSession();
         PreRegistration preRegistration =
                 preDAO.readById(Integer.parseInt(req.getParameter(
-                "preRegistration")));
+                "id")));
         session.setAttribute("preRegistration",preRegistration);
 
         req.getRequestDispatcher("WEB-INF/admin/preRegistration" +
