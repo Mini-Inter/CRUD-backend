@@ -39,11 +39,11 @@ public class PasswordReset extends HttpServlet {
             String error = "Desculpe! Não é possível solicitar uma nova senha no momento, tente novamente mais tarde.";
             HttpSession session = req.getSession();
             session.setAttribute("error", error);
-            resp.sendRedirect("/Inicio/password.jsp");
+            resp.sendRedirect(req.getContextPath()+ "/Inicio/password.jsp");
         } catch (IllegalArgumentException exc) {
             HttpSession session = req.getSession();
             session.setAttribute("error", exc.getMessage());
-            resp.sendRedirect("/Inicio/password.jsp");
+            resp.sendRedirect(req.getContextPath()+ "/Inicio/password.jsp");
         }
     }
 
@@ -106,8 +106,7 @@ public class PasswordReset extends HttpServlet {
             message.setText("Olá! Alguém fez uma solicitação para mudar sua senha da Vidya." +
                     "\nCaso não seja você, apenas ignore este email com segurança.\nO código pedido é: '" + number + "'.");
             Transport.send(message);
-            req.getRequestDispatcher(req.getContextPath()+"/Inicio/code.jsp").forward(req,
-                    resp);
+            resp.sendRedirect(req.getContextPath()+"/Inicio/code.jsp");
         } else{
             throw new IllegalArgumentException("Email não foi digitado " +
                 "corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
