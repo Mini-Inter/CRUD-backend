@@ -467,7 +467,7 @@ public class StudentsDAO {
                     "LEFT JOIN teachingassignment H ON C.id_class = H.fk_class " +
                     "LEFT JOIN subjects D ON H.fk_subject = D.id_subject " +
                     "LEFT JOIN grades Gr on S.id_student = Gr.fk_student AND D.id_subject = Gr.fk_subject " +
-                    "GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, D.id_subject";
+                    "GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9";
             Statement stmt = conn.createStatement();
 
             ResultSet rs = stmt.executeQuery(sql);

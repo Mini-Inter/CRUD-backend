@@ -257,7 +257,15 @@ public class TeachersDAO {
         try {
             conn = ConnectionFactory.connect();
 
-            sql = "SELECT DISTINCT S.full_name, S.id_student, D.name, g.grade_type, G.value, G.id_grade FROM students S JOIN class C ON S.fk_class = C.id_class JOIN teachingAssignment P ON C.id_class = P.fk_class JOIN teachers T ON P.fk_teacher = T.id_employee JOIN grades G ON S.id_student = G.fk_student JOIN subjects D ON P.fk_subject = D.id_subject AND G.fk_subject = D.id_subject WHERE EXTRACT(YEAR FROM g.send_at) = EXTRACT(YEAR FROM CURRENT_DATE) AND T.id_employee = ? AND D.id_subject = ? AND C.id_class = ?";
+            sql = "SELECT S.full_name, S.id_student, T.id_employee, D.id_subject, C.id_class, D.name, g.grade_type, G.value, G.id_grade FROM students S\n" +
+                    "                    LEFT JOIN class C ON S.fk_class = C.id_class " +
+                    "                    LEFT JOIN teachingassignment H ON C.id_class = H.fk_class  " +
+                    "                    LEFT JOIN subjects D ON H.fk_subject = D.id_subject " +
+                    "                    JOIN teachers T ON H.fk_teacher = T.id_employee " +
+                    "                    LEFT JOIN grades G on S.id_student = G.fk_student AND D.id_subject = G.fk_subject " +
+                    "                    WHERE T.id_employee = ? " +
+                    "                    AND D.id_subject = ? AND C.id_class = ? " +
+                    "                    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,id_teacher);
@@ -301,6 +309,9 @@ public class TeachersDAO {
                         gradeForStudent.setIdN1(-1);
                         gradeForStudent.setN2(rs.getDouble("value"));
                         gradeForStudent.setIdN2(rs.getInt("id_grade"));
+                    } else {
+                        gradeForStudent.setN1(-1.0);
+                        gradeForStudent.setN2(-1.0);
                     }
                     list.add(gradeForStudent);
                 }

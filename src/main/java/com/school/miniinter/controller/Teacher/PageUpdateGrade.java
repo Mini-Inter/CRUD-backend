@@ -23,9 +23,7 @@ public class PageUpdateGrade extends HttpServlet {
     ClassDAO classDAO = new ClassDAO();
     TeachersDAO teachersDAO = new TeachersDAO();
     GradeDAO gradeDAO = new GradeDAO();
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException,
-            IOException{
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException{
         HttpSession session =  request.getSession();
         Integer idTeacher = (Integer)session.getAttribute("idTeacher");
         int idSubject = (Integer) session.getAttribute("subject");
@@ -33,20 +31,16 @@ public class PageUpdateGrade extends HttpServlet {
         if(idTeacher == null){
             response.sendRedirect(request.getContextPath()+"/Inicio/login.jsp");
         }else {
-                List<Class> list = classDAO.readClassByTeacherAndSubject(idTeacher,
-                        idSubject);
+            List<Class> list = classDAO.readClassByTeacherAndSubject(idTeacher, idSubject);
 
             if (list.isEmpty()) {
-                request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request
-                        , response);
+                request.getRequestDispatcher("WEB-INF/teacher/homeProfessor.jsp").forward(request, response);
             }
             request.setAttribute("listClass", list);
 
             Integer idFirstClassShow = list.get(0).getId();
             request.setAttribute("id_class", idFirstClassShow);
-            List<GradeForStudent> list1 =
-                    teachersDAO.readGradeStudentBySubjectAndClass(idTeacher,
-                            idSubject, idFirstClassShow);
+            List<GradeForStudent> list1 = teachersDAO.readGradeStudentBySubjectAndClass(idTeacher,idSubject, idFirstClassShow);
 
             request.setAttribute("listGradeByStudent", list1);
 
@@ -54,18 +48,16 @@ public class PageUpdateGrade extends HttpServlet {
                     , response);
         }
     }
-    public void doPost(HttpServletRequest request,
-                       HttpServletResponse response) throws ServletException,
-            IOException{
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         HttpSession session =  request.getSession();
         Integer idTeacher = (Integer)session.getAttribute("idTeacher");
         int idSubject = (Integer) session.getAttribute("subject");
         String url = request.getServletPath();
         String changeClass = request.getParameter("changeClass");
-        if(idTeacher == null){
+        if (idTeacher == null) {
             response.sendRedirect(request.getContextPath()+"/authentication/login.jsp");
-        }else{
-            if(url.equals("/updateGrade") && changeClass.equals("1")) {
+        } else {
+            if (url.equals("/updateGrade") && changeClass.equals("1")) {
 
                 List<Class> list = classDAO.readClassByTeacherAndSubject(idTeacher,
                         idSubject);
@@ -77,18 +69,15 @@ public class PageUpdateGrade extends HttpServlet {
 
                 request.setAttribute("listClass", list);
 
-                Integer id_class = Integer.parseInt(request.getParameter(
-                        "class"));
+                Integer id_class = Integer.parseInt(request.getParameter("class"));
                 request.setAttribute("id_class",id_class);
 
-                List<GradeForStudent> list1 =
-                        teachersDAO.readGradeStudentBySubjectAndClass(idTeacher,
-                                idSubject, id_class);
+                List<GradeForStudent> list1 = teachersDAO.readGradeStudentBySubjectAndClass(idTeacher, idSubject, id_class);
 
                 request.setAttribute("listGradeByStudent", list1);
 
                 request.getRequestDispatcher("WEB-INF/teacher/throwGrade.jsp").forward(request, response);
-            }else if(url.equals("/updateData")){
+            } else if (url.equals("/updateData")) {
 
                 Integer idData = Integer.parseInt(request.getParameter(
                         "idData"));
@@ -103,8 +92,13 @@ public class PageUpdateGrade extends HttpServlet {
                         "class"));
                 request.getRequestDispatcher("updateGrade?changeClass=1&class" +
                         "="+id_class).forward(request,response);
-            }else if(url.equals("/addData")){
-                Double value = Double.parseDouble(request.getParameter("data"));
+            } else if (url.equals("/addData")) {
+                String rawValue = request.getParameter("data");
+                Double value = (double) -1;
+                try {
+                    value = Double.parseDouble(rawValue);
+                } catch (NumberFormatException ignored) {
+                }
                 Integer id_student = Integer.parseInt(request.getParameter(
                         "idStudent"));
                 Integer id_subject = (Integer) session.getAttribute(
@@ -113,12 +107,7 @@ public class PageUpdateGrade extends HttpServlet {
 
                 SimpleGrade simpleGrade = new SimpleGrade(id_student,
                         id_subject,value,grade_type);
-                if(gradeDAO.insertGradeByStudent(simpleGrade)){
-//                    Colocar uma mensagem de nota lançada com sucesso
-                }else{
-//                    Colocar que houve algum erro ao cadastrar essa nota no
-//                    sistema
-                }
+                gradeDAO.insertGradeByStudent(simpleGrade);
 
                 Integer id_class= Integer.parseInt(request.getParameter(
                         "class"));

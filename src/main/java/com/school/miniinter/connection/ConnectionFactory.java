@@ -17,7 +17,7 @@ public class ConnectionFactory {
             String user = envVars.get("USER");
             String password = envVars.get("PASSWORD");
             try {
-                conn = DriverManager.getConnection("jdbc:postgresql://" + host + ":" + port + "/" + database, user, password);
+                    conn = DriverManager.getConnection("jdbc:postgresql://" + host + ":" + port + "/" + database, user, password);
             } catch(SQLException sql){
                 sql.printStackTrace();
             }

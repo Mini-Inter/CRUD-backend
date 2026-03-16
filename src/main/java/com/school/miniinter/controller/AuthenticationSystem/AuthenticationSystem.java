@@ -67,7 +67,8 @@ public class AuthenticationSystem extends HttpServlet {
 
         try {
             if (!EmailUtils.verifyEmail(login)) {
-                login = login.substring(0, login.indexOf("@"));
+                if (login.contains("@"))
+                    login = login.substring(0, login.indexOf("@"));
                 throw new RuntimeException("Email não foi digitado corretamente! Siga a sintaxe 'nome.sobrenome@vidya.org.br'");
             }
             login = login.substring(0, login.indexOf("@"));

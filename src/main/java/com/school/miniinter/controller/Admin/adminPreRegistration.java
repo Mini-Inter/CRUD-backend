@@ -94,19 +94,17 @@ public class adminPreRegistration extends HttpServlet {
     public void editRegistration(HttpServletRequest req,
                                  HttpServletResponse resp) throws ServletException, IOException{
         HttpSession session = req.getSession();
-        PreRegistration preRegistration =
-                preDAO.readById(Integer.parseInt(req.getParameter(
-                "id")));
+        PreRegistration preRegistration = preDAO.readById(Integer.parseInt(req.getParameter("id")));
         session.setAttribute("preRegistration",preRegistration);
 
         req.getRequestDispatcher("WEB-INF/admin/preRegistration" +
-                "/preRegistrationsEdit.jsp").forward(req, resp);
+                "/preRegistrationEdit.jsp").forward(req, resp);
     }
 
     public void createRegistration(HttpServletRequest req,
                                    HttpServletResponse resp) throws ServletException, IOException{
         req.getRequestDispatcher("WEB-INF/admin/preRegistration" +
-                "/preRegistrationsInsert.jsp").forward(req, resp);
+                "/preRegistrationInsert.jsp").forward(req, resp);
     }
 
     public void insertRegistration(HttpServletRequest req,
