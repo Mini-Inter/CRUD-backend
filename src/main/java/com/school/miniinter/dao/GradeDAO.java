@@ -74,7 +74,6 @@ public class GradeDAO {
             return null;
         } 
     }
-
     public boolean updateGradeById(int id_grade, Double value){
         
         Connection conn = null;
@@ -94,7 +93,23 @@ public class GradeDAO {
             return false;
         }
     }
+    public boolean delete(int id_grade) {
+        Connection conn = null;
 
+        try{
+            conn = ConnectionFactory.connect();
+
+            sql = "DELETE FROM grades WHERE id_grade = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,id_grade);
+
+            return pstmt.executeUpdate() > 0;
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+            return false;
+        }
+    }
     public boolean insertGradeByStudent(SimpleGrade simpleGrade){
         
         Connection conn = null;
